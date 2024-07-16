@@ -6,7 +6,7 @@
 }
 
 localhost {
- root  /var/www/html/camagru/public
+ root * /var/www/html/camagru/public
  file_server
  php_server
 }
