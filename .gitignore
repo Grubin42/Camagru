@@ -1,0 +1,46 @@
+# Ignorer les fichiers de configuration sensibles
+.env
+
+# Ignorer les répertoires et fichiers générés par Docker
+docker-compose.override.yml
+docker-compose.*.yml
+**/Dockerfile
+**/docker-compose.yml
+
+# Ignorer les répertoires de données
+postgresql/data/
+php_errors.log
+
+# Ignorer les fichiers de log
+*.log
+
+# Ignorer les fichiers temporaires et de cache
+tmp/
+.cache/
+*.tmp
+
+# Ignorer les fichiers de configuration de l'éditeur
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignorer les répertoires de dépendances (si vous en avez)
+node_modules/
+vendor/
+
+# Ignorer les fichiers spécifiques à macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Ignorer les fichiers Thumbs.db de Windows
+Thumbs.db
+
+# Ignorer les fichiers de vignettes générés par le système
+ehthumbs.db
+ehthumbs_vista.db
+
+# Ignorer les répertoires de système
+Desktop.ini
+$RECYCLE.BIN/

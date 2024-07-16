@@ -12,7 +12,7 @@ DOCKER_DIR	= ${SRCS_DIR}docker-compose.yml
 
 
 # COMMANDS
-DOCKER		=  docker compose -f ${DOCKER_DIR} --env-file ${ENV_FILE} -p camagru
+DOCKER =  docker compose -f ${DOCKER_DIR} --env-file ${ENV_FILE} -p camagru
 
 %:
 	@:
@@ -50,8 +50,4 @@ frankenphp:
 	@echo "${GREEN}Running frankenphp ...${RESET}"
 	@${DOCKER} exec frankenphp sh
 
-mysql8:
-	@echo "${GREEN}Running mysql 8 ...${RESET}"
-	@${DOCKER} exec mysql_8 bash
-
-.PHONY: all start up down stop rebuild delete rebuild-no-cache frankenphp mysql8
+.PHONY: all start up down stop rebuild delete rebuild-no-cache frankenphp
