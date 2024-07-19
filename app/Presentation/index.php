@@ -1,10 +1,11 @@
 <?php
+namespace Camagru;
 use PDO;
 use Exception;
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/../Core/Data/Connection.php';
 
-use app\Core\Data\Connection;
+use Camagru\Core\Data\Connection;
 
 try {
     ini_set('display_errors', 1);

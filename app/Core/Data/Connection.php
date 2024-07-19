@@ -1,5 +1,6 @@
 <?php
 
+namespace Camagru\Core\Data;
 use PDO;
 use PDOExeption;
 
