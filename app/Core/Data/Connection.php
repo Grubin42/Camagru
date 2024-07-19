@@ -1,10 +1,11 @@
 <?php
 
-namespace Camagru\Core\Data;
+use PDO;
+use PDOExeption;
 
 class Connection
 {
-    function getDBConnection(): PDO {
+   public static function getDBConnection(): PDO {
         try {
             $dsn = 'pgsql:host=' . DB_HOST . ';dbname=' . DB_NAME;
             $pdo = new PDO($dsn, DB_USER, DB_PASS);
