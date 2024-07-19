@@ -1,14 +1,5 @@
-<?php
-require_once __DIR__ . '/config.php';
 
-try {
-    $db = getDBConnection();
-    $stmt = $db->query('SELECT username, email FROM users');
-    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (Exception $e) {
-    $users = [];
-}
-?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>

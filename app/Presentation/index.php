@@ -1,10 +1,5 @@
 <?php
-// Configuration de la base de données
-define('DB_HOST', 'postgresql');
-define('DB_NAME', getenv('POSTGRES_DB'));
-define('DB_USER', getenv('POSTGRES_USER'));
-define('DB_PASS', getenv('POSTGRES_PASSWORD'));
-
+require_once __DIR__ . '/config.php';
 function getDBConnection(): PDO {
     try {
         $dsn = 'pgsql:host=' . DB_HOST . ';dbname=' . DB_NAME;
@@ -15,3 +10,13 @@ function getDBConnection(): PDO {
         die('Connection failed: ' . $e->getMessage());
     }
 }
+
+try {
+    $db = getDBConnection();
+    $stmt = $db->query('SELECT username, email FROM users');
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    $users = [];
+}
+include 'Views/Shared/Layout.php'
+?>
