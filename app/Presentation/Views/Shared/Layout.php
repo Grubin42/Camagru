@@ -23,7 +23,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">À propos</a>
                 </li>
-                <a href="./User/Index.php"><button>Aller à la page cible</button></a>
+               
                 <!-- Ajoutez d'autres liens de menu ici -->
             </ul>
         </div>
