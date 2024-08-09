@@ -1,21 +1,12 @@
-
-
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Liste des utilisateurs</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
 </head>
 <body>
-    <h1>Liste des utilisateurs</h1>
-    <ul>
-        <?php if (!empty($users)): ?>
-            <?php foreach ($users as $user): ?>
-                <li><?php echo htmlspecialchars($user['username']); ?> (<?php echo htmlspecialchars($user['email']); ?>)</li>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <li>Aucun utilisateur trouvé.</li>
-        <?php endif; ?>
-    </ul>
+    <?php include __DIR__ . '/../Components/header.php'; ?>
+    <?php include __DIR__ . '/../Components/main.php'; ?>
+    <?php include __DIR__ . '/../Components/footer.php'; ?>
 </body>
 </html>
