@@ -4,7 +4,9 @@
 # Ignorer les répertoires et fichiers générés par Docker
 docker-compose.override.yml
 docker-compose.*.yml
+
 **/Dockerfile
+
 **/docker-compose.yml
 
 # Ignorer les répertoires de données
