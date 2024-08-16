@@ -10,4 +10,3 @@
 <div>
     <?php include(__DIR__ . "/../Users/Components/ListUsers.php") ?>
 </div>
-<h1>Liste des utilisateurs</h1>
