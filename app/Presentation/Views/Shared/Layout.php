@@ -6,7 +6,7 @@
 </head>
 <body>
     <?php include __DIR__ . '/Components/head.php'; ?>
-    <?php include __DIR__ . '/../Components/main.php'; ?>
+    <?php include __DIR__ . '/../Home/index.php'; ?>
     <?php include __DIR__ . '/Components/footer.php'; ?>
 </body>
 </html>
