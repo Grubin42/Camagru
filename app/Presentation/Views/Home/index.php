@@ -1,13 +1,2 @@
-<?php
-
-?>
-
-<h1>salut</h1>
-
-<button>
-    Users
-</button>
-<div>
-    <?php include(__DIR__ . "/../Users/Components/ListUsers.php") ?>
-</div>
-<div></div>
+<h1>Bienvenue sur Camagru</h1>
+<p>Ceci est la page d'accueil de votre application. Utilisez le menu de navigation pour explorer les fonctionnalités.</p>
