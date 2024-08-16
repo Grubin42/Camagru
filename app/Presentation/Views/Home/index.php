@@ -4,7 +4,7 @@
 
 <h1>salut</h1>
 
-<button>
+<button id="redirectButton">
     Users
 </button>
 <div>
@@ -12,3 +12,9 @@
 </div>
 
 <div></div>
+
+<script>
+    document.getElementById("redirectButton").addEventListener("click", function() {
+        window.location.href = "Views/Users/index.php";
+    });
+</script>
