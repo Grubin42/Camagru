@@ -11,17 +11,20 @@ use Camagru\Core\Data\Connection;
 
 try {
     $db = Connection::getDBConnection();
-    $stmt = $db->query('SELECT username, email FROM users');
-    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = $db->query('SELECT username, email FROM users ORDER BY id DESC LIMIT 1');
+    $lastUser = $stmt->fetch(PDO::FETCH_ASSOC);
+    var_dump($lastUser);
+    //$users = $lastUser ? [$lastUser] : []; // Assigner $lastUser à $users si trouvé
 } catch (Exception $e) {
-    $users = [];
+    $lastUser = null;
 }
 
-// function renderView($view, $data) {
-//     extract($data);
-//     include $view;
-// }
+// Fonction pour rendre la vue
+function renderView($view, $data = []) {
+    extract($data);  // Extraire les variables du tableau associatif
+    include $view;   // Inclure le fichier de vue
+}
 
-// renderView(__DIR__ . '/Views/Shared/Layout.php', ['users' => $users]);
-include __DIR__ . '/Views/Shared/Layout.php';
+// Appel de la fonction pour rendre la vue
+renderView(__DIR__ . '/Views/Shared/Layout.php', ['user' => $lastUser]);
 ?>
