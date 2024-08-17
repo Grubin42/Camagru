@@ -7,14 +7,22 @@ use PDOException;
 
 class Connection
 {
-    public static function getDBConnection(): PDO {
-        try {
-            $dsn = 'pgsql:host=' . DB_HOST . ';dbname=' . DB_NAME;
-            $pdo = new PDO($dsn, DB_USER, DB_PASS);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $pdo;
-        } catch (PDOException $e) {
-            die('Connection failed: ' . $e->getMessage());
+    private static ?PDO $instance = null;
+
+    /**
+     * Retourne une instance de PDO.
+     */
+    public static function getDBConnection(): PDO
+    {
+        if (self::$instance === null) {
+            try {
+                $dsn = 'pgsql:host=' . DB_HOST . ';dbname=' . DB_NAME;
+                self::$instance = new PDO($dsn, DB_USER, DB_PASS);
+                self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch (PDOException $e) {
+                die('Connection failed: ' . $e->getMessage());
+            }
         }
+        return self::$instance;
     }
 }
