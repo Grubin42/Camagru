@@ -14,7 +14,7 @@
     </nav>
 </header>
 <body>
-    <?php include __DIR__ . '/../Home/index.php'; ?>
+    <?php include __DIR__ . '/../settings/index.php'; ?>
 </body>
 <footer>
     <p>&copy; <?php echo date('Y'); ?> Votre Application. Tous droits réservés.</p>

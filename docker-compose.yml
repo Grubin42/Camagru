@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 networks:
   camagru:
@@ -9,8 +9,8 @@ services:
     image: axllent/mailpit:latest
     container_name: mailpit
     ports:
-      - '1025:1025'
-      - '8025:8025'
+      - "1025:1025"
+      - "8025:8025"
     networks:
       - camagru
 
@@ -24,7 +24,7 @@ services:
       - "443:443"
       - "443:443/udp"
     volumes:
-      - ./app:/var/www/html/camagru
+      - ./app:/var/www/html/app
       - ./frankenphp/Caddyfile:/etc/caddy/Caddyfile
       - ./frankenphp/php.ini:/usr/local/etc/php/php.ini
     depends_on:
@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
     container_name: postgres
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
       - ./postgresql/data:/var/lib/postgresql/data
       - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
