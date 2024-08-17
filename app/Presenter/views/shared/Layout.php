@@ -1,23 +1,28 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="/assets/css/styles.css">
-</head>
-<header>
-    <nav>
-        <ul>
-            <li><a href="/home">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/contact">Contact</a></li>
-        </ul>
-    </nav>
-</header>
-<body>
-    <?php include __DIR__ . '/../settings/index.php'; ?>
-</body>
-<footer>
-    <p>&copy; <?php echo date('Y'); ?> Votre Application. Tous droits réservés.</p>
-    <script src="/assets/js/scripts.js"></script>
-</footer>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Camagru</title>
+        <link rel="stylesheet" href="/Presenter/assets/css/styles.css">
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/last-user">Dernier utilisateur</a></li>
+                <!-- Ajouter d'autres liens ici -->
+            </ul>
+        </nav>
+
+        <main>
+            <?php include $view; ?> <!-- $view est le chemin de la vue spécifique à inclure -->
+        </main>
+
+        <footer>
+            <p>&copy; <?= date('Y') ?> Camagru. Tous droits réservés.</p>
+        </footer>
+        
+        <script src="/Presenter/assets/js/scripts.js"></script>
+    </body>
 </html>
