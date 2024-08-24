@@ -1,27 +1,25 @@
 <?php
 
 use Camagru\Core\Router;
-use Camagru\Core\Models\User;
+use Camagru\Core\Models\UserModel;
+use Presentation\Controllers\HomeController;
+use Presentation\Controllers\UserController;
 
 require_once __DIR__ . '/functions.php'; // Inclure les fonctions globales
 
 $router = new Router();
-
 // Route pour la page d'accueil
+
 $router->addRoute('/', function() {
-    renderView(__DIR__ . '/../Presentation/Views/Shared/Layout.php', [
-        'view' => __DIR__ . '/../Presentation/Views/Home/index.php'
-    ]);
+    $homeController = new HomeController();
+    $homeController->Index();
 });
 
 // Route pour afficher le dernier utilisateur
 $router->addRoute('/last-user', function() {
-    $userModel = new User();
-    $lastUser = $userModel->getLastUser();
-    renderView(__DIR__ . '/../Presentation/Views/Shared/Layout.php', [
-        'view' => __DIR__ . '/../Presentation/Views/Users/index.php',
-        'user' => $lastUser
-    ]);
+    $homeController = new UserController();
+    $homeController->Index();
+
 });
 
 // Ajouter d'autres routes ici...
