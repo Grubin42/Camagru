@@ -2,6 +2,7 @@
 
 use Camagru\Core\Router;
 use Camagru\Core\models\User;
+use Camagru\Core\models\Post;
 
 require_once __DIR__ . '/functions.php'; // Inclure les fonctions globales
 
@@ -22,6 +23,16 @@ $router->addRoute('/last-user', function() {
     renderView(__DIR__ . '/../Presenter/views/shared/Layout.php', [
         'view' => __DIR__ . '/../Presenter/views/Users/index.php',
         'user' => $lastUser
+    ]);
+});
+
+$router->addRoute('/feed', function() {
+    // $postModel = new Post();
+    // $posts = $postModel->getAllPostsWithComments();
+
+    renderView(__DIR__ . '/../Presenter/views/shared/Layout.php', [
+        'view' => __DIR__ . '/../Presenter/views/feed/index.php',
+        // 'posts' => $posts
     ]);
 });
 
