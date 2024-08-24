@@ -47,6 +47,7 @@ services:
     volumes:
       - ./postgresql/data:/var/lib/postgresql/data
       - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgresql/seed.sql:/docker-entrypoint-initdb.d/seed.sql 
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -54,3 +55,7 @@ services:
       TZ: "Europe/Zurich"
     networks:
       - camagru
+
+volumes:
+  camagru_data:
+    external: false
