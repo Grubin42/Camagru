@@ -20,7 +20,7 @@ $router->addRoute('/last-user', function() {
     $userModel = new User();
     $lastUser = $userModel->getLastUser();
     renderView(__DIR__ . '/../Presenter/views/shared/Layout.php', [
-        'view' => __DIR__ . '/../Presenter/views/users/index.php',
+        'view' => __DIR__ . '/../Presenter/views/Users/index.php',
         'user' => $lastUser
     ]);
 });

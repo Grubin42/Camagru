@@ -2,6 +2,7 @@
 
 namespace Camagru;
 
+require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/Core/Data/Connection.php';
 require_once __DIR__ . '/Core/Models/User.php';
 require_once __DIR__ . '/Core/Router.php';
