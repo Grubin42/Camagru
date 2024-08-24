@@ -16,7 +16,13 @@
         </nav>
 
         <main>
-            <?php include $view; ?> <!-- $view est le chemin de la vue spécifique à inclure -->
+            <?php 
+            if (file_exists($view)) {
+                include $view; 
+            } else {
+                echo "La vue spécifiée n'existe pas.";
+            }
+            ?> 
         </main>
 
         <footer>

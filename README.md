@@ -93,7 +93,16 @@ serveur:
 ## authentification 
 midelware/guard
 
-### rechercher les differentes manières de faire
 
+## Étapes pour Seed la Base de Données
 
+1. Supprimer les Conteneurs et Volumes Existants (Optionnel)
 
+```bash
+docker-compose down -v
+docker-compose up -d
+docker exec -it postgres bash
+psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
+\i /docker-entrypoint-initdb.d/seed_user.sql
+\i /docker-entrypoint-initdb.d/seed_posts.sql
+```

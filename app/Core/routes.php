@@ -2,16 +2,14 @@
 
 use Camagru\Core\Router;
 use Camagru\Core\Models\User;
-
-require_once __DIR__ . '/functions.php'; // Inclure les fonctions globales
+use Camagru\Presentation\Controllers\PostController;
 
 $router = new Router();
 
-// Route pour la page d'accueil
+// Route pour la page d'accueil avec les derniers posts
 $router->addRoute('/', function() {
-    renderView(__DIR__ . '/../Presentation/Views/Shared/Layout.php', [
-        'view' => __DIR__ . '/../Presentation/Views/Home/index.php'
-    ]);
+    $postController = new PostController();
+    $postController->showLastPosts();
 });
 
 // Route pour afficher le dernier utilisateur
