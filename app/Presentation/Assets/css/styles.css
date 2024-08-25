@@ -1,108 +1,37 @@
-/* Global Styles */
-body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
-    background-color: #f5f5f5;
+/* styles.css */
+
+/* Réinitialisation des marges et des rembourrages */
+* {
     margin: 0;
     padding: 0;
-    color: #333;
+    box-sizing: border-box; 
 }
 
-/* Header and Navigation */
-header {
-    background-color: #007BFF;
-    color: #fff;
-    padding: 10px 0;
+/* Style de la barre de navigation */
+nav {
+    background-color: #0d6efd; /* Couleur de fond */
+    color: white; /* Couleur du texte */
+    font-family: Arial, sans-serif; /* Police de caractères */
 }
 
-header nav ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    text-align: center;
+nav ul {
+    list-style: none; /* Supprime les puces de la liste */
+    display: flex; /* Affiche les éléments en ligne */
+    justify-content: space-around; /* Répartit l'espace entre les éléments */
+    padding: 1rem; /* Espacement interne */
 }
 
-header nav ul li {
-    display: inline;
-    margin: 0 15px;
+nav li {
+    margin-right: 1rem; /* Espacement entre les éléments */
 }
 
-header nav ul li a {
-    text-decoration: none;
-    color: #fff;
-    font-weight: bold;
-    transition: color 0.3s;
+nav a {
+    text-decoration: none; /* Supprime le soulignement des liens */
+    color: inherit; /* Hérite de la couleur du texte */
+    transition: color 0.3s; /* Transition de couleur au survol */
 }
 
-header nav ul li a:hover {
-    color: #ffdd57;
+nav a:hover {
+    color: rgb(152, 196, 210); /* Couleur au survol */
 }
 
-/* Main Content */
-main {
-    padding: 20px;
-    max-width: 800px;
-    margin: 20px auto;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-main h1 {
-    text-align: center;
-    color: #007BFF;
-}
-
-main ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-main ul li {
-    background-color: #f9f9f9;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-main ul li:hover {
-    background-color: #e9e9e9;
-}
-
-/* Footer */
-footer {
-    background-color: #007BFF;
-    color: #fff;
-    text-align: center;
-    padding: 10px 0;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-}
-
-footer p {
-    margin: 0;
-}
-
-footer a {
-    color: #ffdd57;
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-footer a:hover {
-    color: #fff;
-}
-
-/* Responsive Design */
-@media (max-width: 600px) {
-    header nav ul li {
-        display: block;
-        margin: 10px 0;
-    }
-
-    main {
-        margin: 10px;
-        padding: 10px;
-    }
-}

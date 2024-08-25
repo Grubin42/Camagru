@@ -5,7 +5,8 @@ namespace Camagru;
 require_once __DIR__ . '/Presentation/Controllers/HomeController.php';
 require_once __DIR__ . '/Presentation/Controllers/LoginController.php';
 require_once __DIR__ . '/Presentation/Controllers/ProfileController.php';
-
+require_once __DIR__ . '/Presentation/Controllers/RegisterController.php';
+require_once __DIR__ . '/Presentation/Controllers/PostController.php';
 //MODEL
 require_once __DIR__ . '/Core/Models/CommentModel.php';
 require_once __DIR__ . '/Core/Models/LikeModel.php';
@@ -14,6 +15,8 @@ require_once __DIR__ . '/Core/Models/UserModel.php';
 
 //SERVICE
 require_once __DIR__ . '/Infrastructure/Services/ProfileService.php';
+require_once __DIR__ . '/Infrastructure/Services/RegisterService.php';
+require_once __DIR__ . '/Infrastructure/Services/PostService.php';
 
 require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/config.php';

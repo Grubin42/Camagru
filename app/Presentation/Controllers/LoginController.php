@@ -15,4 +15,8 @@ class LoginController {
             'view' => __DIR__ . '/../Views/Login/index.php'
         ]);
     }
+    public function Login(string $username, string $password) {
+        
+        var_dump($username, $password);
+    }
 }

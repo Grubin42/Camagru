@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS post (
     id SERIAL PRIMARY KEY,
-    image BYTEA NOT NULL,
+    imageContent BYTEA ,
     created_date TIMESTAMPTZ DEFAULT NOW(),
     user_id INT REFERENCES users(id) ON DELETE CASCADE
 );
