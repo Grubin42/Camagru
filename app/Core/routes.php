@@ -1,27 +1,31 @@
 <?php
 
 use Camagru\Core\Router;
-use Camagru\Core\Models\User;
-use Camagru\Presentation\Controllers\PostController;
+use Presentation\Controllers\HomeController;
+use Presentation\Controllers\ProfileController;
+use Presentation\Controllers\LoginController;
 
 $router = new Router();
+// Route pour la page d'accueil
 
-// Route pour la page d'accueil avec les derniers posts
 $router->addRoute('/', function() {
-    $postController = new PostController();
-    $postController->showLastPosts();
+    $homeController = new HomeController();
+    $homeController->Index();
 });
 
 // Route pour afficher le dernier utilisateur
-$router->addRoute('/last-user', function() {
-    $userModel = new User();
-    $lastUser = $userModel->getLastUser();
-    renderView(__DIR__ . '/../Presentation/Views/Shared/Layout.php', [
-        'view' => __DIR__ . '/../Presentation/Views/Users/index.php',
-        'user' => $lastUser
-    ]);
+$router->addRoute('/profile', function() {
+    $profileController = new ProfileController();
+    $profileController->Index();
+
 });
 
+// Route pour afficher le dernier utilisateur
+$router->addRoute('/login', function() {
+    $loginController = new LoginController();
+    $loginController->Index();
+
+});
 // Ajouter d'autres routes ici...
 
 return $router;
