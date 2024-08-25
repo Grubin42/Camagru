@@ -1,6 +1,5 @@
 <?php
 
-use Camagru\Controller\UserController;
 use Camagru\Core\Router;
 use Presentation\Controllers\HomeController;
 use Presentation\Controllers\ProfileController;
