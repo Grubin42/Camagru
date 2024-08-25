@@ -12,7 +12,7 @@ $router->addRoute('/', function() {
     $homeController = new HomeController();
     $homeController->Index();
 });
-/*
+
 // Route pour afficher le dernier utilisateur
 $router->addRoute('/profile', function() {
     $profileController = new ProfileController();
@@ -27,5 +27,5 @@ $router->addRoute('/login', function() {
 
 });
 // Ajouter d'autres routes ici...
-*/
+
 return $router;
