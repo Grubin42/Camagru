@@ -1,6 +1,6 @@
 <?php
 
-namespace Presentation\Controllers;
+namespace Camagru\Presentation\Controllers;
 
 use Camagru\Infrastructure\Services\ProfileService;
 

@@ -1,12 +1,5 @@
--- Insertion de 15 posts dans la table post
-
--- Vérifier d'abord que la table "post" existe
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'post') THEN
-        RAISE EXCEPTION 'Table "post" does not exist.';
-    END IF;
-END $$;
+-- Vider la table post avant de la remplir
+TRUNCATE TABLE post RESTART IDENTITY CASCADE;
 
 -- Insérer 15 posts avec des images de test (images en base64)
 INSERT INTO post (image, user_id) VALUES

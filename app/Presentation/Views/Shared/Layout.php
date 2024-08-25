@@ -21,6 +21,7 @@
                     <a href="/logout" class="btn-logout">Logout</a>
                 <?php else: ?>
                     <a href="/login" class="btn-login">Login</a>
+                    <a href="/register" class="btn-register">Register</a>
                 <?php endif; ?>
             </div>
         </nav>

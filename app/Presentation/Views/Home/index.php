@@ -3,10 +3,10 @@
 
 <?php if (!empty($posts)): ?>
     <h2>Les 5 derniers posts</h2>
-    <ul class="post-list">
+    <ul>
         <?php foreach ($posts as $post): ?>
-            <li class="post-item">
-                <img src="data:image/jpeg;base64,<?= base64_encode($post['image']) ?>" alt="Post Image">
+            <li>
+                <img src="data:image/png;base64,<?= $post['image'] ?>" alt="Post Image">
                 <p>Date: <?= $post['created_date'] ?></p>
             </li>
         <?php endforeach; ?>
