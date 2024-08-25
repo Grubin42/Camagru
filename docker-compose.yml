@@ -47,7 +47,8 @@ services:
     volumes:
       - ./postgresql/data:/var/lib/postgresql/data
       - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./postgresql/seed.sql:/docker-entrypoint-initdb.d/seed.sql
+      - ./postgresql/seed_user.sql:/docker-entrypoint-initdb.d/seed_user.sql
+      - ./postgresql/seed_posts.sql:/docker-entrypoint-initdb.d/seed_posts.sql
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
