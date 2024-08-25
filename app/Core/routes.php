@@ -13,19 +13,30 @@ $router->addRoute('/', function() {
     $homeController->Index();
 });
 
-// Route pour afficher le dernier utilisateur
+// Route pour afficher le profile et le modifier
 $router->addRoute('/profile', function() {
     $profileController = new ProfileController();
     $profileController->Index();
 
 });
 
-// Route pour afficher le dernier utilisateur
+// Route pour ce connecter 
 $router->addRoute('/login', function() {
     $loginController = new LoginController();
     $loginController->Index();
 
 });
-// Ajouter d'autres routes ici...
+// Route pour s'enregistrer
+$router->addRoute('/register', function() {
+    $loginController = new LoginController();
+    $loginController->Index();
+
+});
+// Route pour ajouter un poste
+$router->addRoute('/post', function() {
+    $loginController = new LoginController();
+    $loginController->Index();
+
+});
 
 return $router;
