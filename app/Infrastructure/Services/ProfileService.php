@@ -2,18 +2,18 @@
 
 namespace Camagru\Infrastructure\Services;
 
-use Camagru\Core\Models\ProfileModel;
+// use Camagru\Core\Models\ProfileModel;
 class ProfileService
 {
-    private $profileModel;
+    // private $profileModel;
 
     public function __construct()
     {
-        $this->profileModel = new ProfileModel();
+        // $this->profileModel = new ProfileModel();
     }
 
-    public function getLastUser(): ?array
-    {
-        return $this->profileModel->getLastUser();
-    }
+    // public function getLastUser(): ?array
+    // {
+    //     return $this->profileModel->getLastUser();
+    // }
 }

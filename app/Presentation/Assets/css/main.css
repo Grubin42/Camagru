@@ -1,0 +1,14 @@
+/* main.css */
+
+/* Importation des styles de base */
+@import url('base/base.css');
+
+/* Importation des styles de mise en page */
+@import url('layout/layout.css');
+
+/* Importation des styles des composants */
+@import url('components/nav.css');
+@import url('components/footer.css');
+
+/* Importation des styles spécifiques aux pages */
+@import url('pages/home.css');

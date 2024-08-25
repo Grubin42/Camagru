@@ -1,0 +1,50 @@
+/* nav.css */
+
+/* Style global de la barre de navigation */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #343a40;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo à gauche */
+.nav-left .logo {
+    font-size: 1.5rem;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Liens de navigation au centre */
+.nav-center {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-center li a {
+    color: #fff;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-center li a:hover {
+    background-color: #495057;
+    border-radius: 5px;
+}
+
+/* Boutons à droite */
+.nav-right .btn-login, .nav-right .btn-logout {
+    color: #fff;
+    padding: 10px 20px;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-right .btn-login:hover, .nav-right .btn-logout:hover {
+    background-color: #fff;
+    color: #343a40;
+}

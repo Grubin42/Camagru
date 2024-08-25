@@ -96,7 +96,6 @@ midelware/guard
 
 ## Étapes pour Seed la Base de Données
 
-1. Supprimer les Conteneurs et Volumes Existants (Optionnel)
 
 ```bash
 docker-compose down -v

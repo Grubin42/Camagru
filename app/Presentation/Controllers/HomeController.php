@@ -1,18 +1,24 @@
 <?php
 
-namespace Presentation\Controllers;
+namespace Camagru\Presentation\Controllers;
 
-use Camagru\Infrastructure\Services\HomeService;
-class HomeController {
-   // private $Home_service;
+use Camagru\Infrastructure\Services\PostService;
 
-   // public function __construct() {
-   //     $this->Home_service = new HomeService();
-   // }
+class HomeController
+{
+    protected $postService;
 
-    public function Index() {
+    public function __construct()
+    {
+        $this->postService = new PostService();
+    }
+
+    public function showHomePage()
+    {
+        $posts = $this->postService->getLastPosts();
         renderView(__DIR__ . '/../Views/Shared/Layout.php', [
-            'view' => __DIR__ . '/../Views/Home/index.php'
+            'view' => __DIR__ . '/../Views/Home/index.php',
+            'posts' => $posts
         ]);
     }
 }

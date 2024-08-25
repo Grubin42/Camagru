@@ -17,7 +17,7 @@ class PostController
     {
         $posts = $this->postService->getLastPosts();
         renderView(__DIR__ . '/../Views/Shared/Layout.php', [
-            'view' => __DIR__ . '/../Views/Post/post_list.php',
+            'view' => __DIR__ . '/../Views/Post/index.php',
             'posts' => $posts
         ]);
     }
