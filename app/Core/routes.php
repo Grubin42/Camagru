@@ -1,11 +1,9 @@
 <?php
 
 use Camagru\Core\Router;
-use Camagru\Core\Models\UserModel;
 use Presentation\Controllers\HomeController;
-use Presentation\Controllers\UserController;
-
-require_once __DIR__ . '/functions.php'; // Inclure les fonctions globales
+use Presentation\Controllers\ProfileController;
+use Presentation\Controllers\LoginController;
 
 $router = new Router();
 // Route pour la page d'accueil
@@ -14,14 +12,20 @@ $router->addRoute('/', function() {
     $homeController = new HomeController();
     $homeController->Index();
 });
-
+/*
 // Route pour afficher le dernier utilisateur
-$router->addRoute('/last-user', function() {
-    $homeController = new UserController();
-    $homeController->Index();
+$router->addRoute('/profile', function() {
+    $profileController = new ProfileController();
+    $profileController->Index();
 
 });
 
-// Ajouter d'autres routes ici...
+// Route pour afficher le dernier utilisateur
+$router->addRoute('/login', function() {
+    $loginController = new LoginController();
+    $loginController->Index();
 
+});
+// Ajouter d'autres routes ici...
+*/
 return $router;

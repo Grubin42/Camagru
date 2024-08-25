@@ -1,15 +1,19 @@
 <?php
 
 namespace Camagru;
-
+// PRESENTATION
 require_once __DIR__ . '/Presentation/Controllers/HomeController.php';
 require_once __DIR__ . '/Presentation/Controllers/UserController.php';
+require_once __DIR__ . '/Presentation/Controllers/LoginController.php';
+require_once __DIR__ . '/Presentation/Controllers/ProfileController.php';
 
-require_once __DIR__ . '/Core/Models/UserModel.php';
+//MODEL
+require_once __DIR__ . '/Core/Models/ProfileModel.php';
 
-require_once __DIR__ . '/Infrastructure/Services/UserService.php';
+//SERVICE
+require_once __DIR__ . '/Infrastructure/Services/ProfileService.php';
 
-require_once __DIR__ . '/Presentation/Controllers/UserController.php';
+require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/Core/Data/Connection.php';
 require_once __DIR__ . '/Core/Models/UserModel.php';
