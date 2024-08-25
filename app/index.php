@@ -7,7 +7,10 @@ require_once __DIR__ . '/Presentation/Controllers/LoginController.php';
 require_once __DIR__ . '/Presentation/Controllers/ProfileController.php';
 
 //MODEL
-require_once __DIR__ . '/Core/Models/ProfileModel.php';
+require_once __DIR__ . '/Core/Models/CommentModel.php';
+require_once __DIR__ . '/Core/Models/LikeModel.php';
+require_once __DIR__ . '/Core/Models/PostModel.php';
+require_once __DIR__ . '/Core/Models/UserModel.php';
 
 //SERVICE
 require_once __DIR__ . '/Infrastructure/Services/ProfileService.php';
