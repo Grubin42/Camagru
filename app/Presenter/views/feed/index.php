@@ -1,6 +1,5 @@
 <h1>Feed</h1>
-
-<!-- <?php if (!empty($posts)): ?>
+<?php if (!empty($posts)): ?>
     <h2>Posts</h2>
     <?php foreach ($posts as $post): ?>
         <div class="post">
@@ -24,4 +23,4 @@
     <?php endforeach; ?>
 <?php else: ?>
     <p>No posts found.</p>
-<?php endif; ?> -->
+<?php endif; ?>

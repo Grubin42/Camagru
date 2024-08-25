@@ -1,8 +1,9 @@
 <?php
 
+use Camagru\Controller\UserController;
 use Camagru\Core\Router;
 use Camagru\Core\models\User;
-use Camagru\Core\models\Post;
+use Camagru\Controller\HomeController;
 
 require_once __DIR__ . '/functions.php'; // Inclure les fonctions globales
 
@@ -10,9 +11,13 @@ $router = new Router();
 
 // Route pour la page d'accueil
 $router->addRoute('/', function() {
-    renderView(__DIR__ . '/../Presenter/views/shared/Layout.php', [
-        'view' => __DIR__ . '/../Presenter/views/home/index.php'
-    ]);
+    $controller = new HomeController();
+    $controller->index();
+});
+
+$router->addRoute('/settings', function() {
+    $controller = new UserController();
+    $controller->index();
 });
 
 // Route pour afficher le dernier utilisateur

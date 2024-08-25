@@ -16,7 +16,7 @@
         </nav>
 
         <main>
-            <?php include $view; ?> <!-- $view est le chemin de la vue spécifique à inclure -->
+        <?php include $viewPath; ?>
         </main>
 
         <footer>
