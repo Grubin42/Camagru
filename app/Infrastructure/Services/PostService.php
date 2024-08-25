@@ -2,7 +2,7 @@
 
 namespace Camagru\Infrastructure\Services;
 
-use Camagru\Core\Models\Post;
+use Camagru\Core\Models\PostModel as Post;
 
 class PostService
 {

@@ -7,6 +7,7 @@ RESET		= \033[0m
 
 # VARIABLES
 DB_NAME = your_database
+DB_PASSWORD = your_password
 DB_USER = your_username
 DB_CONTAINER = postgres
 
@@ -22,7 +23,7 @@ DOCKER =  docker compose -f ${DOCKER_DIR} --env-file ${ENV_FILE} -p camagru
 %:
 	@:
 
-all: up seed
+all: up
 
 start: up
 
@@ -32,7 +33,7 @@ up:
 
 down:
 	@echo "${RED}Stopping containers...${RESET}"
-	@${DOCKER} down -v
+	@${DOCKER} down
 
 stop:
 	@echo "${RED}Stopping containers...${RESET}"
@@ -55,12 +56,12 @@ frankenphp:
 	@echo "${GREEN}Running frankenphp ...${RESET}"
 	@${DOCKER} exec frankenphp sh
 
-seed: up
+seed: delete up
 # wait for postgres to start
 	@sleep 2		
-	docker exec -e PGPASSWORD=your_password -it $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME) -h postgres -c "\i /docker-entrypoint-initdb.d/init.sql"
-	docker exec -e PGPASSWORD=your_password -it $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME) -h postgres -c "\i /docker-entrypoint-initdb.d/seed_user.sql"
-	docker exec -e PGPASSWORD=your_password -it $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME) -h postgres -c "\i /docker-entrypoint-initdb.d/seed_posts.sql"
+	docker exec -e PGPASSWORD=${DB_PASSWORD} -it $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME) -h postgres -c "\i /docker-entrypoint-initdb.d/init.sql"
+	docker exec -e PGPASSWORD=${DB_PASSWORD} -it $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME) -h postgres -c "\i /docker-entrypoint-initdb.d/seed_user.sql"
+	docker exec -e PGPASSWORD=${DB_PASSWORD} -it $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME) -h postgres -c "\i /docker-entrypoint-initdb.d/seed_posts.sql"
 	@echo "${GREEN}Database seeding completed successfully!${RESET}"
 
 .PHONY: all start up down stop rebuild delete rebuild-no-cache frankenphp seed
