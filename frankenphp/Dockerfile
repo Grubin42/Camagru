@@ -1,9 +1,14 @@
 FROM dunglas/frankenphp
 
-# Installer les extensions PHP nécessaires
+# Installer les extensions PHP nécessaires et msmtp
 RUN apt-get update && apt-get install -y \
     libpq-dev \
+    msmtp \
     && docker-php-ext-install pdo pdo_pgsql \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copier le fichier de configuration msmtp dans le conteneur
+COPY .msmtprc /etc/msmtprc
+RUN chmod 600 /etc/msmtprc
 
 WORKDIR /var/www/html

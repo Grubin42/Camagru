@@ -4,9 +4,10 @@ use Camagru\Core\Router;
 use Camagru\Presentation\Controllers\HomeController;
 use Camagru\Presentation\Controllers\RegisterController;
 use Camagru\Presentation\Controllers\LoginController;
+use Camagru\Presentation\Controllers\PasswordResetController;
+
 $router = new Router();
 // Route pour la page d'accueil
-
 
 $router->addRoute('/', function() {
     $homeController = new HomeController();
@@ -22,7 +23,6 @@ $router->addRoute('/login', function() {
 
         $loginController->authenticate($username, $password);
     } else {
-        var_dump($_SERVER['REQUEST_METHOD']);
         $loginController->showLoginForm();
     }
 });
@@ -44,6 +44,17 @@ $router->addRoute('/register', function() {
 $router->addRoute('/logout', function() {
     $loginController = new LoginController();
     $loginController->logout();
+});
+
+
+$router->addRoute('/request-reset', function() {
+    $passwordResetController = new PasswordResetController();
+    $passwordResetController->requestPasswordReset();
+});
+
+$router->addRoute('/reset-password', function() {
+    $passwordResetController = new PasswordResetController();
+    $passwordResetController->resetPassword();
 });
 
 // $router->addRoute('/profile', function() {

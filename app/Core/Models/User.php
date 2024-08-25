@@ -32,4 +32,17 @@ class User
             'password' => $hashedPassword
         ]);
     }
+    
+    public function findByEmail(string $email): ?array
+    {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE email = :email LIMIT 1');
+        $stmt->execute(['email' => $email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+
+    public function updatePassword(int $userId, string $newPassword): bool
+    {
+        $stmt = $this->db->prepare('UPDATE users SET password = :password WHERE id = :id');
+        return $stmt->execute(['password' => password_hash($newPassword, PASSWORD_DEFAULT), 'id' => $userId]);
+    }
 }

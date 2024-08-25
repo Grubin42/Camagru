@@ -8,6 +8,7 @@
 
 /* Importation des styles des composants */
 @import url('components/nav.css');
+@import url('components/forms.css');
 @import url('components/footer.css');
 
 /* Importation des styles spécifiques aux pages */
