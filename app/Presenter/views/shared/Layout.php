@@ -10,7 +10,7 @@
         <nav>
             <ul>
                 <li><a href="/">Accueil</a></li>
-                <li><a href="/last-user">Dernier utilisateur</a></li>
+                <li><a href="/profile">Dernier utilisateur</a></li>
                 <!-- Ajouter d'autres liens ici -->
             </ul>
         </nav>

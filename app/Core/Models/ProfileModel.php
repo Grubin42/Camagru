@@ -5,7 +5,7 @@ namespace Camagru\Core\Models;
 use PDO;
 use Camagru\Core\Data\Connection;
 
-class User
+class ProfileModel
 {
     private PDO $db;
 

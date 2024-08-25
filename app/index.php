@@ -1,15 +1,22 @@
 <?php
 
 namespace Camagru;
+// PRESENTATION
+require_once __DIR__ . '/Presentation/Controllers/HomeController.php';
+require_once __DIR__ . '/Presentation/Controllers/LoginController.php';
+require_once __DIR__ . '/Presentation/Controllers/ProfileController.php';
 
+//MODEL
+require_once __DIR__ . '/Core/Models/ProfileModel.php';
+
+//SERVICE
+require_once __DIR__ . '/Infrastructure/Services/ProfileService.php';
+
+require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/Core/Data/Connection.php';
-require_once __DIR__ . '/Core/Models/User.php';
 require_once __DIR__ . '/Core/Router.php';
-require_once __DIR__ . '/Core/routes.php'; // Charger les routes
-require_once __DIR__ . '/Controller/HomeController.php';
-require_once __DIR__ . '/Controller/UserController.php';
-require_once __DIR__ . '/Service/UserService.php';
+// require_once __DIR__ . '/Core/routes.php'; // Charger les routes
 
 // Charger le routeur avec les routes définies
 $router = require __DIR__ . '/Core/routes.php';
