@@ -3,7 +3,7 @@
 namespace Camagru;
 
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/Core/functions.php'; // Inclure les fonctions globales si nécessaire
+require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/Core/Data/Connection.php';
 require_once __DIR__ . '/Core/Models/User.php';
 require_once __DIR__ . '/Core/Models/Post.php';
