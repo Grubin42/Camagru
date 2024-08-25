@@ -38,8 +38,12 @@ $router->addRoute('/login', function() {
 // Route pour ajouter un poste
 $router->addRoute('/posts', function() {
     $postController = new PostController();
-    $postController->showLastPosts();
+    $postController->createPost();
+});
 
+$router->addRoute('/supperpose-images', function() {
+    $postController = new PostController();
+    $postController->handleFormSubmit();
 });
 
 return $router;

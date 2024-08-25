@@ -22,10 +22,15 @@
 
 <div id="image-select">
     <h3>Select an Overlay Image:</h3>
-    <!-- Example transparent images -->
     <img src="/Presentation/Assets/img/blue-waves.png" onclick="selectOverlay(this.src)" alt="Overlay 1">
     <!-- Add more images as needed -->
 </div>
+
+<form id="photo-form" action="/supperpose-images" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="captured_image" id="captured_image_input">
+    <input type="hidden" name="overlay_image" id="overlay_image_input">
+    <input type="submit" value="Submit">
+</form>
 
 <script>
 
@@ -47,6 +52,20 @@
         }
     }
 
+    // TODO: remove this
+    document.getElementById('photo-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting immediately
+        
+        // Log form data to the console
+        const capturedImage = document.getElementById('captured_image_input').value;
+        const overlayImage = document.getElementById('overlay_image_input').value;
+        console.log('Captured Image:', capturedImage);
+        console.log('Overlay Image:', overlayImage);
+
+        // Submit the form after logging
+        event.target.submit(); // Continue with the form submission
+    });
+
     function selectOverlay(src) {
 
         console.log('Selected overlay:', src);
@@ -58,6 +77,9 @@
         overlayImage.style.border = '2px solid red';
         overlayImage.src = selectedOverlay;
         overlayImage.style.display = 'block';
+
+        // Set the data URL in the hidden input field for the form
+        document.getElementById('overlay_image_input').value = src;
     }   
 
 
@@ -80,38 +102,10 @@
         photo.src = dataURL;
         photo.style.display = 'block'; // Show the photo
 
-        overlayCapturedPhoto();
+        // Set the data URL in the hidden input field for the form
+        document.getElementById('captured_image_input').value = dataURL;
+
     }
-
-    function overlayCapturedPhoto() {
-        if (!selectedOverlay) return;
-
-        const canvas = document.getElementById('canvas');
-        const photo = document.getElementById('photo');
-        const overlayImage = document.getElementById('selected-image');
-
-        if (overlayImage) {
-            const resultCanvas = document.createElement('canvas');
-            resultCanvas.width = canvas.width;
-            resultCanvas.height = canvas.height;
-            const resultContext = resultCanvas.getContext('2d');
-
-            // Draw the captured photo on the result canvas
-            resultContext.drawImage(photo, 0, 0);
-
-            // Draw the selected overlay image on top of the captured photo
-            resultContext.drawImage(overlayImage, 0, 0);
-
-            // Convert the result canvas to data URL and display
-            const resultURL = resultCanvas.toDataURL('image/png');
-            photo.src = resultURL;
-        } else {
-            console.error("Element with id 'selected-image' not found.");
-        }
-    }
-
-    // Add event listener to the button
-    // document.getElementById('capture-button').addEventListener('click', capturePhoto);
 
     // Start the camera when the page loads
     window.onload = startCamera;
