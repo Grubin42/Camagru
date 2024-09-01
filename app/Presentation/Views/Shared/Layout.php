@@ -9,20 +9,18 @@
 <body>
     <header>
         <nav>
-            <div class="nav-left">
-                <a href="/" class="logo">Camagru</a>
-            </div>
-            <ul class="nav-center">
-                <li><a href="/posts">Posts</a></li>
+            <ul class="nav-right">
+                <li><a href="/posts">New post</a></li>
                 <li><a href="/profile">Profile</a></li>
-            </ul>
-            <div class="nav-right">
+                <li><a href="/home">Home</a></li>
+                <li>
                 <?php if (isset($_SESSION['user'])): ?>
                     <a href="/logout" class="btn-logout">Logout</a>
                 <?php else: ?>
                     <a href="/login" class="btn-login">Login</a>
                 <?php endif; ?>
-            </div>
+                </li>
+            </ul>
         </nav>
     </header>
 

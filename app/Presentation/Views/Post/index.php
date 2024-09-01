@@ -64,6 +64,7 @@
 
         // Submit the form after logging
         event.target.submit(); // Continue with the form submission
+        
     });
 
     function selectOverlay(src) {
