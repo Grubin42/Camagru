@@ -43,5 +43,17 @@ class PasswordResetService
         return false;
     }
 
+    public function resetPassword(string $token, string $newPassword): bool
+    {
+        $resetRecord = $this->passwordResetModel->findByToken($token);
+
+        if ($resetRecord && new \DateTime() < new \DateTime($resetRecord['expires_at'])) {
+            $this->userModel->updatePassword($resetRecord['user_id'], $newPassword); // On passe le mot de passe non haché
+            $this->passwordResetModel->deleteByToken($token);
+            return true;
+        }
+
+        return false;
+    }
     // Autres méthodes pour gérer la réinitialisation
 }

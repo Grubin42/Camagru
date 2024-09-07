@@ -33,7 +33,8 @@ class LoginController
             header('Location: /');
             exit();
         } else {
-            header('Location: /register');
+            $_SESSION['error_message'] = 'Identifiant ou mot de passe incorrect.';
+            header('Location: /login');
             exit();
         }
     }

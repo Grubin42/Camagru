@@ -1,8 +1,13 @@
 <h2>Connexion</h2>
 
-<!-- Affichage des erreurs s'il y en a -->
-<?php if (isset($error)): ?>
-    <p class="error"><?= $error ?></p>
+<!-- Affichage des erreurs depuis la session s'il y en a -->
+<?php if (isset($_SESSION['error_message'])): ?>
+    <div class="alert alert-danger">
+        <?= $_SESSION['error_message']; ?>
+        <br>
+        <a href="/register" class="btn btn-primary">Pas encore inscrit ? Inscrivez-vous ici</a>
+    </div>
+    <?php unset($_SESSION['error_message']); // Supprimer le message après l'affichage ?>
 <?php endif; ?>
 
 <form action="/login" method="POST">
