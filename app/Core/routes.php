@@ -5,6 +5,7 @@ use Camagru\Presentation\Controllers\HomeController;
 use Camagru\Presentation\Controllers\RegisterController;
 use Camagru\Presentation\Controllers\LoginController;
 use Camagru\Presentation\Controllers\PasswordResetController;
+use Camagru\Presentation\Controllers\PostController;
 
 $router = new Router();
 // Route pour la page d'accueil
@@ -57,15 +58,21 @@ $router->addRoute('/reset-password', function() {
     $passwordResetController->resetPassword();
 });
 
-// $router->addRoute('/profile', function() {
-//     if (!isset($_SESSION['user'])) {
-//         header('Location: /login');
-//         exit();
-//     }
+$router->addRoute('/posts', function() {
+    // Vérification si l'utilisateur est connecté
+    if (isset($_SESSION['user'])) {
+        $postController = new PostController();
+        $postController->showCreatePostForm();
+    } else {
+        // Si l'utilisateur n'est pas connecté, redirection vers la page de connexion
+        header('Location: /login');
+        exit();
+    }
+});
 
-//     $profileController = new ProfileController();
-//     $profileController->showProfile();
-// });
-// Ajouter d'autres routes ici...
+$router->addRoute('/posts/save', function() {
+    $postController = new PostController();
+    $postController->savePost();
+});
 
 return $router;

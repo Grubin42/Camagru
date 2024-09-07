@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS commentaire (
     post_id INT REFERENCES post(id) ON DELETE CASCADE
 );
 
--- Correction du nom de la table et des colonnes pour éviter les conflits
 CREATE TABLE IF NOT EXISTS likes (
     id SERIAL PRIMARY KEY,
     post_id INT REFERENCES post(id) ON DELETE CASCADE,

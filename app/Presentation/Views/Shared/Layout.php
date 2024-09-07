@@ -13,8 +13,10 @@
                 <a href="/" class="logo">Camagru</a>
             </div>
             <ul class="nav-center">
-                <li><a href="/posts">Posts</a></li>
-                <li><a href="/profile">Profile</a></li>
+                <?php if (isset($_SESSION['user'])): ?>
+                    <li><a href="/posts">Posts</a></li>
+                    <li><a href="/profile">Profile</a></li>
+                <?php endif; ?>
             </ul>
             <div class="nav-right">
                 <?php if (isset($_SESSION['user'])): ?>
