@@ -28,7 +28,7 @@ class PostModel
         }
 
     }
-    public function getAllImages() 
+    public function getAllImages() :array
     {
         $stmt = $this->db->query('SELECT * FROM post ORDER BY created_date DESC');
         $stmt->execute();
@@ -41,7 +41,25 @@ class PostModel
                 $post['image'] = base64_encode($imageStream);
             }
         }
-
         return $posts;
+    }
+    public function CreatePost($userId, $imageData)
+    {
+        // Debug pour voir si les données arrivent
+        if (!$imageData) {
+            echo "Erreur : l'image fusionnée est vide.";
+            return;
+        }
+    
+        // Insérer dans la base de données
+        $stmt = $this->db->prepare('INSERT INTO post (image, user_id) VALUES (:image, :user_id)');
+        $stmt->bindParam(':image', $imageData, PDO::PARAM_LOB);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+    
+        if (!$stmt->execute()) {
+            // Debug pour l'insertion
+            echo "Erreur lors de l'insertion en base de données.";
+            return;
+        }
     }
 }

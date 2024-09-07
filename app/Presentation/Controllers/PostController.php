@@ -25,4 +25,18 @@ class PostController {
         header('Location: /');
         exit; 
     }
+
+    public function SavePost()
+    {
+        $image = $_POST["image"];
+        $sticker = $_POST["sticker"];
+        $capturedImage = str_replace('data:image/png;base64,', '', $image);
+        $capturedImage = base64_decode($capturedImage);
+        $capturedstiker = str_replace('data:image/png;base64,', '', $sticker);
+        $capturedsticker = base64_decode($capturedstiker);
+
+        $this->PostService->MergeImage($capturedImage, $capturedsticker);
+        header('Location: /');
+        exit();
+    }
 }

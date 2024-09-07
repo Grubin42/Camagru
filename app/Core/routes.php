@@ -70,21 +70,21 @@ $router->addRoute('/register', function() {
 
 // Route pour ajouter un poste
 $router->addRoute('/post', function() {
-    $postController = new PostController();
+    if(isset($_SESSION['user'])) 
+    {
+        $postController = new PostController();
+        $postController->Index();
+    }
+    header("Location: /login");
+});
+
+$router->addRoute('/post/save', function() {
     if(isset($_SESSION['user'])) 
     {
         if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            // Vérifier que le fichier est bien envoyé
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $fileTmpPath = $_FILES['image']['tmp_name'];
-                $imageContent = file_get_contents($fileTmpPath);
-                $postController->ImageRegister($imageContent);
-                echo "L'image a été téléchargée et sauvegardée avec succès.";
-            } else {
-                echo "Une erreur s'est produite lors du téléchargement de l'image.";
-            }
+            $postController = new PostController();
+            $postController->SavePost();
         }
-        $postController->Index();
     }
     header("Location: /login");
 });
