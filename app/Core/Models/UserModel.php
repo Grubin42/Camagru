@@ -22,6 +22,13 @@ class UserModel
         $stmt = $this->db->query('SELECT username, email FROM users ORDER BY id DESC LIMIT 1');
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
+    public function Login(string $username): ?array
+    {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE username = :username LIMIT 1');
+        
+        $stmt->execute(['username' => $username]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
 
     public function RegisterUser($username, $password, $email)
     {

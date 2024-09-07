@@ -15,15 +15,33 @@ class PostModel
         $this->db = Connection::getDBConnection();
     }
 
-    public function ImageRegister($imageContent) {
+    // pas oublier de recuperer l'id de l'utilisateur pour l affichage de l'image
+    public function ImageRegister($image) {
+        
         try {
-            // Insérez les données dans la base de données. Utilisez le `PDO::PARAM_LOB` pour indiquer qu'il s'agit d'un objet BLOB
-            $stmt = $this->db->prepare('INSERT INTO post (imageContent, user_id) VALUES (:imageContent, :user_id)');
-            $stmt->bindValue(':imageContent', $imageContent, PDO::PARAM_LOB);
-            $stmt->bindValue(':user_id', 1, PDO::PARAM_INT); // Assurez-vous que le user_id est valide
+            $stmt = $this->db->prepare('INSERT INTO post (image, user_id) VALUES (:image, :user_id)');
+            $stmt->bindValue(':image', $image, PDO::PARAM_LOB);
+            $stmt->bindValue(':user_id', $_SESSION['user']['id'], PDO::PARAM_INT); // Assurez-vous que le user_id est valide
             $stmt->execute();
         } catch (PDOException $e) {
             echo 'Échec de l\'insertion : ' . $e->getMessage();
         }
+
+    }
+    public function getAllImages() 
+    {
+        $stmt = $this->db->query('SELECT * FROM post ORDER BY created_date DESC');
+        $stmt->execute();
+        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        foreach ($posts as &$post) {
+            // Lire le contenu du stream
+            if (is_resource($post['image'])) {
+                $imageStream = stream_get_contents($post['image']);
+                $post['image'] = base64_encode($imageStream);
+            }
+        }
+
+        return $posts;
     }
 }

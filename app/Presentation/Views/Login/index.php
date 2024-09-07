@@ -2,16 +2,30 @@
     <div class="card shadow mt-5">
         <div class="card-body text-center my-auto">
             <h1>Page de connexion</h1>
-            <form action="/login" method="post">
-                <div class="mb-3">
-                    <label for="username">Nom d'utilisateur :</label>
-                    <input type="text" name="username" id="username" class="form-control-m m-2" required>
+            <?php if (isset($_SESSION['error_message'])): ?>
+                <div class="alert alert-danger">
+                    <?= htmlspecialchars($_SESSION['error_message']) ?>
                 </div>
-                <div class="mb-3">
-                    <label for="password">Mot de passe :</label>
-                    <input type="password" name="password" id="password" class="form-control-m m-2" required>
+                <?php
+                // Effacer le message d'erreur après l'affichage
+                unset($_SESSION['error_message']);
+                ?>
+            <?php endif; ?>
+            <form action="/login" method="post" class="d-flex flex-column align-items-center">
+                <!-- Username -->
+                <div class="mb-3 d-flex justify-content-center align-items-center" style="width: 400px;">
+                    <label for="username" class="form-label" style="width: 150px;">Nom d'utilisateur :</label>
+                    <input type="text" name="username" id="username" class="form-control" style="flex: 1;" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Se connecter</button>
+
+                <!-- Password -->
+                <div class="mb-3 d-flex justify-content-center align-items-center" style="width: 400px;">
+                    <label for="password" class="form-label" style="width: 150px;">Mot de passe :</label>
+                    <input type="password" name="password" id="password" class="form-control" style="flex: 1;" required>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary mt-3">Se connecter</button>
             </form>
         </div>
     </div>

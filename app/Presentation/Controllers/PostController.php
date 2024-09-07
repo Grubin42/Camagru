@@ -19,8 +19,8 @@ class PostController {
         ]);
     }
 
-    public function ImageRegister(string $imageContent) {
-        $this->PostService->ImageRegister($imageContent);
+    public function ImageRegister(string $image) {
+        $this->PostService->ImageRegister($image);
 
         header('Location: /');
         exit; 

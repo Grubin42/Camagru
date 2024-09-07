@@ -15,4 +15,9 @@ class PostService
     {
         return $this->PostModel->ImageRegister($imageContent);
     }
+
+    public function GetAllImage(): array
+    {
+        return $this->PostModel->GetAllImages();
+    }
 }
