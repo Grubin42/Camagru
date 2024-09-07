@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS post (
     user_id INT REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS commentaire (
+-- TODO: change commentaire to comment
+CREATE TABLE IF NOT EXISTS commentaire (        
     id SERIAL PRIMARY KEY,
     commentaire TEXT NOT NULL,
     username VARCHAR(50) NOT NULL,

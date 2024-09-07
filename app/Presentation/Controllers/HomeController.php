@@ -5,16 +5,23 @@ namespace Presentation\Controllers;
 
 use Camagru\Infrastructure\Services\HomeService;
 
+use Camagru\Infrastructure\Services\PostService;
+
 class HomeController {
    // private $Home_service;
 
-   // public function __construct() {
-   //     $this->Home_service = new HomeService();
-   // }
+   private $postService;
+
+   public function __construct() {
+         $this->postService = new PostService();
+   }
 
     public function Index() {
+        $posts = $this->postService->showAllPost(); 
+
         renderView(__DIR__ . '/../Views/Shared/Layout.php', [
-            'view' => __DIR__ . '/../Views/Home/index.php'
+            'view' => __DIR__ . '/../Views/Home/index.php',
+            'posts' => $posts,
         ]);
     }
 }

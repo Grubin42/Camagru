@@ -14,48 +14,46 @@ class Post
         $this->db = Connection::getDBConnection();
     }
 
-    /**
-     * Retrieve all posts with their associated comments.
-     */
-    public function getAllPostsWithComments(): array
-    {
-        $sql = "
-            SELECT p.id as post_id, p.image, p.created_at, u.username,
-                   c.id as comment_id, c.content as comment_content, c.created_at as comment_created_at, c.username as comment_username
-            FROM post p
-            JOIN users u ON p.user_id = u.id
-            LEFT JOIN comment c ON p.id = c.post_id
-            ORDER BY p.created_at DESC, c.created_at ASC
-        ";
+    public function getAllPosts() {
+        $query = "SELECT id, image, user_id, created_date FROM post ORDER BY created_date DESC"; // Adjust to your desired order
         
-        $stmt = $this->db->query($sql);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
 
-        $posts = [];
-        foreach ($results as $row) {
-            $postId = $row['post_id'];
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all posts as an associative array //TODO: check what is means
+    }
 
-            if (!isset($posts[$postId])) {
-                $posts[$postId] = [
-                    'post_id' => $row['post_id'],
-                    'image' => $row['image'],
-                    'created_at' => $row['created_at'],
-                    'username' => $row['username'],
-                    'comments' => [],
-                ];
-            }
 
-            if ($row['comment_id'] !== null) {
-                $posts[$postId]['comments'][] = [
-                    'comment_id' => $row['comment_id'],
-                    'content' => $row['comment_content'],
-                    'created_at' => $row['comment_created_at'],
-                    'username' => $row['comment_username']
-                ];
+    public function getLastPosts(int $limit = 5): array
+    {
+        $stmt = $this->db->query('SELECT * FROM post ORDER BY created_date DESC LIMIT ' . $limit);
+        $stmt->execute();
+        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Parcourir les posts pour convertir l'image en base64
+        foreach ($posts as &$post) {
+            // Lire le contenu du stream
+            if (is_resource($post['image'])) {
+                $imageStream = stream_get_contents($post['image']);
+                $post['image'] = base64_encode($imageStream);
             }
         }
-
-        return array_values($posts); // Re-indexing array to have a numeric index
+    
+        return $posts;
     }
+
+    public function savePost($userId, $imagePath) {
+        // Read the image file content
+        $imageContent = file_get_contents($imagePath);
+
+        //TODO: try catch
+                $stmt = $this->db->prepare('INSERT INTO post (image, user_id) VALUES (:image, :user_id)');
+                $stmt->bindValue(':image', $imageContent, PDO::PARAM_LOB);
+                $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT); // Assurez-vous que le user_id est valide
+                $stmt->execute();
+                return $this->db->lastInsertId();
+        }
+
+
 
 }

@@ -22,7 +22,8 @@
 
 <div id="image-select">
     <h3>Select an Overlay Image:</h3>
-    <img src="/Presentation/Assets/img/blue-waves.png" onclick="selectOverlay(this.src)" alt="Overlay 1">
+    <img src="/Presentation/Assets/img/pinguin.gif" onclick="selectOverlay(this.src)" alt="Overlay 1">
+    <img src="/Presentation/Assets/img/lion.jpg" onclick="selectOverlay(this.src)" alt="Overlay 2">
     <!-- Add more images as needed -->
 </div>
 
@@ -59,8 +60,6 @@
         // Log form data to the console
         const capturedImage = document.getElementById('captured_image_input').value;
         const overlayImage = document.getElementById('overlay_image_input').value;
-        console.log('Captured Image:', capturedImage);
-        console.log('Overlay Image:', overlayImage);
 
         // Submit the form after logging
         event.target.submit(); // Continue with the form submission

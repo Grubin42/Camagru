@@ -7,6 +7,7 @@ use Camagru\Infrastructure\Services\PostService;
 class PostController
 {
 
+
     private $postService;
 
     public function __construct() {
@@ -14,12 +15,17 @@ class PostController
         $this->postService = new PostService();
     }
     public function handleFormSubmit() {
+
+        session_start();
+
+        // TODO: make a service
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $capturedImageData = $_POST['captured_image'] ?? '';
             $overlayImagePath = $_POST['overlay_image'] ?? '';
 
              // Debug: Print received base64 data
-        error_log("Captured Image Data: " . substr($capturedImageData, 0, 100) . "..."); // Print first 100 characters
+            error_log("Captured Image Data: " . substr($capturedImageData, 0, 100) . "..."); // Print first 100 characters
     
             // Decode the base64 image
             $capturedImageData = str_replace('data:image/png;base64,', '', $capturedImageData);
@@ -53,11 +59,63 @@ class PostController
             imagedestroy($capturedImage);
             imagedestroy($overlayImage);
 
+
+            // Create output file path for the combined image.
+            $outputImagePath = '/Presentation/Assets/save/output_image.png'; // Ensure this directory is writablec
+
             // Return the output image path as JSON
             header('Content-Type: application/json');
             echo json_encode(['imagePath' => 'output_image.png']);
-            exit; // Important to stop further output
+            
+            // Get the URL of the newly created image
+
+            // Redirect to the /publish page with the image path as a query parameter
+            $_SESSION['imagePath'] = 'output_image.png';
+
+            header('Location: /publish');
+            exit; 
         }
+    }
+
+    public function confirmationPublishPost() {
+        // renderView(__DIR__ . '/../Views/Shared/Layout.php', [
+        //     'view' => __DIR__ . '/../Views/Publish/index.php',
+        //     // 'supperposedImagePath' => $_POST['imagePath'] ?? '',
+        // ]);
+
+        session_start(); 
+
+        $imagePath = $_SESSION['imagePath'] ?? ''; 
+
+         // Optionally, unset the session variable if you don't need it anymore
+        unset($_SESSION['imagePath']); 
+
+        if (!$imagePath) {
+            // Handle the case where the image path is not available
+            echo 'No image available for publication.';
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // if(!isset($_POST['imagePath'])) {
+            //     die('No image path provided.'); //TODO: check `die` function
+            // }
+            // Publish the post
+            $this->postService->savePost(1, $imagePath);
+
+
+            // Redirect to the home page
+            header('Location: /home');
+            exit;
+        }
+    }
+  
+
+    public function publishPost() {
+        renderView(__DIR__ . '/../Views/Shared/Layout.php', [
+            'view' => __DIR__ . '/../Views/Publish/index.php',
+            // 'supperposedImagePath' => $_POST['imagePath'] ?? '',
+        ]);
     }
     
 
@@ -65,7 +123,7 @@ class PostController
     {
         // $posts = $this->postService->getLastPosts();
         renderView(__DIR__ . '/../Views/Shared/Layout.php', [
-            'view' => __DIR__ . '/../Views/Post/index.php',
+            'view' => __DIR__ . '/../Views/Create/index.php',
         ]);
     }
 }
