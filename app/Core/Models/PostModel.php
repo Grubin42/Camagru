@@ -46,46 +46,49 @@ class PostModel
     }
     */
     public function getAllImages() :array
-{
-    // Requête SQL pour récupérer les posts et leurs commentaires avec une jointure
-    $sql = "SELECT post.id as post_id, post.image, post.created_date, 
-                   commentaire.id as comment_id, commentaire.commentaire, commentaire.username, commentaire.created_date as comment_date
-            FROM post
-            LEFT JOIN commentaire ON post.id = commentaire.post_id
-            ORDER BY post.created_date DESC";
+    {
+        // Requête SQL pour récupérer les posts, leurs commentaires, et le nombre de likes
+        $sql = "SELECT post.id as post_id, post.image, post.created_date, 
+                       commentaire.id as comment_id, commentaire.commentaire, commentaire.username, commentaire.created_date as comment_date,
+                       COUNT(likes.id) as like_count  -- Compter les likes
+                FROM post
+                LEFT JOIN commentaire ON post.id = commentaire.post_id
+                LEFT JOIN likes ON post.id = likes.post_id  -- Joindre la table des likes
+                GROUP BY post.id, commentaire.id  -- Grouper les résultats pour éviter les doublons
+                ORDER BY post.created_date DESC";
+        
+        $stmt = $this->db->query($sql);
+        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    $stmt = $this->db->query($sql);
-    $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // Organiser les résultats pour associer les commentaires à leurs posts
-    $groupedPosts = [];
-    foreach ($posts as $row) {
-        $postId = $row['post_id'];
-
-        // Si le post n'a pas encore été ajouté, on l'ajoute
-        if (!isset($groupedPosts[$postId])) {
-            $groupedPosts[$postId] = [
-                'id' => $row['post_id'],
-                'image' => base64_encode(stream_get_contents($row['image'])),
-                'created_date' => $row['created_date'],
-                'comments' => []  // Initialisation des commentaires
-            ];
+        // Organiser les résultats pour associer les commentaires et les likes à leurs posts
+        $groupedPosts = [];
+        foreach ($posts as $row) {
+            $postId = $row['post_id'];
+    
+            // Si le post n'a pas encore été ajouté, on l'ajoute
+            if (!isset($groupedPosts[$postId])) {
+                $groupedPosts[$postId] = [
+                    'id' => $row['post_id'],
+                    'image' => base64_encode(stream_get_contents($row['image'])),
+                    'created_date' => $row['created_date'],
+                    'like_count' => $row['like_count'],  // Nombre de likes
+                    'comments' => []  // Initialisation des commentaires
+                ];
+            }
+    
+            // Ajouter les commentaires
+            if (!empty($row['comment_id'])) {
+                $groupedPosts[$postId]['comments'][] = [
+                    'comment_id' => $row['comment_id'],
+                    'commentaire' => $row['commentaire'],
+                    'username' => $row['username'],
+                    'comment_date' => $row['comment_date']
+                ];
+            }
         }
-
-        // Si le commentaire est présent, l'ajouter à la liste des commentaires
-        if (!empty($row['comment_id'])) {
-            $groupedPosts[$postId]['comments'][] = [
-                'comment_id' => $row['comment_id'],
-                'commentaire' => $row['commentaire'],
-                'username' => $row['username'],
-                'comment_date' => $row['comment_date']
-            ];
-        }
+    
+        return array_values($groupedPosts);
     }
-
-    // Retourner les posts avec leurs commentaires
-    return array_values($groupedPosts);
-}
     public function saveImageToDatabase($imageData): bool {
         try {
             $userId = $_SESSION['user']['id'];

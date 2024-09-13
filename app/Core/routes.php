@@ -108,4 +108,16 @@ $router->addRoute('/post/add_comment', function() {
     }
     header("Location: /");
 });
+
+$router->addRoute('/post/like', function() {
+    if(isset($_SESSION['user'])) 
+    {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $HomeController = new HomeController();
+            $HomeController->likePost();
+        }
+    }
+    header("Location: /");
+});
+
 return $router;

@@ -28,4 +28,13 @@ class HomeController {
         $comment = $_POST["comment"];
         $this->HomeService->AddComment($post_id, $comment);
     }
+    public function likePost() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $postId = $_POST['post_id'];
+            $userId = $_SESSION['user']['id'];  // Récupérer l'ID de l'utilisateur connecté
+    
+            // Appeler la méthode du service pour ajouter le like
+            $this->HomeService->LikePost($postId, $userId);
+        }
+    }
 }

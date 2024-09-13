@@ -10,10 +10,19 @@
                     <!-- Affichage du post -->
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="card-title">Posté le : <?= date('d-m-Y', strtotime($post['created_date'])) ?></h5>
+                            <h6 class="card-title">Posté le : <?= date('d-m-Y', strtotime($post['created_date'])) ?></h6>
+                            <!-- Bouton Like -->
                             <?php if (isset($_SESSION['user'])): ?>
-                                <button class="btn btn-outline-primary btn-sm">Like <i class="bi bi-hand-thumbs-up"></i></button>
-                            <?php endif; ?>   
+                                <form method="post" action="/post/like">
+                                    <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                                    <button class="btn btn-outline-primary btn-sm" type="submit">
+                                        Like <i class="bi bi-hand-thumbs-up"></i>
+                                    </button>
+                                    <span><?= $post['like_count'] ?> likes</span>
+                                </form>
+                            <?php else: ?>
+                                <span><?= $post['like_count'] ?> likes</span>
+                            <?php endif; ?>
                         </div>
                         <div class="text-center my-3">
                             <img src="data:image/png;base64,<?= $post['image'] ?>" alt="Post Image" class="img-fluid">
