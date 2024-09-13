@@ -78,6 +78,15 @@ $router->addRoute('/post', function() {
     header("Location: /login");
 });
 
+$router->addRoute('/post/MyImage', function() {
+    if(isset($_SESSION['user'])) 
+    {
+        $postController = new PostController();
+        $postController->Index();
+    }
+    header("Location: /login");
+});
+
 $router->addRoute('/post/save', function() {
     if(isset($_SESSION['user'])) 
     {
@@ -86,7 +95,7 @@ $router->addRoute('/post/save', function() {
             $postController->SavePost();
         }
     }
-    header("Location: /login");
+    header("Location: /");
 });
 
 return $router;

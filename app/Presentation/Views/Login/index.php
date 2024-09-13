@@ -13,13 +13,13 @@
             <?php endif; ?>
             <form action="/login" method="post" class="d-flex flex-column align-items-center">
                 <!-- Username -->
-                <div class="mb-3 d-flex justify-content-center align-items-center" style="width: 400px;">
+                <div class="mb-3 d-flex justify-content-center align-items-center" style="width: 350px;">
                     <label for="username" class="form-label" style="width: 150px;">Nom d'utilisateur :</label>
                     <input type="text" name="username" id="username" class="form-control" style="flex: 1;" required>
                 </div>
 
                 <!-- Password -->
-                <div class="mb-3 d-flex justify-content-center align-items-center" style="width: 400px;">
+                <div class="mb-3 d-flex justify-content-center align-items-center" style="width: 350px;">
                     <label for="password" class="form-label" style="width: 150px;">Mot de passe :</label>
                     <input type="password" name="password" id="password" class="form-control" style="flex: 1;" required>
                 </div>
