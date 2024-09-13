@@ -20,6 +20,7 @@ require_once __DIR__ . '/Infrastructure/Services/ProfileService.php';
 require_once __DIR__ . '/Infrastructure/Services/RegisterService.php';
 require_once __DIR__ . '/Infrastructure/Services/PostService.php';
 require_once __DIR__ . '/Infrastructure/Services/LoginService.php';
+require_once __DIR__ . '/Infrastructure/Services/HomeService.php';
 
 require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/config.php';

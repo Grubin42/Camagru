@@ -98,4 +98,14 @@ $router->addRoute('/post/save', function() {
     header("Location: /");
 });
 
+$router->addRoute('/post/add_comment', function() {
+    if(isset($_SESSION['user'])) 
+    {
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            $HomeController = new HomeController();
+            $HomeController->AddComment();
+        }
+    }
+    header("Location: /");
+});
 return $router;

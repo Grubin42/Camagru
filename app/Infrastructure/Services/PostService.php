@@ -18,7 +18,7 @@ class PostService
 
     public function GetAllImage(): array
     {
-        return $this->PostModel->GetAllImages();
+        return $this->PostModel->getAllImages();
     }
     
     public function mergeAndSaveImage($photoData, $stickerData): bool {

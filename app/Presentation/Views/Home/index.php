@@ -10,21 +10,25 @@
                     <!-- Affichage du post -->
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="card-title">Posté le : <?= date('d-m-Y', strtotime($post['created_date'])) ?></h5>
-                            <button class="btn btn-outline-primary btn-sm">Like <i class="bi bi-hand-thumbs-up"></i></button>
+                            <h5 class="card-title">Posté le : <?= date('d-m-Y', strtotime($post['created_date'])) ?></h5>
+                            <?php if (isset($_SESSION['user'])): ?>
+                                <button class="btn btn-outline-primary btn-sm">Like <i class="bi bi-hand-thumbs-up"></i></button>
+                            <?php endif; ?>   
                         </div>
                         <div class="text-center my-3">
                             <img src="data:image/png;base64,<?= $post['image'] ?>" alt="Post Image" class="img-fluid">
                         </div>
                     </div>
-
+                    
                     <!-- Bouton pour afficher/masquer les commentaires -->
-                    <div class="card-footer bg-white">
-                        <button class="btn btn-link text-decoration-none" data-bs-toggle="collapse" data-bs-target="#comments-<?= $post['id'] ?>" aria-expanded="false">
-                            Voir les commentaires
-                        </button>
-                    </div>
-
+                    <?php if (isset($_SESSION['user'])): ?>
+                        <div class="card-footer bg-white">
+                            <button class="btn btn-link text-decoration-none" data-bs-toggle="collapse" data-bs-target="#comments-<?= $post['id'] ?>" aria-expanded="false">
+                                Voir les commentaires
+                            </button>
+                        </div>
+                    <?php endif; ?>
+                    
                     <!-- Section des commentaires avec collapse -->
                     <div class="collapse" id="comments-<?= $post['id'] ?>">
                         <div class="card-body">
@@ -33,7 +37,7 @@
                                 <ul class="list-group list-group-flush mb-3">
                                     <?php foreach ($post['comments'] as $comment): ?>
                                         <li class="list-group-item">
-                                            <strong><?= $comment['author'] ?>:</strong> <?= $comment['content'] ?>
+                                            <strong><?= htmlspecialchars($comment['username']) ?>:</strong> <?= htmlspecialchars($comment['commentaire']) ?>
                                         </li>
                                     <?php endforeach; ?>
                                 </ul>
