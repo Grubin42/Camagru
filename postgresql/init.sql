@@ -10,7 +10,9 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL,
     password VARCHAR(100) NOT NULL,
-    notif BOOLEAN DEFAULT TRUE
+    notif BOOLEAN DEFAULT TRUE,
+    reset_token VARCHAR(100),
+    reset_token_expiration TIMESTAMPTZ
 );
 
 CREATE TABLE IF NOT EXISTS post (
@@ -28,7 +30,6 @@ CREATE TABLE IF NOT EXISTS commentaire (
     post_id INT REFERENCES post(id) ON DELETE CASCADE
 );
 
--- Correction du nom de la table et des colonnes pour éviter les conflits
 CREATE TABLE IF NOT EXISTS likes (
     id SERIAL PRIMARY KEY,
     post_id INT REFERENCES post(id) ON DELETE CASCADE,

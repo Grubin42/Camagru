@@ -12,6 +12,8 @@ class HomeController {
         $this->Postservice = new PostService();
         $this->HomeService = new HomeService();
     }
+
+    /*
     public function Index()
     {
         $posts = $this->Postservice->GetAllImage();
@@ -21,7 +23,34 @@ class HomeController {
             'posts' => $posts
         ]);
     }
+    */
+    public function Index()
+    {
+        
+        // Nombre de posts par page
+        $postsPerPage = 5;
 
+        // Page actuelle (par défaut 1 si non spécifié)
+        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+        // Calcul de l'offset
+        $offset = ($currentPage - 1) * $postsPerPage;
+
+        // Récupérer les posts limités et le nombre total de posts
+        $posts = $this->Postservice->GetPostsPaginated($postsPerPage, $offset);
+        $totalPosts = $this->Postservice->GetTotalPosts();
+
+        // Calcul du nombre total de pages
+        $totalPages = ceil($totalPosts / $postsPerPage);
+
+        // Passer les données à la vue
+        renderView(__DIR__ . '/../Views/Shared/Layout.php', [
+            'view' => __DIR__ . '/../Views/Home/index.php',
+            'posts' => $posts,
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages
+        ]);
+    }
     public function AddComment()
     {
         $post_id = $_POST["post_id"];

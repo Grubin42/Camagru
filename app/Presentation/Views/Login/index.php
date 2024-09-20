@@ -23,9 +23,12 @@
                     <label for="password" class="form-label" style="width: 150px;">Mot de passe :</label>
                     <input type="password" name="password" id="password" class="form-control" style="flex: 1;" required>
                 </div>
+                <div class="d-flex justify-content-between align-items-center" style="width: 350px;">
+                    <button type="submit" class="btn btn-primary mt-3">Se connecter</button>
 
-                <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary mt-3">Se connecter</button>
+                    <!-- Forgot Password Button -->
+                    <a href="/forgot-password" class="btn btn-link mt-3">Mot de passe oublié ?</a>
+                </div>
             </form>
         </div>
     </div>

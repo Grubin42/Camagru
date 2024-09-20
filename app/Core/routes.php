@@ -7,6 +7,9 @@ use Presentation\Controllers\LoginController;
 use Presentation\Controllers\RegisterController;
 use Presentation\Controllers\PostController;
 use Presentation\Controllers\LogoutController;
+use Presentation\Controllers\ErrorController;
+use Presentation\Controllers\ForgotPasswordController;
+use Presentation\Controllers\ResetPasswordController;
 
 $router = new Router();
 // Route pour la page d'accueil
@@ -36,6 +39,19 @@ $router->addRoute('/login', function() {
         $loginController->Login($username, $password);
     }
     $loginController->Index();
+});
+
+$router->addRoute('/forgot-password', function() {
+    $forgotPasswordController = new ForgotPasswordController();
+
+    // Vérifie si la méthode HTTP est GET ou POST
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Traitement de l'envoi du lien de réinitialisation
+        $forgotPasswordController->sendResetLink();
+    } else {
+        // Affichage du formulaire "Mot de passe oublié"
+        $forgotPasswordController->showForgotPasswordForm();
+    }
 });
 // Route pour ce connecter 
 $router->addRoute('/logout', function() {
@@ -118,6 +134,16 @@ $router->addRoute('/post/like', function() {
         }
     }
     header("Location: /");
+});
+
+$router->addRoute('/error', function() {
+    $ErrorController = new ErrorController();
+    $ErrorController->showErrorPage(null);
+});
+
+$router->addRoute('/reset-password', function() {
+    $resetPasswordController = new ResetPasswordController();
+    $resetPasswordController->resetPassword();
 });
 
 return $router;

@@ -116,4 +116,13 @@ class PostService
     {
         return $this->PostModel->getImagesByUserId();
     }
+
+    public function GetPostsPaginated($postsPerPage, $offset)
+    {
+        return $this->PostModel->GetPostsPaginated($postsPerPage,$offset);
+    }
+    public function GetTotalPosts()
+    {
+        return $this->PostModel->GetTotalPosts();
+    }
 }

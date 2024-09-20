@@ -132,7 +132,80 @@ class PostModel
                 $post['image'] = base64_encode($imageStream);
             }
         }
-
         return $posts;
+    }
+    public function GetPostsPaginated($limit, $offset)
+    {
+        // Requête pour récupérer les posts et compter les likes
+        $sql = "SELECT post.id as post_id, post.image, post.created_date, 
+        COUNT(likes.id) as like_count  -- Compter les likes
+        FROM post
+        LEFT JOIN likes ON post.id = likes.post_id
+        GROUP BY post.id
+        ORDER BY post.created_date DESC
+        LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Ajouter les images et les commentaires
+        $groupedPosts = [];
+        foreach ($posts as $row) {
+        $postId = $row['post_id'];
+
+        // Ajouter les posts avec les images et les likes
+        $groupedPosts[$postId] = [
+            'id' => $postId,
+            'image' => base64_encode(stream_get_contents($row['image'])),
+            'created_date' => $row['created_date'],
+            'like_count' => $row['like_count'],
+            'comments' => []  // Les commentaires seront ajoutés séparément
+            ];
+        }
+
+        // Récupérer les commentaires pour les posts affichés
+        $this->addCommentsToPosts($groupedPosts);
+
+        return array_values($groupedPosts);
+    }
+    private function addCommentsToPosts(array &$posts)
+    {
+        $postIds = array_keys($posts);
+
+        if (empty($postIds)) {
+            return;  // Ne pas continuer si aucun post n'est trouvé
+        }
+
+        $sql = "SELECT commentaire.id as comment_id, commentaire.commentaire, commentaire.username, commentaire.created_date as comment_date, commentaire.post_id
+                FROM commentaire
+                WHERE commentaire.post_id IN (" . implode(',', $postIds) . ")
+                ORDER BY commentaire.created_date ASC";
+
+        $stmt = $this->db->query($sql);
+        $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Associer les commentaires aux posts
+        foreach ($comments as $comment) {
+            $postId = $comment['post_id'];
+
+            if (isset($posts[$postId])) {
+                $posts[$postId]['comments'][] = [
+                    'comment_id' => $comment['comment_id'],
+                    'commentaire' => $comment['commentaire'],
+                    'username' => $comment['username'],
+                    'comment_date' => $comment['comment_date']
+                ];
+            }
+        }
+    }
+    // Compter le nombre total de posts
+    public function GetTotalPosts()
+    {
+        $stmt = $this->db->query('SELECT COUNT(*) FROM post');
+        return $stmt->fetchColumn();
     }
 }
