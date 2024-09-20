@@ -38,7 +38,7 @@ class CommentModel
             error_log('Failed to save comment: ' . implode(', ', $stmt->errorInfo()));
             return false; // Return false if it fails
         }
-       
+
     }
 
     public function getCommentsByPostId($postId) {

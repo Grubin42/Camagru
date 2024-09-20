@@ -11,7 +11,7 @@ body {
 /* Header and Navigation */
 header {
     /* background-color: #FF00FE; */
-    color: #FF00FE;
+    /* color: #FF00FE; */
     padding: 10px 0;
 }
 
@@ -30,7 +30,7 @@ header nav ul li {
 
 header nav ul li a {
     text-decoration: none;
-    color: #FF00FE;
+    /* color: #FF00FE; */
     font-weight: bold;
     transition: color 0.3s;
 }
@@ -44,14 +44,12 @@ main {
     padding: 20px;
     max-width: 800px;
     margin: 20px auto;
-    /* background-color: #fff; */
-    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
     border-radius: 8px;
 }
 
 main h1 {
     text-align: center;
-    color: #FF00FE;
+    /* color: #FF00FE; */
 }
 
 main ul {
@@ -59,16 +57,28 @@ main ul {
     padding: 0;
 }
 
-main ul li {
-    /* background-color: #f9f9f9; */
-    margin: 10px 0;
+/* main ul li { */
+    /* margin: 10px 0;
     padding: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+    border-radius: 5px; */
+    /* transition: background-color 0.3s; */
+/* } */
+
+/* main ul li:hover {
+    background-color: #6332A7;
+} */
+
+/* button */
+button {
+    background-color:  #011641;
+    color: #FF00FE;
+    border: solid 1px #011641;
+    /* padding: 15px 32px; */
 }
 
-main ul li:hover {
+button:hover {
     background-color: #6332A7;
+    border: solid 1px #FF00FE;
 }
 
 /* Footer */

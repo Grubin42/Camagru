@@ -17,7 +17,6 @@ class CommentController
     
     public function saveComment() {
 
-        // session_start();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $username = $_POST['username'] ?? '';
@@ -27,12 +26,10 @@ class CommentController
             $result = $this->commentService->saveComment($username, $comment, $postId);
 
         if ($result !== false) {
-            // Comment saved successfully
             header('Location: /'); // Redirect to home page or wherever necessary
             exit;
         } else {
-            // Handle any errors related to comment saving
-            echo 'Error saving comment.';
+            echo 'Error saving comment.';   
         }
         }
     }

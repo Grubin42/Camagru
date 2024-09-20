@@ -1,0 +1,38 @@
+.post {
+  width: 100%; /* Parent takes the full width */
+  border: solid 1px #ff00fe;
+  border-radius: 7px;
+}
+
+.user-image {
+  width: 100%; /* Image takes the full width of the parent */
+  height: auto; /* Maintain aspect ratio */
+  /*    TODO: checker  if possible together */
+  border-top-right-radius: 6px; 
+  border-top-left-radius: 6px;
+  border-bottom: solid 1px #ff00fe;
+}
+
+.image-footer {
+  display: flex; /* Use flexbox for layout */
+  width: 100%;
+}
+
+.image-button-container {
+  flex: 1; /* Each button takes equal space */
+  padding: 10px; /* Add some padding for styling */
+  border: none; /* Remove default border */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  border-radius: 7px;
+}
+
+.view-comment-container {
+    display: flex;
+
+}
+
+.comment {
+    background-color: 244E74;
+    border-radius: 7px;
+    border: solid
+}

@@ -2,9 +2,11 @@
 
 use Camagru\Core\Router;
 use Presentation\Controllers\HomeController;
+use Presentation\Controllers\RegisterController;
 use Presentation\Controllers\LoginController;
 use Presentation\Controllers\PostController;
 use Presentation\Controllers\CommentController;
+use Presentation\Controllers\PasswordResetController;
 
 $router = new Router();
 // Route pour la page d'accueil
@@ -21,11 +23,51 @@ $router->addRoute('/', function() {
 
 // });
 
+$router->addRoute('/register', function() {
+    $registerController = new RegisterController();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+        $registerController->register($username, $email, $password);
+    } else {
+        $registerController->showRegisterForm();
+    }
+});
+
 // Route pour ce connecter 
 $router->addRoute('/login', function() {
-    $loginController = new LoginController();
-    $loginController->Index();
 
+    $loginController = new LoginController();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        $loginController->authenticate($username, $password);
+    } else {
+        $loginController->Index();
+    }
+
+    // $loginController = new LoginController();
+    // $loginController->Index();
+});
+
+$router->addRoute('/logout', function() {
+    $loginController = new LoginController();
+    $loginController->logout();
+});
+
+$router->addRoute('/request-reset', function() {
+    $passwordResetController = new PasswordResetController();
+    $passwordResetController->requestPasswordReset();
+});
+
+$router->addRoute('/reset-password', function() {
+    $passwordResetController = new PasswordResetController();
+    $passwordResetController->resetPassword();
 });
 
 

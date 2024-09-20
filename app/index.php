@@ -6,11 +6,12 @@ namespace Camagru;
 
 // PRESENTATION
 require_once __DIR__ . '/Presentation/Controllers/HomeController.php';
+require_once __DIR__ . '/Presentation/Controllers/RegisterController.php';
 require_once __DIR__ . '/Presentation/Controllers/LoginController.php';
 require_once __DIR__ . '/Presentation/Controllers/ProfileController.php';
 require_once __DIR__ . '/Presentation/Controllers/PostController.php';
-require_once __DIR__ . '/Presentation/Controllers/RegisterController.php';
 require_once __DIR__ . '/Presentation/Controllers/CommentController.php';
+require_once __DIR__ . '/Presentation/Controllers/PasswordResetController.php';
 
 //MODEL
 require_once __DIR__ . '/Core/Models/CommentModel.php';
@@ -18,15 +19,18 @@ require_once __DIR__ . '/Core/Models/LikeModel.php';
 require_once __DIR__ . '/Core/Models/PostModel.php';
 require_once __DIR__ . '/Core/Models/UserModel.php';
 require_once __DIR__ . '/Core/Models/CommentModel.php';
+require_once __DIR__ . '/Core/Models/PasswordReset.php';
 
 
 //SERVICE
 require_once __DIR__ . '/Infrastructure/Services/HomeService.php';
-require_once __DIR__ . '/Infrastructure/Services/LoginService.php';
-require_once __DIR__ . '/Infrastructure/Services/PostService.php';
-require_once __DIR__ . '/Infrastructure/Services/ProfileService.php';
 require_once __DIR__ . '/Infrastructure/Services/RegisterService.php';
+require_once __DIR__ . '/Infrastructure/Services/LoginService.php';
+require_once __DIR__ . '/Infrastructure/Services/PasswordResetService.php';
+require_once __DIR__ . '/Infrastructure/Services/PostService.php';
 require_once __DIR__ . '/Infrastructure/Services/CommentService.php';
+require_once __DIR__ . '/Infrastructure/Services/ProfileService.php';
+require_once __DIR__ . '/Infrastructure/Services/MailService.php';
 
 
 

@@ -1,3 +1,7 @@
+<head>
+    <link rel="stylesheet" href="/Presentation/Assets/css/feed.css">
+</head>
+
 <h1>Bienvenue sur Camagru</h1>
 <p>Ceci est la page d'accueil de votre application. Utilisez le menu de navigation pour explorer les fonctionnalités.</p>
 
@@ -5,15 +9,14 @@
     <h2>Les 5 derniers posts</h2>
     <ul>
         <?php foreach ($posts as $post): ?>
-            <li>
-                <img src="data:image/png;base64,<?= $post['image'] ?>" alt="Post Image">
-                <div>
-                    <p>Date: <?= $post['created_date'] ?></p>
-                    <p>id: <?= $post['id'] ?> </p>
-                    <button>like</button>
-                    <button onclick="toggleComments(<?= $post['id'] ?>)">view comments</button>
-                    <button onclick="toggleCommentInput(<?= $post['id'] ?>)">comment</button>
+            <li class="post">
+                <img class="user-image" src="data:image/png;base64,<?= $post['image'] ?>" alt="Post Image">
+                <div class="image-footer">
+                    <button class="image-button-container">like</button>
+                    <button class="image-button-container" onclick="toggleComments(<?= $post['id'] ?>)">view comments</button>
+                    <button class="image-button-container" onclick="toggleCommentInput(<?= $post['id'] ?>)">comment</button>
                 </div>
+                
                 <!-- Comment input form -->
                 <div id="comment-section-<?= $post['id'] ?>" class="comment-section" style="display: none;">
                     <form action="/comment" method="POST">
@@ -38,10 +41,9 @@
                             <?php endforeach; ?>
                         </ul>
                     <?php else: ?>
-                        <p>No comments available.</p>
+                        <p>No comments yet.</p>
                     <?php endif; ?>
                 </div>
-
             </li>
         <?php endforeach; ?>
     </ul>
