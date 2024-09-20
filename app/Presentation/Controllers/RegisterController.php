@@ -20,8 +20,12 @@ class RegisterController
         ]);
     }
 
-    public function register($username, $email, $password)
+    public function register()
     {
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        
         if ($this->registerService->register($username, $email, $password)) {
             header('Location: /login');
             exit();

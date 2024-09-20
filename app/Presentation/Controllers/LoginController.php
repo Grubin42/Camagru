@@ -20,8 +20,11 @@ class LoginController
         ]);
     }
 
-    public function authenticate($username, $password)
+    public function authenticate()
     {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -46,7 +49,7 @@ class LoginController
         }
 
         session_destroy();
-        header('Location: /login');
+        header('Location: /');
         exit();
     }
 }

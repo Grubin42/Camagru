@@ -14,23 +14,23 @@ class Post
         $this->db = Connection::getDBConnection();
     }
 
-    public function getLastPosts(int $limit = 5): array
-    {
-        $stmt = $this->db->query('SELECT * FROM post ORDER BY created_date DESC LIMIT ' . $limit);
-        $stmt->execute();
-        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // public function getLastPosts(int $limit = 5): array
+    // {
+    //     $stmt = $this->db->query('SELECT * FROM post ORDER BY created_date DESC LIMIT ' . $limit);
+    //     $stmt->execute();
+    //     $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-        // Parcourir les posts pour convertir l'image en base64
-        foreach ($posts as &$post) {
-            // Lire le contenu du stream
-            if (is_resource($post['image'])) {
-                $imageStream = stream_get_contents($post['image']);
-                $post['image'] = base64_encode($imageStream);
-            }
-        }
+    //     // Parcourir les posts pour convertir l'image en base64
+    //     foreach ($posts as &$post) {
+    //         // Lire le contenu du stream
+    //         if (is_resource($post['image'])) {
+    //             $imageStream = stream_get_contents($post['image']);
+    //             $post['image'] = base64_encode($imageStream);
+    //         }
+    //     }
     
-        return $posts;
-    }
+    //     return $posts;
+    // }
 
     public function createPost($userId, $imageData)
     {
@@ -48,8 +48,31 @@ class Post
         if (!$stmt->execute()) {
             // Debug pour l'insertion
             echo "Erreur lors de l'insertion en base de données.";
-            var_dump($stmt->errorInfo());
             return;
         }
+    }
+
+    public function getPostsPaginated(int $limit, int $offset): array
+    {
+        $stmt = $this->db->prepare('SELECT * FROM post ORDER BY created_date DESC LIMIT :limit OFFSET :offset');
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($posts as &$post) {
+            if (is_resource($post['image'])) {
+                $imageStream = stream_get_contents($post['image']);
+                $post['image'] = base64_encode($imageStream);
+            }
+        }
+
+        return $posts;
+    }
+
+    public function getTotalPosts(): int
+    {
+        $stmt = $this->db->query('SELECT COUNT(*) FROM post');
+        return (int) $stmt->fetchColumn();
     }
 }

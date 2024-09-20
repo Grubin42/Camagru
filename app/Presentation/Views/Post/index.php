@@ -39,7 +39,7 @@
     </div>
 
     <!-- Bouton pour soumettre le post -->
-    <form action="/posts/save" method="POST" id="post-form">
+    <form action="/posts" method="POST" id="post-form">
         <input type="hidden" id="captured-image" name="captured_image">
         <input type="hidden" id="selected-sticker" name="selected_sticker">
         <button type="submit">Soumettre</button>

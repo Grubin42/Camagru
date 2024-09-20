@@ -6,23 +6,22 @@ use Camagru\Presentation\Controllers\RegisterController;
 use Camagru\Presentation\Controllers\LoginController;
 use Camagru\Presentation\Controllers\PasswordResetController;
 use Camagru\Presentation\Controllers\PostController;
+use Camagru\Presentation\Controllers\LikeController;
 
 $router = new Router();
 // Route pour la page d'accueil
 
 $router->addRoute('/', function() {
-    $homeController = new HomeController();
-    $homeController->showHomePage();
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $postController = new PostController();
+    $postController->showPosts($page);
 });
 
 $router->addRoute('/login', function() {
     $loginController = new LoginController();
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-
-        $loginController->authenticate($username, $password);
+        $loginController->authenticate();
     } else {
         $loginController->showLoginForm();
     }
@@ -32,11 +31,7 @@ $router->addRoute('/register', function() {
     $registerController = new RegisterController();
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $username = $_POST['username'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        $registerController->register($username, $email, $password);
+        $registerController->register();
     } else {
         $registerController->showRegisterForm();
     }
@@ -62,7 +57,12 @@ $router->addRoute('/posts', function() {
     // Vérification si l'utilisateur est connecté
     if (isset($_SESSION['user'])) {
         $postController = new PostController();
-        $postController->showCreatePostForm();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $postController->savePost();
+        } else {
+            $postController->showCreatePostForm();
+        }
     } else {
         // Si l'utilisateur n'est pas connecté, redirection vers la page de connexion
         header('Location: /login');
@@ -70,9 +70,19 @@ $router->addRoute('/posts', function() {
     }
 });
 
-$router->addRoute('/posts/save', function() {
-    $postController = new PostController();
-    $postController->savePost();
+$router->addRoute('/like-post', function() {
+    $likeController = new LikeController();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_SESSION['user'])) {
+            // Gérer le like/unlike via le contrôleur
+            $likeController->toggleLike(); 
+        } else {
+            // Si l'utilisateur n'est pas connecté, renvoyer une réponse JSON avec une erreur
+            http_response_code(401); // Code HTTP 401 pour "Non autorisé"
+            echo json_encode(['error' => 'Vous devez être connecté pour liker un post.']);
+        }
+    }
 });
 
 return $router;

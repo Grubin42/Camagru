@@ -2,10 +2,10 @@
 
 namespace Camagru\Core\Models;
 
-use PDO;
 use Camagru\Core\Data\Connection;
+use PDO;
 
-class ProfileModel
+class Like
 {
     private PDO $db;
 
@@ -14,12 +14,45 @@ class ProfileModel
         $this->db = Connection::getDBConnection();
     }
 
-    /**
-     * Récupère le dernier utilisateur ajouté à la base de données.
-     */
-    public function getLastUser(): ?array
+    public function checkLikeExists($postId, $userId): bool
     {
-        $stmt = $this->db->query('SELECT username, email FROM users ORDER BY id DESC LIMIT 1');
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $stmt = $this->db->prepare('SELECT * FROM likes WHERE post_id = :post_id AND user_id = :user_id');
+        $stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return (bool)$stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function addLike($postId, $userId)
+    {
+        $stmt = $this->db->prepare('INSERT INTO likes (post_id, user_id) VALUES (:post_id, :user_id)');
+        $stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    public function removeLike($postId, $userId)
+    {
+        $stmt = $this->db->prepare('DELETE FROM likes WHERE post_id = :post_id AND user_id = :user_id');
+        $stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    public function getLikeCount($postId): int
+    {
+        $stmt = $this->db->prepare('SELECT COUNT(*) as like_count FROM likes WHERE post_id = :post_id');
+        $stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
+        $stmt->execute();
+        return (int)$stmt->fetch(PDO::FETCH_ASSOC)['like_count'];
+    }
+
+    public function userLikedPost($postId, $userId): bool
+    {
+        $stmt = $this->db->prepare('SELECT COUNT(*) as liked FROM likes WHERE post_id = :post_id AND user_id = :user_id');
+        $stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return (bool)$stmt->fetch(PDO::FETCH_ASSOC)['liked'];
     }
 }

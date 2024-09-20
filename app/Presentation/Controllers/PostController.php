@@ -21,14 +21,33 @@ class PostController
         ]);
     }
 
+    public function showPosts($page = 1)
+    {
+        $postsPerPage = 5;
+        $offset = ($page - 1) * $postsPerPage;
+
+        // Obtenir les posts avec pagination
+        $posts = $this->postService->getPostsPaginated($postsPerPage, $offset);
+
+        // Obtenir le nombre total de posts pour calculer le nombre de pages
+        $totalPosts = $this->postService->getTotalPosts();
+        $totalPages = ceil($totalPosts / $postsPerPage);
+
+        renderView(__DIR__ . '/../Views/Shared/Layout.php', [
+            'view' => __DIR__ . '/../Views/Home/index.php',
+            'posts' => $posts,
+            'currentPage' => $page,
+            'totalPages' => $totalPages
+        ]);
+    }
+
     public function savePost()
     {
         // Récupérer l'image capturée et le sticker depuis le formulaire
         $capturedImage = $_POST['captured_image'] ?? null;
         $selectedStickerUrl = $_POST['selected_sticker'] ?? null;
-        $userId = $_SESSION['user']['id'] ?? null;
     
-        if ($capturedImage && $selectedStickerUrl && $userId) {
+        if ($capturedImage && $selectedStickerUrl) {
             // Nettoyer les données des images (base64 -> binaire)
             $capturedImage = str_replace('data:image/png;base64,', '', $capturedImage);
             $capturedImage = base64_decode($capturedImage);
@@ -44,10 +63,10 @@ class PostController
             $mergedImage = $this->postService->mergeImages($capturedImage, $stickerContent);
     
             // Enregistrer l'image fusionnée en base de données
-            $this->postService->createPost($userId, $mergedImage);
+            $this->postService->createPost($mergedImage);
     
             // Rediriger vers la page des posts
-            header('Location: /posts');
+            header('Location: /');
             exit();
         } else {
             echo "Erreur : données manquantes ou utilisateur non connecté.";

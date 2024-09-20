@@ -3,19 +3,39 @@
 namespace Camagru\Infrastructure\Services;
 
 use Camagru\Core\Models\Post;
+use Camagru\Core\Models\Like;
 
 class PostService
 {
     protected $postModel;
+    protected $likeModel;
 
     public function __construct()
     {
         $this->postModel = new Post();
+        $this->likeModel = new Like();
     }
 
-    public function getLastPosts(int $limit = 5): array
+    // public function getLastPosts(int $limit = 5): array
+    // {
+    //     return $this->postModel->getLastPosts($limit);
+    // }
+    public function getPostsPaginated(int $limit, int $offset, $userId = null): array
     {
-        return $this->postModel->getLastPosts($limit);
+        $posts = $this->postModel->getPostsPaginated($limit, $offset);
+
+        // Ajouter des informations sur les likes à chaque post
+        foreach ($posts as &$post) {
+            $post['like_count'] = $this->likeModel->getLikeCount($post['id']);
+            $post['liked_by_user'] = $userId ? $this->likeModel->userLikedPost($post['id'], $userId) : false;
+        }
+
+        return $posts;
+    }
+
+    public function getTotalPosts(): int
+    {
+        return $this->postModel->getTotalPosts();
     }
 
     public function mergeImages(string $capturedImage, string $sticker): string
@@ -57,8 +77,9 @@ class PostService
         return $mergedImageData;
     }
 
-    public function createPost($imageData, $userId)
+    public function createPost($imageData)
     {
+        $userId = $_SESSION['user']['id'] ?? null;
         $this->postModel->createPost($imageData, $userId);
     }
 }
