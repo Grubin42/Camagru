@@ -24,10 +24,13 @@ class PostService
     {
         $posts = $this->postModel->getPostsPaginated($limit, $offset);
 
-        // Ajouter des informations sur les likes à chaque post
         foreach ($posts as &$post) {
+            // Ajouter les likes
             $post['like_count'] = $this->likeModel->getLikeCount($post['id']);
             $post['liked_by_user'] = $userId ? $this->likeModel->userLikedPost($post['id'], $userId) : false;
+
+            // Ajouter les commentaires
+            $post['comments'] = $this->postModel->getCommentsForPost($post['id']);
         }
 
         return $posts;

@@ -7,6 +7,7 @@ use Camagru\Presentation\Controllers\LoginController;
 use Camagru\Presentation\Controllers\PasswordResetController;
 use Camagru\Presentation\Controllers\PostController;
 use Camagru\Presentation\Controllers\LikeController;
+use Camagru\Presentation\Controllers\CommentController;
 
 $router = new Router();
 // Route pour la page d'accueil
@@ -82,6 +83,14 @@ $router->addRoute('/like-post', function() {
             http_response_code(401); // Code HTTP 401 pour "Non autorisé"
             echo json_encode(['error' => 'Vous devez être connecté pour liker un post.']);
         }
+    }
+});
+
+$router->addRoute('/add-comment', function() {
+    $commentController = new CommentController();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $commentController->addComment();
     }
 });
 

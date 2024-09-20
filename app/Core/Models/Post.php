@@ -75,4 +75,21 @@ class Post
         $stmt = $this->db->query('SELECT COUNT(*) FROM post');
         return (int) $stmt->fetchColumn();
     }
+
+    public function getPostOwnerById(int $postId)
+    {
+        $stmt = $this->db->prepare('SELECT u.email, u.notif FROM post p JOIN users u ON p.user_id = u.id WHERE p.id = :post_id');
+        $stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getCommentsForPost(int $postId): array
+{
+    $stmt = $this->db->prepare('SELECT * FROM commentaire WHERE post_id = :post_id ORDER BY created_date DESC');
+    $stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 }

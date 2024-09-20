@@ -14,4 +14,15 @@ class MailService
 
         mail($email, $subject, $message, $headers);
     }
+
+    public function sendCommentNotification(string $email, string $commenter, int $postId)
+    {
+        $subject = 'Nouveau commentaire sur votre post';
+        $message = "$commenter a commenté votre post $postId";
+        $headers = 'From: no-reply@camagru.com' . "\r\n" .
+                   'Reply-To: no-reply@camagru.com' . "\r\n" .
+                   'X-Mailer: PHP/' . phpversion();
+    
+        mail($email, $subject, $message, $headers);
+    }
 }
