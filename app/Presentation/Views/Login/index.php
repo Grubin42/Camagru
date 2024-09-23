@@ -24,7 +24,7 @@
                     <input type="password" name="password" id="password" class="form-control" style="flex: 1;" required>
                 </div>
                 <div class="d-flex justify-content-between align-items-center" style="width: 350px;">
-                    <button type="submit" class="btn btn-primary mt-3">Se connecter</button>
+                    <button type="submit" class="btn btn-primary btn-sm mt-3">Se connecter</button>
 
                     <!-- Forgot Password Button -->
                     <a href="/forgot-password" class="btn btn-link mt-3">Mot de passe oublié ?</a>

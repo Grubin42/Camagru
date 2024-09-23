@@ -2,40 +2,46 @@
     <div class="card shadow mt-5">
         <div class="card-body text-center my-auto">
             <h1>Page de connexion</h1>
-            <!-- Vérifier et afficher l'erreur si elle existe -->
-            <?php if (isset($error)): ?>
+
+            <!-- Affichage des erreurs -->
+            <?php if (!empty($errors)): ?>
                 <div class="alert alert-danger">
-                    <?= htmlspecialchars($error) ?>
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?= htmlspecialchars($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
                 </div>
             <?php endif; ?>
 
-            <form action="/register" method="post" class="d-flex flex-column align-items-center">
+            <form method="POST" action="/register" class="text-center"> <!-- Formulaire POST pour l'enregistrement -->
+                
                 <!-- Username -->
-                <div class="mb-3 d-flex justify-content-center align-items-center" style="width: 350px;">
-                    <label for="username" class="form-label" style="width: 150px;">Nom d'utilisateur :</label>
-                    <input type="text" name="username" id="username" class="form-control" style="flex: 1;" required>
+                <div class="form-group mt-3">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input style="width: 250px;" type="text" class="form-control form-control-sm mx-auto" id="username" name="username" required>
                 </div>
-                
-                <!-- Password -->
-                <div class="mb-3 d-flex justify-content-center align-items-center" style="width: 350px;">
-                    <label for="password" class="form-label" style="width: 150px;">Mot de passe :</label>
-                    <input type="password" name="password" id="password" class="form-control" style="flex: 1;" required>
-                </div>
-                
-                <!-- Confirm Password -->
-                <div class="mb-3 d-flex justify-content-center align-items-center" style="width: 350px;">
-                    <label for="password1" class="form-label" style="width: 150px;">Confirmer Mot de passe :</label>
-                    <input type="password" name="password1" id="password1" class="form-control" style="flex: 1;" required>
-                </div>
-                
+
                 <!-- Email -->
-                <div class="mb-3 d-flex justify-content-center align-items-center" style="width: 350px;">
-                    <label for="email" class="form-label" style="width: 150px;">Email :</label>
-                    <input type="email" name="email" id="email" class="form-control" style="flex: 1;" required>
+                <div class="form-group mt-3">
+                    <label for="email">Email</label>
+                    <input style="width: 250px;" type="email" class="form-control form-control-sm mx-auto" id="email" name="email" required>
                 </div>
-                
+
+                <!-- Password -->
+                <div class="form-group mt-3">
+                    <label for="password">Mot de passe</label>
+                    <input style="width: 250px;" type="password" class="form-control form-control-sm mx-auto" id="password" name="password" required>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group mt-3">
+                    <label for="password1">Confirmer Mot de passe</label>
+                    <input style="width: 250px;" type="password" class="form-control form-control-sm mx-auto" id="confirmPassword" name="confirmPassword" required>
+                </div>
+
                 <!-- Submit Button -->
-                <button type="submit" class="btn btn-primary mt-3">Valider les données</button>
+                <button type="submit" class="btn btn-primary btn-sm mt-3">Valider les données</button>
             </form>
         </div>
     </div>

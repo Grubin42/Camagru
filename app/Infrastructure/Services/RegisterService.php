@@ -11,13 +11,11 @@ class RegisterService
     {
         $this->UserModel = new UserModel();
     }
-
-    public function getLastUser(): ?array
-    {
-        return $this->UserModel->getLastUser();
-    }
     public function Register(string $username, $password, $email): ?array
     {
         return $this->UserModel->RegisterUser($username, $password, $email);
+    }
+    public function isUsernameTaken(string $username): bool {
+        return $this->UserModel->isUsernameTaken($username);
     }
 }

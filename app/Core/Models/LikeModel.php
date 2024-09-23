@@ -14,14 +14,6 @@ class LikeModel
         $this->db = Connection::getDBConnection();
     }
 
-    /**
-     * Récupère le dernier utilisateur ajouté à la base de données.
-     */
-    public function getLastUser(): ?array
-    {
-        $stmt = $this->db->query('SELECT username, email FROM users ORDER BY id DESC LIMIT 1');
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
-    }
     public function LikePost($postId, $userId) {
         // Vérifier si l'utilisateur a déjà liké ce post
         $stmt = $this->db->prepare("SELECT * FROM likes WHERE post_id = :post_id AND user_id = :user_id");

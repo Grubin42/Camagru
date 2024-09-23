@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS users CASCADE;
 -- Recréer les tables
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(50) NOT NULL,
+    username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(50) NOT NULL,
     password VARCHAR(100) NOT NULL,
     notif BOOLEAN DEFAULT TRUE,

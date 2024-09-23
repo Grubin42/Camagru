@@ -30,6 +30,22 @@ $router->addRoute('/profile', function() {
 
 });
 
+$router->addRoute('/editProfile', function() {
+    if(isset($_SESSION['user'])) 
+    {
+        $profileController = new ProfileController();
+        $profileController->EditProfile();
+    }
+});
+
+$router->addRoute('/updateProfile', function() {
+    if(isset($_SESSION['user'])) 
+    {
+        $profileController = new ProfileController();
+        $profileController->updateProfile();
+    }
+});
+
 // Route pour ce connecter 
 $router->addRoute('/login', function() {
     $loginController = new LoginController();
@@ -61,28 +77,15 @@ $router->addRoute('/logout', function() {
 
 // Route pour s'enregistrer
 $router->addRoute('/register', function() {
-    $registerController = new RegisterController();
-    $error = null;
-
-    // Vérifier si une requête POST a été envoyée
-    if ($_SERVER["REQUEST_METHOD"] === "POST") {
-        $username = $_POST["username"];
-        $password = $_POST["password"];
-        $password1 = $_POST["password1"];
-        $email = $_POST["email"];
-        
-        // Appeler la méthode Register du contrôleur
-        $result = $registerController->Register($username, $password, $password1, $email);
-
-        // Vérifier si la méthode Register a retourné une erreur
-        if (isset($result['error'])) {
-            $error = $result['error'];
+        $registerController = new RegisterController();
+    
+        // Vérifier si une requête POST a été envoyée
+        if ($_SERVER["REQUEST_METHOD"] === "POST") {       
+            // Appeler la méthode Register du contrôleur
+            $registerController->Register();
         }
-    }
-
-    // Appeler la méthode Index du contrôleur et passer l'erreur si elle existe
-    $registerController->Index($error);
-});
+        $registerController->Index();
+    });
 
 // Route pour ajouter un poste
 $router->addRoute('/post', function() {

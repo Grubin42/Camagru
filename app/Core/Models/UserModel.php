@@ -17,9 +17,20 @@ class UserModel
     /**
      * Récupère le dernier utilisateur ajouté à la base de données.
      */
-    public function getLastUser(): ?array
+    public function GetUser(): ?array
     {
-        $stmt = $this->db->query('SELECT username, email FROM users ORDER BY id DESC LIMIT 1');
+        // On récupère l'userId depuis la session
+        $userId = $_SESSION['user']['id'];
+        // Préparation de la requête SQL pour récupérer les likes correspondant à l'id utilisateur
+        $stmt = $this->db->prepare('SELECT username, email FROM users WHERE id = :id');
+        
+        // Liaison de la variable :id à l'userId
+        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+
+        // Exécution de la requête
+        $stmt->execute();
+
+        // Récupération des résultats sous forme de tableau associatif
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
     public function Login(string $username): ?array
@@ -39,6 +50,16 @@ class UserModel
         $stmt = $this->db->prepare('INSERT INTO users (username, password, email) VALUES (?, ?, ?)');
         $stmt->execute([$username, $hashedPassword, $email]);
     }
+
+    public function isUsernameTaken(string $username): bool {
+
+        $stmt = $this->db->prepare('SELECT COUNT(*) FROM users WHERE username = :username');
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+        return $stmt->fetchColumn() > 0; // Renvoie true si le nom d'utilisateur est pris
+        
+    }
+
     public function findUserByEmail($email)
     {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
@@ -73,5 +94,29 @@ class UserModel
         $stmt->bindParam(':password', $hashedPassword);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
+    }
+    
+    // Met à jour le nom d'utilisateur
+    public function UpdateUsername($userId, $username) {
+        $stmt = $this->db->prepare('UPDATE users SET username = :username WHERE id = :id');
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    // Met à jour l'email
+    public function UpdateEmail($userId, $email) {
+        $stmt = $this->db->prepare('UPDATE users SET email = :email WHERE id = :id');
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    // Met à jour le mot de passe
+    public function UpdatePassword($userId, $hashedPassword) {
+        $stmt = $this->db->prepare('UPDATE users SET password = :password WHERE id = :id');
+        $stmt->bindParam(':password', $hashedPassword);
+        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 }
