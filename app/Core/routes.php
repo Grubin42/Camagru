@@ -7,23 +7,18 @@ use Presentation\Controllers\LoginController;
 use Presentation\Controllers\PostController;
 use Presentation\Controllers\CommentController;
 use Presentation\Controllers\PasswordResetController;
+use Presentation\Controllers\ProfileController;
 
 $router = new Router();
 // Route pour la page d'accueil
 
-$router->addRoute('/', function() {
+$router->addRoute('/', function () {
     $homeController = new HomeController();
     $homeController->Index();
 });
 
-// // Route pour afficher le profile et le modifier
-// $router->addRoute('/profile', function() {
-//     $profileController = new ProfileController();
-//     $profileController->Index();
 
-// });
-
-$router->addRoute('/register', function() {
+$router->addRoute('/register', function () {
     $registerController = new RegisterController();
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -38,7 +33,7 @@ $router->addRoute('/register', function() {
 });
 
 // Route pour ce connecter 
-$router->addRoute('/login', function() {
+$router->addRoute('/login', function () {
 
     $loginController = new LoginController();
 
@@ -50,56 +45,94 @@ $router->addRoute('/login', function() {
     } else {
         $loginController->Index();
     }
-
-    // $loginController = new LoginController();
-    // $loginController->Index();
 });
 
-$router->addRoute('/logout', function() {
+$router->addRoute('/logout', function () {
     $loginController = new LoginController();
     $loginController->logout();
 });
 
-$router->addRoute('/request-reset', function() {
+$router->addRoute('/request-reset', function () {
     $passwordResetController = new PasswordResetController();
     $passwordResetController->requestPasswordReset();
 });
 
-$router->addRoute('/reset-password', function() {
+$router->addRoute('/reset-password', function () {
     $passwordResetController = new PasswordResetController();
     $passwordResetController->resetPassword();
 });
 
 
-$router->addRoute('/home', function() {
+$router->addRoute('/home', function () {
     $homecontroller = new HomeController();
     $homecontroller->Index();
 });
 
 // Route pour ajouter un poste
-$router->addRoute('/posts', function() {
+$router->addRoute('/posts', function () {
     $postController = new PostController();
     $postController->createPost();
 });
 
-$router->addRoute('/supperpose-images', function() {
+$router->addRoute('/supperpose-images', function () {
     $postController = new PostController();
     $postController->handleFormSubmit();
 });
 
-$router->addRoute('/publish', function() {
-        $postController = new PostController();
-        $postController->publishPost();
+$router->addRoute('/publish', function () {
+    $postController = new PostController();
+    $postController->publishPost();
 });
 
-$router->addRoute('/publish/confirmation', function() {
+$router->addRoute('/publish/confirmation', function () {
     $postController = new PostController();
     $postController->confirmationPublishPost();
 });
 
-$router->addRoute('/comment', function() {
+$router->addRoute('/comment', function () {
     $commentController = new CommentController();
     $commentController->saveComment();
 });
+
+
+// // Route pour afficher le profile et le modifier
+$router->addRoute('/profile', function () {
+    $profileController = new ProfileController();
+    $profileController->Index();
+
+});
+
+// edit username
+$router->addRoute('/profile/username', function () {
+    $profileController = new ProfileController();
+    $profileController->displayEditUserName();
+});
+
+$router->addRoute('/profile/editUsername', function () {
+    $profileController = new ProfileController();
+    $profileController->updateUsername();
+});
+
+// edit password
+$router->addRoute('/profile/password', function () {
+    $profileController = new ProfileController();
+    $profileController->displayEditPassword();
+});
+
+$router->addRoute('/profile/editPassword', function () {
+    $profileController = new ProfileController();
+    $profileController->updatePassword();
+});
+
+// edit email TODO: implement this
+// $router->addRoute('/profile/email', function() {
+//     $profileController = new ProfileController();
+//     $profileController->displayEditEmail();
+// });
+
+// $router->addRoute('/profile/editEmail', function() {
+//     $profileController = new ProfileController();
+//     $profileController->updateEmail();
+// });
 
 return $router;

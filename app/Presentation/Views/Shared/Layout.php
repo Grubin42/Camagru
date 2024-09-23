@@ -13,7 +13,6 @@
                 <li><a href="/posts">New post</a></li>
                 <li><a href="/profile">Profile</a></li>
                 <li><a href="/home">Home</a></li>
-                <li><a href="/logout" >Logout</a></li>
                 <li>
                 <?php if (isset($_SESSION['user'])): ?>
                     <a href="/logout" class="btn-logout">Logout</a>

@@ -17,7 +17,7 @@ class CommentModel
     public function saveComment($username, $comment, $postId) {
         // Prepare the SQL statement
         $query = "INSERT INTO commentaire (commentaire, username, post_id) VALUES (:comment, :username, :post_id)";
-
+        
         // Prepare the statement
         $stmt = $this->db->prepare($query);
 

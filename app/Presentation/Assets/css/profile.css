@@ -1,0 +1,65 @@
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.list-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-form-container {
+    width: 100%;
+    display: flex;
+    margin-top: 50px;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-form  {
+    width: 400px;
+    max-width: 700px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: end;
+}
+
+
+.toggle {
+    position: relative;
+    display: inline-block;
+    margin-top: 0.5rem;
+    width: 50px;
+    height: 26px;
+    background-color: hsl(0, 0%, 85%);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.25s ease-in;
+}
+.toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 22px;
+    height: 22px;
+    background-color: white;
+    border-radius: 50%;
+    transition: all 0.25s ease-out;
+}
+#cb-toggle:checked + .toggle {
+    background-color: hsl(102, 58%, 39%);
+}
+#cb-toggle:checked + .toggle::after {
+    transform: translateX(24px);
+}
+.hide-me {
+    opacity: 0;
+    height: 0;
+    width: 0;
+}
