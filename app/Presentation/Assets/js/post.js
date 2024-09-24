@@ -3,38 +3,39 @@ const video = document.getElementById('video');
 const canvas = document.getElementById('canvas');
 const captureButton = document.getElementById('capture');
 const resetButton = document.getElementById('reset');
+const uploadPhotoButton = document.getElementById('uploadPhotoButton');
+const fileInput = document.getElementById('fileInput');
 const photoInput = document.getElementById('photo'); // Champ caché pour la photo capturée
-const stickerInput = document.getElementById('stickerBase64'); // Champ caché pour le sticker en base64
-const stickerFileInput = document.getElementById('stickerFile'); // Input pour le fichier sticker
+const stickerBase64Input = document.getElementById('stickerBase64'); // Champ caché pour le sticker en base64
 let context = canvas.getContext('2d');
 let photoCaptured = false; // Variable pour vérifier si la photo est capturée
 let stickerImage = null; // Image du sticker
 
-// Facteur de redimensionnement (50% dans cet exemple)
-const stickerScaleFactor = 0.5;
-
-// Activer la webcam
+// Activer la webcam ou afficher le bouton d'upload si refus ou absence de webcam
 navigator.mediaDevices.getUserMedia({ video: true })
     .then(stream => {
         video.srcObject = stream;
     })
     .catch(err => {
-        console.error("Erreur de webcam: ", err);
+        console.error("Accès à la caméra refusé ou pas de caméra trouvée.");
+        // Afficher le bouton pour uploader une photo si pas de webcam ou refus d'accès
+        uploadPhotoButton.style.display = "inline-block";
     });
 
 // Fonction pour capturer la photo
 captureButton.addEventListener('click', () => {
-    context.drawImage(video, 0, 0, canvas.width, canvas.height); // Capture l'image de la vidéo
+    // Capture l'image de la vidéo dans le canvas
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
     const dataURL = canvas.toDataURL('image/png'); // Convertir l'image en base64
-    photoInput.value = dataURL; // Mettre la photo capturée dans un champ caché pour le formulaire
+    photoInput.value = dataURL; // Mettre la photo capturée dans un champ caché
     photoCaptured = true; // Indiquer que la photo est capturée
 
     // Si un sticker a été chargé, l'ajouter visuellement sur la photo
     if (stickerImage) {
-        const scaledWidth = stickerImage.width * stickerScaleFactor;
-        const scaledHeight = stickerImage.height * stickerScaleFactor;
+        const scaledWidth = stickerImage.width * 0.5;
+        const scaledHeight = stickerImage.height * 0.5;
 
-        // Position du sticker (en bas à droite avec 10px de marge)
+        // Positionner le sticker en bas à droite avec une marge de 10px
         const x = canvas.width - scaledWidth - 10;
         const y = canvas.height - scaledHeight - 10;
 
@@ -43,49 +44,83 @@ captureButton.addEventListener('click', () => {
     }
 });
 
-// Réinitialiser la capture
+// Fonction pour uploader une photo
+uploadPhotoButton.addEventListener('click', () => {
+    fileInput.click(); // Ouvrir la boîte de dialogue pour choisir une photo
+});
+
+// Gérer la sélection d'une image uploadée
+fileInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        const img = new Image();
+        img.src = e.target.result;
+        
+        img.onload = function() {
+            // Dessiner l'image uploadée dans le canvas
+            context.drawImage(img, 0, 0, canvas.width, canvas.height);
+            const dataURL = canvas.toDataURL('image/png'); // Convertir l'image en base64
+            photoInput.value = dataURL; // Mettre la photo uploadée dans le champ caché
+            photoCaptured = true; // Marquer la photo comme capturée
+        };
+    };
+    reader.readAsDataURL(file);
+});
+
+// Réinitialiser la capture et la sélection du sticker
 resetButton.addEventListener('click', () => {
     context.clearRect(0, 0, canvas.width, canvas.height); // Effacer le canvas
     photoCaptured = false; // Réinitialiser l'état de capture de la photo
+    captureButton.disabled = true; // Désactiver le bouton "Prendre la photo"
+    uploadPhotoButton.disabled = true; // Désactiver le bouton "Choisir une photo"
+    stickerImage = null; // Réinitialiser le sticker sélectionné
+
+    // Supprimer la sélection visuelle des stickers
+    document.querySelectorAll('.sticker-preview').forEach(sticker => {
+        sticker.classList.remove('sticker-selected');
+    });
 });
 
-// Gérer le téléchargement d'un sticker
-stickerFileInput.addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            stickerImage = new Image();
-            stickerImage.src = e.target.result; // Charger le fichier image comme sticker
+// Gérer la sélection des stickers
+document.querySelectorAll('.sticker-preview').forEach(sticker => {
+    sticker.addEventListener('click', function() {
+        // Supprimer l'indicateur visuel de tous les stickers
+        document.querySelectorAll('.sticker-preview').forEach(s => s.classList.remove('sticker-selected'));
 
-            stickerImage.onload = function() {
-                // Stocker l'image du sticker en base64 dans un champ caché pour l'envoyer au serveur
-                stickerInput.value = stickerImage.src.replace(/^data:image\/(png|jpg|jpeg|gif);base64,/, '');
+        // Ajouter l'indicateur visuel au sticker sélectionné
+        this.classList.add('sticker-selected');
 
-                // Si la photo est déjà capturée, ajouter visuellement le sticker
-                if (photoCaptured) {
-                    const scaledWidth = stickerImage.width * stickerScaleFactor;
-                    const scaledHeight = stickerImage.height * stickerScaleFactor;
+        // Charger l'image du sticker sélectionné
+        stickerImage = new Image();
+        stickerImage.src = this.dataset.stickerSrc;
 
-                    const x = canvas.width - scaledWidth - 10; // 10px de marge à droite
-                    const y = canvas.height - scaledHeight - 10; // 10px de marge en bas
+        // Activer les boutons "Prendre la photo" et "Choisir une photo" après la sélection du sticker
+        captureButton.disabled = false;
+        captureButton.style.cursor = "pointer"; // Changer l'apparence du curseur
+        uploadPhotoButton.disabled = false;
+        uploadPhotoButton.style.cursor = "pointer"; // Changer l'apparence du curseur
 
-                    // Dessiner le sticker redimensionné sur la photo
-                    context.drawImage(stickerImage, x, y, scaledWidth, scaledHeight);
-                }
-            };
+        // Mettre à jour le champ caché pour l'envoyer avec le formulaire
+        const canvasForSticker = document.createElement('canvas');
+        const ctx = canvasForSticker.getContext('2d');
+        canvasForSticker.width = stickerImage.width;
+        canvasForSticker.height = stickerImage.height;
+
+        stickerImage.onload = function() {
+            ctx.drawImage(stickerImage, 0, 0);
+            const stickerBase64 = canvasForSticker.toDataURL('image/png');
+            stickerBase64Input.value = stickerBase64;
         };
-        reader.readAsDataURL(file); // Lire le fichier en base64
-    } else {
-        alert("Veuillez capturer une photo avant d'ajouter un sticker !");
-    }
+    });
 });
 
-// Soumettre le formulaire lorsque les données sont prêtes
+// Gérer la soumission du formulaire
 document.getElementById('photoForm').addEventListener('submit', function(event) {
-    // Si le sticker ou la photo sont vides, empêcher la soumission
-    if (document.getElementById('stickerBase64').value === "" || document.getElementById('photo').value === "") {
-        event.preventDefault(); // Empêche la soumission si les données sont manquantes
-        alert("Veuillez capturer une photo et choisir un sticker avant de soumettre le formulaire.");
+    // Vérifier que la photo et le sticker sont bien présents avant de soumettre
+    if (!photoCaptured || stickerBase64Input.value === "") {
+        event.preventDefault(); // Empêcher la soumission si les données sont manquantes
+        alert("Veuillez capturer une photo et choisir un sticker avant de soumettre.");
     }
 });
