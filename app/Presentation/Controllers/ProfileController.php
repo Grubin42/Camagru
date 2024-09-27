@@ -81,6 +81,7 @@ class ProfileController {
             $this->ProfileService->UpdateProfile($username, $email, $password, $notif);
 
             $this->ProfileService->UpdateCommentsUsername($userId, $username);
+            
             // ON REMET A JOUR LES DONNEES DANS LA SESSION
             $_SESSION['user']['username'] = $username;
             $_SESSION['user']['email'] = $email;

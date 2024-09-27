@@ -137,7 +137,8 @@ class UserModel
         return $stmt->execute();
     }
     public function UpdateCommentsUsername($userId, $newUsername) {
-        $stmt = $this->db->prepare('UPDATE commentaire SET username = :newUsername WHERE post_id IN (SELECT id FROM post WHERE user_id = :userId)');
+        // Mettre à jour le nom d'utilisateur dans la table des commentaires pour tous les commentaires de cet utilisateur
+        $stmt = $this->db->prepare('UPDATE commentaire SET username = :newUsername WHERE user_id = :userId');
         $stmt->bindParam(':newUsername', $newUsername);
         $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
         return $stmt->execute();

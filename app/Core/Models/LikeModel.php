@@ -40,4 +40,15 @@ class LikeModel
             ]);
         }
     }
+    public function getLikeCount($postId) {
+        // Préparer la requête SQL pour compter les likes
+        $stmt = $this->db->prepare("SELECT COUNT(*) as like_count FROM likes WHERE post_id = :post_id");
+        $stmt->execute([
+            ':post_id' => $postId
+        ]);
+    
+        // Retourner le nombre de likes
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['like_count'] ?? 0;  // Retourner 0 si aucun like
+    }
 }

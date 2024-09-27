@@ -11,7 +11,7 @@ class VerificationController {
         $this->RegisterService = new RegisterService();
     }
 
-    public function verify() {
+    public function verify(){
         if (isset($_GET['token'])) {
             $token = $_GET['token'];
             $user = $this->RegisterService->findUserByToken($token);

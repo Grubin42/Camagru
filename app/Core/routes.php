@@ -122,15 +122,16 @@ $router->addRoute('/post/save', function() {
 });
 
 $router->addRoute('/post/add_comment', function() {
-    if(isset($_SESSION['user'])) 
-    {
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            $HomeController = new HomeController();
-            $HomeController->AddComment();
-        }
+    if (isset($_SESSION['user'])) {
+        $HomeController = new HomeController();
+        $HomeController->AddComment();  // Appel de la méthode AddComment sans redirection
+    } else {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Utilisateur non connecté'
+        ]);
     }
-    header("Location: /");
-    exit();
+    exit();  // Pas de redirection, car nous renvoyons une réponse JSON
 });
 
 $router->addRoute('/post/like', function() {
@@ -141,8 +142,6 @@ $router->addRoute('/post/like', function() {
             $HomeController->likePost();
         }
     }
-    header("Location: /");
-    exit();
 });
 
 $router->addRoute('/error', function() {

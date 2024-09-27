@@ -44,27 +44,67 @@ class HomeController {
         ]);
         exit();
     }
-    public function AddComment(): void
+    public function AddComment()
     {
-        $post_id = $_POST["post_id"];
-        $comment = $_POST["comment"];
-        $username = $_SESSION['user']['username'];
-
-        $postOwner = $this->HomeService->GetPostOwner($post_id);
-
-        $this->HomeService->AddComment($post_id, $comment);
-
-        if ($postOwner['notif'] == TRUE){
-            $this->EmailService->sendCommentNotification($postOwner['email'], $username, $postOwner['created_date']);
+        // Vérifier si la requête est bien en POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $post_id = $_POST["post_id"];
+            $comment = trim($_POST["comment"]);
+            $username = $_SESSION['user']['username'];
+    
+            // Récupérer les informations du propriétaire du post
+            $postOwner = $this->HomeService->GetPostOwner($post_id);
+    
+            // Ajouter le commentaire à la base de données
+            $this->HomeService->AddComment($post_id, $comment);
+    
+            // Si le propriétaire du post a activé les notifications, envoyer un email
+            if ($postOwner['notif'] == TRUE) {
+                $this->EmailService->sendCommentNotification($postOwner['email'], $username, $postOwner['created_date']);
+            }
+    
+            // Retourner une réponse JSON avec le nouveau commentaire
+            echo json_encode([
+                'success' => true,
+                'username' => htmlspecialchars($username),
+                'comment' => htmlspecialchars($comment)
+            ]);
+        } else {
+            // Si la requête n'est pas POST, retourner une erreur JSON
+            echo json_encode([
+                'success' => false,
+                'message' => 'Méthode de requête invalide'
+            ]);
         }
+        exit();
     }
     public function likePost() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $postId = $_POST['post_id'];
-            $userId = $_SESSION['user']['id'];  // Récupérer l'ID de l'utilisateur connecté
-    
-            // Appeler la méthode du service pour ajouter le like
-            $this->HomeService->LikePost($postId, $userId);
+
+        // Vérifie que la requête est bien POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Méthode de requête non valide.'
+            ]);
+            exit();
         }
+
+        // Récupérer l'ID du post et l'ID de l'utilisateur connecté
+        $postId = $_POST['post_id'];
+        $userId = $_SESSION['user']['id'];
+
+        // Appelle le service pour ajouter le like
+        $this->HomeService->LikePost($postId, $userId);
+
+        // Récupérer le nouveau nombre de likes après l'ajout du like
+        $likeCount = $this->HomeService->GetLikeCount($postId);
+
+        // Retourner une réponse JSON avec le nouveau nombre de likes
+        echo json_encode([
+            'success' => true,
+            'message' => 'Like ajouté avec succès.',
+            'likes' => $likeCount
+        ]);
+        exit();
     }
 }

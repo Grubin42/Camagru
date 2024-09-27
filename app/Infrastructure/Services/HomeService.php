@@ -29,4 +29,9 @@ class HomeService
     {
         return $this->PostModel->GetPostOwner($post_id);
     }
+
+    public function GetLikeCount($post_id)
+    {
+        return $this->LikeModel->GetLikeCount($post_id);
+    }
 }

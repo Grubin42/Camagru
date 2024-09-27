@@ -9,12 +9,11 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <h6 class="card-title">Posté le : <?= date('d-m-Y', strtotime($post['created_date'])) ?></h6>
                                 <?php if (isset($_SESSION['user'])): ?>
-                                    <form method="post" action="/post/like">
-                                        <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
-                                        <button class="btn btn-outline-primary btn-sm" type="submit">
+                                    <form method="post" action="/post/like" class="like-form" data-post-id="<?= $post['id'] ?>">
+                                        <button class="btn btn-outline-primary btn-sm like-button" type="button">
                                             Like <i class="bi bi-hand-thumbs-up"></i>
                                         </button>
-                                        <span><?= $post['like_count'] ?> likes</span>
+                                        <span class="like-count"><?= $post['like_count'] ?> likes</span>
                                     </form>
                                 <?php else: ?>
                                     <span><?= $post['like_count'] ?> likes</span>
@@ -35,23 +34,23 @@
 
                         <div class="collapse" id="comments-<?= $post['id'] ?>">
                             <div class="card-body">
-                                <?php if (!empty($post['comments'])): ?>
-                                    <ul class="list-group list-group-flush mb-3">
+                                <ul class="list-group list-group-flush mb-3 comment-list" id="comment-list-<?= $post['id'] ?>">
+                                    <?php if (!empty($post['comments'])): ?>
                                         <?php foreach ($post['comments'] as $comment): ?>
                                             <li class="list-group-item">
                                                 <strong><?= htmlspecialchars($comment['username']) ?>:</strong> <?= htmlspecialchars($comment['commentaire']) ?>
                                             </li>
                                         <?php endforeach; ?>
-                                    </ul>
-                                <?php else: ?>
-                                    <p>Aucun commentaire pour l'instant.</p>
-                                <?php endif; ?>
+                                    <?php else: ?>
+                                        <li class="list-group-item"></li>
+                                    <?php endif; ?>
+                                </ul>
 
-                                <form method="post" action="/post/add_comment">
+                                <form method="post" action="/post/add_comment" class="comment-form" data-post-id="<?= $post['id'] ?>">
                                     <div class="input-group mb-3">
                                         <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
                                         <input type="text" name="comment" class="form-control" placeholder="Ajouter un commentaire..." required>
-                                        <button class="btn btn-outline-secondary" type="submit">Commenter</button>
+                                        <button class="btn btn-outline-secondary" type="button">Commenter</button>
                                     </div>
                                 </form>
                             </div>
@@ -113,3 +112,4 @@
         justify-content: center;
     }
 </style>
+<script src="/Presentation/Assets/js/likecomment.js"></script>

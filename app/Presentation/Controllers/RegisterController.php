@@ -19,7 +19,7 @@ class RegisterController {
             'error' => $error  // Passer l'erreur à la vue
         ]);
     }
-    public function Register(): void {
+    public function Register() {
         $username = isset($_POST['username']) ? trim($_POST['username']) : '';
         $email = isset($_POST['email']) ? trim($_POST['email']) : '';
         $password = isset($_POST['password']) ? trim($_POST['password']) : '';

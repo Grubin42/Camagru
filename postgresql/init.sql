@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS commentaire (
     commentaire TEXT NOT NULL,
     username VARCHAR(50) NOT NULL,
     created_date TIMESTAMPTZ DEFAULT NOW(),
-    post_id INT REFERENCES post(id) ON DELETE CASCADE
+    post_id INT REFERENCES post(id) ON DELETE CASCADE,
+    user_id INT REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS likes (
