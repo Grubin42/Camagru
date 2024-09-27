@@ -20,13 +20,14 @@ class PostController {
             'view' => __DIR__ . '/../Views/Post/index.php',
             'posts' => $posts
         ]);
+        exit();
     }
 
     public function ImageRegister(string $image) {
         $this->PostService->ImageRegister($image);
 
         header('Location: /');
-        exit; 
+        exit(); 
     }
 
     public function SavePost(): void
@@ -36,7 +37,35 @@ class PostController {
             if (isset($_POST['photo']) && isset($_POST['sticker'])) {
                 $photoData = $_POST['photo'];  // Photo capturée en base64
                 $stickerData = $_POST['sticker'];  // Sticker en base64
+                $errors = [];
+                $maxImageSize = 5 * 1024 * 1024; // 5 Mo
                 
+                // Vérifier si une photo a bien été sélectionnée
+                if (empty($photoData)) {
+                    $errors[] = "Erreur : aucune photo sélectionnée.";
+                } else {
+                    // Calculer la taille réelle de l'image décodée à partir du base64
+                    $photoSizeInBytes = (int)(strlen(base64_decode(explode(',', $photoData)[1])));
+                    
+                    // Vérifier la taille de la photo
+                    if ($photoSizeInBytes > $maxImageSize) {
+                        $errors[] = "Erreur : la taille de la photo dépasse la limite autorisée de 5 Mo.";
+                    }
+                }
+
+                // Vérifier si un sticker a bien été sélectionné
+                if (empty($stickerData)) {
+                    $errors[] = "Erreur : aucun sticker sélectionné.";
+                }
+
+                // Si des erreurs existent, les afficher à l'utilisateur
+                if (!empty($errors)) {
+                    renderView(__DIR__ . '/../Views/Shared/Layout.php', [
+                        'view' => __DIR__ . '/../Views/Post/index.php',
+                        'errors' => $errors
+                    ]);
+                    exit();
+                }
                 // Appeler le service pour fusionner et sauvegarder l'image
                 $result = $this->PostService->mergeAndSaveImage(photoData: $photoData, stickerData: $stickerData);
         

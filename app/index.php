@@ -1,6 +1,6 @@
 <?php
-
 namespace Camagru;
+
 // PRESENTATION
 require_once __DIR__ . '/Presentation/Controllers/HomeController.php';
 require_once __DIR__ . '/Presentation/Controllers/LoginController.php';
@@ -35,7 +35,9 @@ require_once __DIR__ . '/Core/Router.php';
 // Charger le routeur avec les routes définies
 $router = require __DIR__ . '/Core/routes.php';
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 // Récupérer le chemin demandé
 $requestedPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 

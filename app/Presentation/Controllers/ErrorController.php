@@ -11,5 +11,6 @@ class ErrorController
             'errorMessage' => $errorMessage,
             'errorCode' => $errorCode
         ]);
+        exit();
     }
 }

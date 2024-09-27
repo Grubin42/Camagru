@@ -28,23 +28,7 @@ class PostModel
         }
 
     }
-    /*
-    public function getAllImages() :array
-    {
-        $stmt = $this->db->query('SELECT * FROM post ORDER BY created_date DESC');
-        $stmt->execute();
-        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-        foreach ($posts as &$post) {
-            // Lire le contenu du stream
-            if (is_resource($post['image'])) {
-                $imageStream = stream_get_contents($post['image']);
-                $post['image'] = base64_encode($imageStream);
-            }
-        }
-        return $posts;
-    }
-    */
+
     public function getAllImages() :array
     {
         // Requête SQL pour récupérer les posts, leurs commentaires, et le nombre de likes
@@ -207,5 +191,17 @@ class PostModel
     {
         $stmt = $this->db->query('SELECT COUNT(*) FROM post');
         return $stmt->fetchColumn();
+    }
+
+    public function GetPostOwner($postId) 
+    {  // Ici on utilise $postId pour correspondre à la requête
+        $stmt = $this->db->prepare('
+        SELECT u.email, u.notif, p.created_date 
+        FROM post p 
+        JOIN users u ON p.user_id = u.id 
+        WHERE p.id = :post_id');
+        $stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

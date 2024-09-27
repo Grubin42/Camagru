@@ -17,7 +17,7 @@ class ProfileService
         return $this->userModel->GetUser();
     }
 
-    public function UpdateProfile($username, $email, $password = null) {
+    public function UpdateProfile($username, $email, $password = null, $notif) {
         $userId = $_SESSION['user']['id'];
         // Si le nom d'utilisateur est fourni, on le met à jour
         if (!empty($username)) {
@@ -34,5 +34,10 @@ class ProfileService
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $this->userModel->UpdatePassword($userId, $hashedPassword);
         }
+        $this->userModel->UpdateNotif($userId, $notif);
+    }
+    public function UpdateCommentsUsername($userId, $username)
+    {
+        return $this->userModel->UpdateCommentsUsername($userId, $username);
     }
 }

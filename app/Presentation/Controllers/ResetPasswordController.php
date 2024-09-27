@@ -34,6 +34,7 @@ class ResetPasswordController
 
             $token = $_GET['token'] ?? '';
             renderView(__DIR__ . '/../Views/ResetPassword/index.php');
+            exit();
         }
     }
 }

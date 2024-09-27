@@ -17,7 +17,8 @@ class ProfileController {
         renderView(__DIR__ . '/../Views/Shared/Layout.php', [
             'view' => __DIR__ . '/../Views/Profile/index.php',
             'user' => $user
-        ]);      
+        ]);
+        exit();   
     }
     public function editProfile() {
 
@@ -26,18 +27,19 @@ class ProfileController {
         renderView(__DIR__ . '/../Views/Shared/Layout.php', [
             'view' => __DIR__ . '/../Views/Profile/editProfile.php',
             'user' => $user
-        ]);      
+        ]);  
+        exit();    
     }
     public function updateProfile() {
         // Récupérer les données actuelles de l'utilisateur pour la comparaison
         $currentUser = $this->ProfileService->getUser();
-
+        $userId = $_SESSION['user']['id'];
         // Récupérer les valeurs soumises par l'utilisateur
         $username = isset($_POST['username']) ? trim($_POST['username']) : '';
         $email = isset($_POST['email']) ? trim($_POST['email']) : '';
         $password = isset($_POST['password']) ? trim($_POST['password']) : '';
         $confirmPassword = isset($_POST['confirm_password']) ? trim($_POST['confirm_password']) : '';
-
+        $notif = isset($_POST['notif']) ? 1 : 0;
         $errors = [];
 
         // 1. Validation du username
@@ -73,9 +75,16 @@ class ProfileController {
                 'user' => $this->ProfileService->GetUser(),
                 'errors' => $errors
             ]);
+            exit();
         } else {
             // Appelle le service pour mettre à jour uniquement les champs fournis
-            $this->ProfileService->UpdateProfile($username, $email, $password);
+            $this->ProfileService->UpdateProfile($username, $email, $password, $notif);
+
+            $this->ProfileService->UpdateCommentsUsername($userId, $username);
+            // ON REMET A JOUR LES DONNEES DANS LA SESSION
+            $_SESSION['user']['username'] = $username;
+            $_SESSION['user']['email'] = $email;
+            $_SESSION['user']['notif'] = $notif;
 
             // Redirection après la mise à jour
             renderView(__DIR__ . '/../Views/Shared/Layout.php', [

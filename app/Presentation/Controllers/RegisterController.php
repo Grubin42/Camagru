@@ -61,7 +61,7 @@ class RegisterController {
         
             // Redirection après enregistrement réussi
             header('Location: /login');
-            exit;
+            exit();
         }
     }
 }

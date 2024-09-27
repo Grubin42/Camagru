@@ -4,26 +4,18 @@ namespace Presentation\Controllers;
 
 use Camagru\Infrastructure\Services\PostService;
 use Camagru\Infrastructure\Services\HomeService;
+use Camagru\Infrastructure\Services\EmailService;
 class HomeController {
     private $Postservice;
     private $HomeService;
+    private $EmailService;
 
     public function __construct() {
         $this->Postservice = new PostService();
         $this->HomeService = new HomeService();
+        $this->EmailService = new EmailService();
     }
 
-    /*
-    public function Index()
-    {
-        $posts = $this->Postservice->GetAllImage();
-
-        renderView(__DIR__ . '/../Views/Shared/Layout.php', [
-            'view' => __DIR__ . '/../Views/Home/index.php',
-            'posts' => $posts
-        ]);
-    }
-    */
     public function Index()
     {
         
@@ -50,12 +42,21 @@ class HomeController {
             'currentPage' => $currentPage,
             'totalPages' => $totalPages
         ]);
+        exit();
     }
-    public function AddComment()
+    public function AddComment(): void
     {
         $post_id = $_POST["post_id"];
         $comment = $_POST["comment"];
+        $username = $_SESSION['user']['username'];
+
+        $postOwner = $this->HomeService->GetPostOwner($post_id);
+
         $this->HomeService->AddComment($post_id, $comment);
+
+        if ($postOwner['notif'] == TRUE){
+            $this->EmailService->sendCommentNotification($postOwner['email'], $username, $postOwner['created_date']);
+        }
     }
     public function likePost() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

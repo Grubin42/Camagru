@@ -22,7 +22,7 @@ class UserModel
         // On récupère l'userId depuis la session
         $userId = $_SESSION['user']['id'];
         // Préparation de la requête SQL pour récupérer les likes correspondant à l'id utilisateur
-        $stmt = $this->db->prepare('SELECT username, email FROM users WHERE id = :id');
+        $stmt = $this->db->prepare('SELECT username, email, notif FROM users WHERE id = :id');
         
         // Liaison de la variable :id à l'userId
         $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
@@ -117,6 +117,18 @@ class UserModel
         $stmt = $this->db->prepare('UPDATE users SET password = :password WHERE id = :id');
         $stmt->bindParam(':password', $hashedPassword);
         $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+    public function UpdateNotif($userId, $notif) {
+        $stmt = $this->db->prepare('UPDATE users SET notif = :notif WHERE id = :id');
+        $stmt->bindParam(':notif', $notif, PDO::PARAM_BOOL); // Utilisation de PDO::PARAM_BOOL pour les booleans
+        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+    public function UpdateCommentsUsername($userId, $newUsername) {
+        $stmt = $this->db->prepare('UPDATE commentaire SET username = :newUsername WHERE post_id IN (SELECT id FROM post WHERE user_id = :userId)');
+        $stmt->bindParam(':newUsername', $newUsername);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
         return $stmt->execute();
     }
 }

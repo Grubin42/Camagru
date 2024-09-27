@@ -40,7 +40,7 @@
 
                         <!-- Canvas (résultat) à droite -->
                         <div class="ms-3">
-                            <h5 class="text-center">Résultat avec sticker</h5>
+                            <h5 class="text-center">Résultat</h5>
                             <canvas id="canvas" width="320" height="240" class="img-fluid border"></canvas>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                         <div id="stickerSelection" class="d-flex justify-content-center flex-wrap">
                             <!-- Stickers plus petits avec bordure par défaut et curseur changé -->
                             <img src="/Presentation/Assets/img/pinguin.gif" class="sticker-preview m-2" style="width: 50px; height: 50px;" data-sticker-src="/Presentation/Assets/img/pinguin.gif" />
-                            <img src="/Presentation/Assets/img/pinguin.gif" class="sticker-preview m-2" style="width: 50px; height: 50px;" data-sticker-src="/Presentation/Assets/img/pinguin.gif" />
+                            <img src="/Presentation/Assets/img/internet.jpeg" class="sticker-preview m-2" style="width: 50px; height: 50px;" data-sticker-src="/Presentation/Assets/img/internet.jpeg" />
                             <img src="/Presentation/Assets/img/pinguin.gif" class="sticker-preview m-2" style="width: 50px; height: 50px;" data-sticker-src="/Presentation/Assets/img/pinguin.gif" />
                         </div>
                     </div>

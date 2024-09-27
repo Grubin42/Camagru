@@ -37,7 +37,12 @@
                     <label for="confirm_password">Confirmez le mot de passe</label>
                     <input style="width: 250px;" type="password" class="form-control form-control-sm mx-auto" id="confirm_password" name="confirm_password">
                 </div>
-
+                <!-- Checkbox pour activer/désactiver les notifications -->
+                <div class="form-group mt-3">
+                    <label for="notif">Notifications Actives</label><br>
+                    <input type="checkbox" id="notif" name="notif" value="1" <?= $user['notif'] ? 'checked' : '' ?>> Activer les notifications
+                </div>
+                
                 <button type="submit" class="btn btn-primary btn-sm mt-3">Enregistrer les modifications</button>
             </form>
         </div>  

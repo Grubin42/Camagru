@@ -27,7 +27,7 @@ $router->addRoute('/profile', function() {
         $profileController->Index();
     }
     header("Location: /login");
-
+    exit();
 });
 
 $router->addRoute('/editProfile', function() {
@@ -95,6 +95,7 @@ $router->addRoute('/post', function() {
         $postController->Index();
     }
     header("Location: /login");
+    exit();
 });
 
 $router->addRoute('/post/MyImage', function() {
@@ -104,6 +105,7 @@ $router->addRoute('/post/MyImage', function() {
         $postController->Index();
     }
     header("Location: /login");
+    exit();
 });
 
 $router->addRoute('/post/save', function() {
@@ -115,6 +117,7 @@ $router->addRoute('/post/save', function() {
         }
     }
     header("Location: /");
+    exit();
 });
 
 $router->addRoute('/post/add_comment', function() {
@@ -126,6 +129,7 @@ $router->addRoute('/post/add_comment', function() {
         }
     }
     header("Location: /");
+    exit();
 });
 
 $router->addRoute('/post/like', function() {
@@ -137,6 +141,7 @@ $router->addRoute('/post/like', function() {
         }
     }
     header("Location: /");
+    exit();
 });
 
 $router->addRoute('/error', function() {
