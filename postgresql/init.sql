@@ -12,7 +12,9 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(100) NOT NULL,
     notif BOOLEAN DEFAULT TRUE,
     reset_token VARCHAR(100),
-    reset_token_expiration TIMESTAMPTZ
+    reset_token_expiration TIMESTAMPTZ,
+    is_verified BOOLEAN DEFAULT FALSE,
+    verification_token VARCHAR(100)
 );
 
 CREATE TABLE IF NOT EXISTS post (

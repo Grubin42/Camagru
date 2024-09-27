@@ -11,6 +11,7 @@ require_once __DIR__ . '/Presentation/Controllers/LogoutController.php';
 require_once __DIR__ . '/Presentation/Controllers/ErrorController.php';
 require_once __DIR__ . '/Presentation/Controllers/ForgotPasswordController.php';
 require_once __DIR__ . '/Presentation/Controllers/ResetPasswordController.php';
+require_once __DIR__ . '/Presentation/Controllers/VerificationController.php';
 
 //MODEL
 require_once __DIR__ . '/Core/Models/CommentModel.php';

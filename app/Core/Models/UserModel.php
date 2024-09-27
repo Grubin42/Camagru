@@ -43,12 +43,23 @@ class UserModel
 
     public function RegisterUser($username, $password, $email)
     {
-        // Hash the password (utilisez password_hash() pour une sécurité accrue)
+        // Hash the password pour plus de sécurité
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+    
+        // Générer un jeton unique pour la validation par email
+        $verificationToken = bin2hex(random_bytes(50));
 
-        // Insérez les données dans la base de données
-        $stmt = $this->db->prepare('INSERT INTO users (username, password, email) VALUES (?, ?, ?)');
-        $stmt->execute([$username, $hashedPassword, $email]);
+        // Insérer les données dans la base de données avec le jeton de validation et `is_verified` à FALSE
+        $stmt = $this->db->prepare('INSERT INTO users (username, password, email, verification_token, is_verified) VALUES (:username, :password, :email, :token, FALSE)');
+        $stmt->bindValue(':username', $username);
+        $stmt->bindValue(':password', $hashedPassword);
+        $stmt->bindValue(':email', $email);
+        $stmt->bindValue(':token', $verificationToken); // Liaison du jeton de validation
+    
+        $stmt->execute();
+    
+        // Retourner le jeton de validation pour l'envoi de l'email
+        return $verificationToken;
     }
 
     public function isUsernameTaken(string $username): bool {
@@ -130,5 +141,17 @@ class UserModel
         $stmt->bindParam(':newUsername', $newUsername);
         $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
         return $stmt->execute();
+    }
+    public function findUserByToken($token) {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE verification_token = :token AND is_verified = FALSE');
+        $stmt->bindParam(':token', $token);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    public function verifyUser($userId) {
+        $stmt = $this->db->prepare('UPDATE users SET is_verified = TRUE, verification_token = NULL WHERE id = :id');
+        $stmt->bindParam(':id', $userId);
+        $stmt->execute();
     }
 }

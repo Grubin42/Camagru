@@ -4,6 +4,19 @@
             <div class="card shadow">
                 <div class="card-body text-center">
                     <h2>Réinitialisation du mot de passe</h2>
+
+                    <!-- Afficher les erreurs si elles existent -->
+                    <?php if (!empty($errors)): ?>
+                        <div class="alert alert-danger">
+                            <ul>
+                                <?php foreach ($errors as $error): ?>
+                                    <li><?= htmlspecialchars($error) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Formulaire de réinitialisation du mot de passe -->
                     <form action="/reset-password" method="post">
                         <input type="hidden" name="token" value="<?= htmlspecialchars($_GET['token']) ?>">
 

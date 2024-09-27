@@ -10,6 +10,7 @@ use Presentation\Controllers\LogoutController;
 use Presentation\Controllers\ErrorController;
 use Presentation\Controllers\ForgotPasswordController;
 use Presentation\Controllers\ResetPasswordController;
+use Presentation\Controllers\VerificationController;
 
 $router = new Router();
 // Route pour la page d'accueil
@@ -152,6 +153,11 @@ $router->addRoute('/error', function() {
 $router->addRoute('/reset-password', function() {
     $resetPasswordController = new ResetPasswordController();
     $resetPasswordController->resetPassword();
+});
+
+$router->addRoute('/verify', function() {
+    $VerifyController = new VerificationController();
+    $VerifyController->verify();
 });
 
 return $router;

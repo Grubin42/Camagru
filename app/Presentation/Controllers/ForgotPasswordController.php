@@ -19,7 +19,6 @@ class ForgotPasswordController {
             
             // Vérifier si l'email existe dans la base de données
             $userModel = new UserModel();
-            // aller dans le service
             $user = $userModel->findUserByEmail($email);
             
             if ($user) {
@@ -29,14 +28,22 @@ class ForgotPasswordController {
                 
                 // Sauvegarder le token dans la base de données pour cet utilisateur
                 $userModel->storeResetToken($email, $token);
-
+    
                 // Envoyer le lien de réinitialisation par email
                 $emailService = new EmailService();
                 $emailService->sendPasswordResetEmail($email, $resetUrl);
                 
-                echo "Un email de réinitialisation a été envoyé à votre adresse.";
+                // Rediriger vers la vue de confirmation
+                renderView(__DIR__ . '/../Views/Shared/Layout.php', [
+                    'view' => __DIR__ . '/../Views/ResetPassword/success.php',
+                    'message' => "Un email de réinitialisation a été envoyé à votre adresse."
+                ]);
             } else {
-                echo "Cet email n'existe pas.";
+                // Rediriger vers une vue d'erreur avec un message d'erreur
+                renderView(__DIR__ . '/../Views/Shared/Layout.php', [
+                    'view' => __DIR__ . '/../Views/ResetPassword/error.php',
+                    'message' => "Cet email n'existe pas."
+                ]);
             }
         }
     }

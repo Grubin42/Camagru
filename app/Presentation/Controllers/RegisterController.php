@@ -3,12 +3,13 @@
 namespace Presentation\Controllers;
 
 use Camagru\Infrastructure\Services\RegisterService;
-
+use Camagru\Infrastructure\Services\EmailService;
 class RegisterController {
     private $Register;
-
+    private $EmailService;
     public function __construct() {
         $this->Register = new RegisterService();
+        $this->EmailService = new EmailService();
     }
 
 
@@ -54,12 +55,16 @@ class RegisterController {
             ]);
             exit();
         }
-        else{
-            
-            // Si tout va bien, appeler la méthode d'enregistrement du modèle
-            $this->Register->Register($username, $password, $email); // Noter que password1 n'est pas nécessaire ici
-        
-            // Redirection après enregistrement réussi
+        else{        
+
+            // Enregistrer l'utilisateur avec le jeton et `is_verified` à FALSE
+            $verificationToken = $this->Register->RegisterUser($username, $password, $email);
+
+            // Envoyer l'email de validation
+            $this->EmailService->sendVerificationEmail($email, $verificationToken);
+
+            // Redirection avec message de succès
+            $_SESSION['success_message'] = "Votre compte a été créé. Un email de validation vous a été envoyé.";
             header('Location: /login');
             exit();
         }
