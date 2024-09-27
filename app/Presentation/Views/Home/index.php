@@ -13,18 +13,20 @@
 
                 <!-- Accordéon pour les commentaires -->
                 <div class="comment-section">
-                    <button class="toggle-comments">Voir les commentaires (<?= count($post['comments']) ?>)</button>
-                    <div class="comments" style="display: none;">
-                        <?php if (!empty($post['comments'])): ?>
-                            <?php foreach ($post['comments'] as $comment): ?>
+                    <button class="toggle-comments">
+                        Voir les commentaires (<span id="comment-count-<?= $post['id'] ?>"><?= count($post['comment']) ?></span>)
+                    </button>
+                    <div id="comments-list-<?= $post['id'] ?>" class="comments" style="display: none;">
+                        <?php if (!empty($post['comment'])): ?>
+                            <?php foreach ($post['comment'] as $comment): ?>
                                 <p>
-                                    <strong><?= $comment['username'] ?></strong> : <?= $comment['commentaire'] ?>
+                                    <strong><?= $comment['username'] ?></strong> : <?= $comment['comment'] ?>
                                     <small>(<?= $comment['created_date'] ?>)</small>
                                 </p>
                             <?php endforeach; ?>
-                        <?php else: ?>
-                            <p>Aucun commentaire pour ce post.</p>
-                        <?php endif; ?>
+                            <?php else: ?>
+                                <p class="no-comments">Aucun commentaire pour ce post.</p>
+                            <?php endif; ?>
                     </div>
                 </div>
 
@@ -128,21 +130,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const formData = new FormData(form);
             const postId = formData.get('post_id');
+            const comment = formData.get('comment'); // Récupérer le commentaire
             const commentSection = document.getElementById(`comments-list-${postId}`);
+            const commentCountSpan = document.getElementById(`comment-count-${postId}`); // Récupérer l'élément pour le nombre de commentaires
 
             try {
                 const response = await fetch('/add-comment', {
                     method: 'POST',
-                    body: formData
+                    headers: {
+                        'Content-Type': 'application/json', // Indique que tu envoies des données JSON
+                    },
+                    body: JSON.stringify({
+                        post_id: postId,
+                        comment: comment
+                    })
                 });
 
                 if (response.ok) {
                     const result = await response.json();
                     if (result.username && result.comment) {
+
+                        const noComments = commentSection.querySelector('.no-comments');
+                        if (noComments) {
+                            noComments.remove();
+                        }
                         // Ajouter le nouveau commentaire dans la section
                         const newComment = `<p><strong>${result.username}</strong> : ${result.comment}</p>`;
                         commentSection.insertAdjacentHTML('beforeend', newComment);
                         form.reset(); // Réinitialiser le formulaire après soumission
+
+                        // Mettre à jour le nombre de commentaires
+                        const currentCount = parseInt(commentCountSpan.textContent);
+                        commentCountSpan.textContent = currentCount + 1; // Incrémenter le nombre de commentaires
                     }
                 } else if (response.status === 401) {
                     alert('Vous devez être connecté pour commenter.');
@@ -150,6 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('Erreur lors de l\'ajout du commentaire.');
                 }
             } catch (error) {
+                console.error('Erreur réseau :', error); // Ajouter un log pour voir l'erreur en détail
                 alert('Erreur réseau. Veuillez vérifier votre connexion.');
             }
         });

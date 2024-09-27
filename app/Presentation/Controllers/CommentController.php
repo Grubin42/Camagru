@@ -25,13 +25,17 @@ class CommentController
             exit();
         }
 
-        $postId = $_POST['post_id'] ?? null;
-        $comment = $_POST['comment'] ?? null;
+        // Récupérer les données JSON envoyées par le fetch
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        $postId = $data['post_id'] ?? null;
+        $comment = $data['comment'] ?? null;
         $username = $_SESSION['user']['username'] ?? null;
+        $userId = $_SESSION['user']['id'] ?? null;
 
         if ($postId && $comment && $username) {
             // Ajouter le commentaire
-            $this->commentService->addComment($postId, $comment, $username);
+            $this->commentService->addComment($postId, $comment, $username, $userId);
 
             // Récupérer l'email du propriétaire du post
             $postOwner = $this->commentService->getPostOwner($postId);

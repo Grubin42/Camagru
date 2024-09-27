@@ -113,10 +113,14 @@
     }
 
     // Sauvegarder l'image fusionnée
-document.getElementById('post-form').addEventListener('submit', (event) => {
-    document.getElementById('final-image').value = finalCanvas.toDataURL(); // Sauvegarder l'image fusionnée
-    console.log('Captured Image:', document.getElementById('captured-image').value);
-    console.log('Selected Sticker:', document.getElementById('selected-sticker').value);
-    console.log('Final Image:', document.getElementById('final-image').value);
-});
+    document.getElementById('post-form').addEventListener('submit', (event) => {
+        event.preventDefault(); // Empêcher l'envoi par défaut du formulaire
+
+        // Log pour vérifier que les valeurs sont bien capturées
+        console.log('Captured Image:', document.getElementById('captured-image').value);
+        console.log('Selected Sticker:', document.getElementById('selected-sticker').value);
+
+        // Soumettre le formulaire
+        event.target.submit();
+    });
 </script>

@@ -16,10 +16,6 @@ class PostService
         $this->likeModel = new Like();
     }
 
-    // public function getLastPosts(int $limit = 5): array
-    // {
-    //     return $this->postModel->getLastPosts($limit);
-    // }
     public function getPostsPaginated(int $limit, int $offset, $userId = null): array
     {
         $posts = $this->postModel->getPostsPaginated($limit, $offset);
@@ -30,7 +26,7 @@ class PostService
             $post['liked_by_user'] = $userId ? $this->likeModel->userLikedPost($post['id'], $userId) : false;
 
             // Ajouter les commentaires
-            $post['comments'] = $this->postModel->getCommentsForPost($post['id']);
+            $post['comment'] = $this->postModel->getCommentsForPost($post['id']);
         }
 
         return $posts;
@@ -83,6 +79,6 @@ class PostService
     public function createPost($imageData)
     {
         $userId = $_SESSION['user']['id'] ?? null;
-        $this->postModel->createPost($imageData, $userId);
+        $this->postModel->createPost($userId, $imageData);
     }
 }

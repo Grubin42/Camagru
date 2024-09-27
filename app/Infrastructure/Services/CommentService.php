@@ -16,9 +16,9 @@ class CommentService
         $this->postModel = new Post();
     }
 
-    public function addComment(int $postId, string $comment, string $username)
+    public function addComment(int $postId, string $comment, string $username, int $userId)
     {
-        return $this->commentModel->addComment($postId, $comment, $username);
+        return $this->commentModel->addComment($postId, $comment, $username, $userId);
     }
 
     public function getPostOwner(int $postId)

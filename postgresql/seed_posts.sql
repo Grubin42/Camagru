@@ -1,8 +1,8 @@
--- Vider la table post avant de la remplir
-TRUNCATE TABLE post RESTART IDENTITY CASCADE;
+-- Vider la table posts avant de la remplir
+TRUNCATE TABLE posts RESTART IDENTITY CASCADE;
 
 -- Insérer 15 posts avec des images de test (images en base64)
-INSERT INTO post (image, user_id) VALUES
+INSERT INTO posts (image, user_id) VALUES
     (DECODE('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAHUlEQVR42mP8z/C/HwADgQH+sy6lGwAAAABJRU5ErkJggg==', 'base64'), 1),
     (DECODE('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAHUlEQVR42mP8z/C/HwADgQH+sy6lGwAAAABJRU5ErkJggg==', 'base64'), 2),
     (DECODE('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAHUlEQVR42mP8z/C/HwADgQH+sy6lGwAAAABJRU5ErkJggg==', 'base64'), 3),

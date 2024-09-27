@@ -1,7 +1,7 @@
 <?php
 
 use Camagru\Core\Router;
-use Camagru\Presentation\Controllers\HomeController;
+use Camagru\Presentation\Controllers\ProfileController;
 use Camagru\Presentation\Controllers\RegisterController;
 use Camagru\Presentation\Controllers\LoginController;
 use Camagru\Presentation\Controllers\PasswordResetController;
@@ -91,6 +91,30 @@ $router->addRoute('/add-comment', function() {
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $commentController->addComment();
+    }
+});
+
+$router->addRoute('/profile', function() {
+    if (isset($_SESSION['user'])) {
+        $profileController = new ProfileController();
+        $profileController->showProfile();
+    } else {
+        header('Location: /login');
+        exit();
+    }
+});
+
+$router->addRoute('/edit-profile', function() {
+    if (isset($_SESSION['user'])) {
+        $profileController = new ProfileController();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $profileController->editProfile();
+        } else {
+            $profileController->showEditProfileForm();
+        }
+    } else {
+        header('Location: /login');
+        exit();
     }
 });
 

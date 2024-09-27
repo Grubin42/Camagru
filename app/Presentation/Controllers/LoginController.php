@@ -32,7 +32,12 @@ class LoginController
         $user = $this->loginService->login($username, $password);
 
         if ($user) {
-            $_SESSION['user'] = $user;
+            $_SESSION['user'] = [
+                'id' => $user['id'],
+                'username' => $user['username'],
+                'email' => $user['email'],
+                'notif' => $user['notif']
+            ];
             header('Location: /');
             exit();
         } else {
