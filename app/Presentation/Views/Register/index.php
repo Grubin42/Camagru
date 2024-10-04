@@ -19,13 +19,15 @@
                 <!-- Username -->
                 <div class="form-group mt-3">
                     <label for="username">Nom d'utilisateur</label>
-                    <input style="width: 250px;" type="text" class="form-control form-control-sm mx-auto" id="username" name="username" required>
+                    <input style="width: 250px;" type="text" class="form-control form-control-sm mx-auto" id="username" name="username" 
+                           value="<?= htmlspecialchars($_POST['username'] ?? '') ?>" required>
                 </div>
 
                 <!-- Email -->
                 <div class="form-group mt-3">
                     <label for="email">Email</label>
-                    <input style="width: 250px;" type="email" class="form-control form-control-sm mx-auto" id="email" name="email" required>
+                    <input style="width: 250px;" type="email" class="form-control form-control-sm mx-auto" id="email" name="email" 
+                           value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required>
                 </div>
 
                 <!-- Password -->
@@ -36,7 +38,7 @@
 
                 <!-- Confirm Password -->
                 <div class="form-group mt-3">
-                    <label for="password1">Confirmer Mot de passe</label>
+                    <label for="confirmPassword">Confirmer Mot de passe</label>
                     <input style="width: 250px;" type="password" class="form-control form-control-sm mx-auto" id="confirmPassword" name="confirmPassword" required>
                 </div>
 

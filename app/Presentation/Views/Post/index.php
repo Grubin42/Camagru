@@ -1,25 +1,3 @@
-<style>
-    .sticker-preview {
-        cursor: pointer;
-        border: 2px solid transparent;
-        transition: border-color 0.3s ease;
-    }
-
-    .sticker-selected {
-        border-color: blue;
-    }
-
-    /* Boutons désactivés par défaut */
-    #uploadPhotoButton,
-    #capture {
-        cursor: not-allowed;
-    }
-
-    /* Masquer le bouton "Choisir une photo" par défaut */
-    #uploadPhotoButton {
-        display: none;
-    }
-</style>
 
 <div class="container mt-5">
     <div class="card">
@@ -100,5 +78,27 @@
         </div>
     </div>
 </div>
+<style>
+    .sticker-preview {
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border-color 0.3s ease;
+    }
+
+    .sticker-selected {
+        border-color: blue;
+    }
+
+    /* Boutons désactivés par défaut */
+    #uploadPhotoButton,
+    #capture {
+        cursor: not-allowed;
+    }
+
+    /* Masquer le bouton "Choisir une photo" par défaut */
+    #uploadPhotoButton {
+        display: none;
+    }
+</style>
 
 <script src="/Presentation/Assets/js/post.js"></script>

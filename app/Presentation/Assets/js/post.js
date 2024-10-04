@@ -17,7 +17,6 @@ navigator.mediaDevices.getUserMedia({ video: true })
         video.srcObject = stream;
     })
     .catch(err => {
-        console.error("Accès à la caméra refusé ou pas de caméra trouvée.");
         // Afficher le bouton pour uploader une photo si pas de webcam ou refus d'accès
         uploadPhotoButton.style.display = "inline-block";
     });
