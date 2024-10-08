@@ -91,25 +91,24 @@
     .nav-pagi{
         background: none;
     }
-    /* Enlever le contour bleu et l'effet de focus */
+    
     .pagination .page-link:focus, 
     .pagination .page-link:hover {
         outline: none;
         box-shadow: none;
-        color: #000; /* Assure que la couleur reste noire au survol */
-        text-decoration: none; /* Enlever la sous-ligne au hover */
+        color: #000; 
+        text-decoration: none;
     }
 
-    /* Style pour la page active */
     .pagination .page-item.active .page-link {
         color: #000;
         font-weight: bold;
-        text-decoration: underline; /* Marquer la page active avec un soulignement si souhaité */
+        text-decoration: underline;
     }
 
-    /* Optionnel : Centrer les liens de pagination */
     .pagination {
         justify-content: center;
     }
 </style>
+
 <script src="/Presentation/Assets/js/likecomment.js"></script>

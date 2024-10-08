@@ -204,4 +204,20 @@ class PostModel
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function deletePost($postId, $userId): bool
+{
+    try {
+        // Prépare la requête pour supprimer un post
+        $stmt = $this->db->prepare('DELETE FROM post WHERE id = :post_id AND user_id = :user_id');
+        $stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+
+        return $stmt->execute(); // Retourne vrai si la suppression est réussie
+    } catch (PDOException $e) {
+        // En cas d'erreur, log l'erreur ou retourne faux
+        error_log('Erreur lors de la suppression du post : ' . $e->getMessage());
+        return false;
+    }
+}
 }

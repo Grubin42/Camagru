@@ -159,4 +159,17 @@ $router->addRoute('/verify', function() {
     $VerifyController->verify();
 });
 
+$router->addRoute('/post/delete', function() {
+    // Vérifiez si l'utilisateur est connecté
+    if (isset($_SESSION['user'])) {
+        // Appelle le contrôleur pour gérer la suppression
+        $postController = new PostController();
+        $postController->delete();
+    } else {
+        // Si l'utilisateur n'est pas connecté, on le redirige vers la page de login
+        header("Location: /login");
+        exit();
+    }
+});
+
 return $router;

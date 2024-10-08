@@ -8,7 +8,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </head>
-    <body>
+    <body> 
         <nav>
             <ul>
                 <li><a href="/">
@@ -74,7 +74,12 @@
         </nav>
         <main>
             <?php include $view; ?>
-        </main>      
+        </main>
+        <footer class="bg-light text-center text-muted py-3 mt-auto">
+        <div class="container">
+            <p class="mb-0">© 2024 Camagru. Tous droits réservés.</p>
+        </div>
+    </footer>
         <script src="/Presentation/Assets/js/scripts.js"></script>
     </body>
 </html>

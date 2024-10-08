@@ -125,4 +125,9 @@ class PostService
     {
         return $this->PostModel->GetTotalPosts();
     }
+
+    public function deletePhoto($postId, $userId)
+    {
+        return $this->PostModel->deletePost($postId,$userId);
+    }
 }

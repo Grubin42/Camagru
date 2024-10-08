@@ -87,4 +87,27 @@ class PostController {
             echo "Méthode de requête invalide.";
         }
     }
+
+    public function delete()
+    {
+        // Vérifier si la requête est de type POST et si l'ID de la photo est fourni
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+            $postId = $_POST['id'];
+            $userId = $_SESSION['user']['id']; // L'ID de l'utilisateur connecté
+
+            // Appeler le service pour supprimer la photo
+            $success = $this->PostService->deletePhoto($postId, $userId);
+
+            if ($success) {
+                // Retourner une réponse JSON en cas de succès
+                echo json_encode(['success' => true]);
+            } else {
+                // En cas d'échec, retourner une réponse JSON avec un message d'erreur
+                echo json_encode(['success' => false, 'message' => 'La suppression a échoué.']);
+            }
+        } else {
+            // Si la requête n'est pas valide, retourner une réponse JSON avec une erreur
+            echo json_encode(['success' => false, 'message' => 'Requête non valide ou ID manquant.']);
+        }
+    }
 }
