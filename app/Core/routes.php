@@ -4,7 +4,7 @@ use Camagru\Core\Router;
 use Camagru\Presentation\Controllers\ProfileController;
 use Camagru\Presentation\Controllers\RegisterController;
 use Camagru\Presentation\Controllers\LoginController;
-use Camagru\Presentation\Controllers\PasswordResetController;
+use Camagru\Presentation\Controllers\TokenController;
 use Camagru\Presentation\Controllers\PostController;
 use Camagru\Presentation\Controllers\LikeController;
 use Camagru\Presentation\Controllers\CommentController;
@@ -38,6 +38,19 @@ $router->addRoute('/register', function() {
     }
 });
 
+$router->addRoute('/register/success', function() {
+    $registerController = new RegisterController();
+    $registerController->showSuccess();
+});
+
+$router->addRoute('/verify-email', function() {
+    $tokenController = new TokenController();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $tokenController->verifyEmail();
+    }
+});
+
 $router->addRoute('/logout', function() {
     $loginController = new LoginController();
     $loginController->logout();
@@ -45,13 +58,13 @@ $router->addRoute('/logout', function() {
 
 
 $router->addRoute('/request-reset', function() {
-    $passwordResetController = new PasswordResetController();
-    $passwordResetController->requestPasswordReset();
+    $TokenController = new TokenController();
+    $TokenController->requestPasswordReset();
 });
 
 $router->addRoute('/reset-password', function() {
-    $passwordResetController = new PasswordResetController();
-    $passwordResetController->resetPassword();
+    $TokenController = new TokenController();
+    $TokenController->resetPassword();
 });
 
 $router->addRoute('/posts', function() {

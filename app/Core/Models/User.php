@@ -24,12 +24,14 @@ class User
     public function createUser(string $username, string $email, string $password): bool
     {
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $verified = 0; // Utiliser 0 pour FALSE
 
-        $stmt = $this->db->prepare('INSERT INTO users (username, email, password) VALUES (:username, :email, :password)');
+        $stmt = $this->db->prepare('INSERT INTO users (username, email, password, verified) VALUES (:username, :email, :password, :verified)');
         return $stmt->execute([
             'username' => $username,
             'email' => $email,
-            'password' => $hashedPassword
+            'password' => $hashedPassword,
+            'verified' => $verified
         ]);
     }
     
@@ -64,5 +66,24 @@ class User
         $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
     
         $stmt->execute();
+    }
+
+    public function setVerified(int $userId): bool
+    {
+        $stmt = $this->db->prepare('UPDATE users SET verified = TRUE WHERE id = :id');
+        return $stmt->execute(['id' => $userId]);
+    }
+
+    /**
+     * Recherche un utilisateur par username uniquement s'il est vérifié.
+     *
+     * @param string $username
+     * @return array|null
+     */
+    public function findByUsernameAndVerified(string $username): ?array
+    {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE username = :username AND verified = TRUE LIMIT 1');
+        $stmt->execute(['username' => $username]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 }

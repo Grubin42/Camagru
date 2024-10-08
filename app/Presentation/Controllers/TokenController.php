@@ -2,15 +2,16 @@
 
 namespace Camagru\Presentation\Controllers;
 
-use Camagru\Infrastructure\Services\PasswordResetService;
+use Camagru\Core\Models\Token;
+use Camagru\Infrastructure\Services\TokenService;
 
-class PasswordResetController
+class TokenController
 {
-    protected $passwordResetService;
+    protected $tokenService;
 
     public function __construct()
     {
-        $this->passwordResetService = new PasswordResetService();
+        $this->tokenService = new TokenService();
     }
 
     /**
@@ -22,7 +23,7 @@ class PasswordResetController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
 
-            if ($this->passwordResetService->sendResetLink($email)) {
+            if ($this->tokenService->sendResetLink($email)) {
                 // Rediriger vers une page de confirmation
                 header('Location: /request-reset/sent');
                 exit();
@@ -52,7 +53,7 @@ class PasswordResetController
             $token = $_POST['token'] ?? '';
             $newPassword = $_POST['password'] ?? '';
 
-            if ($this->passwordResetService->resetPassword($token, $newPassword)) {
+            if ($this->tokenService->resetPassword($token, $newPassword)) {
                 // Redirection après succès
                 header('Location: /login?reset=success');
                 exit();
@@ -64,6 +65,24 @@ class PasswordResetController
         } else {
             $token = $_GET['token'] ?? '';
             renderView(__DIR__ . '/../Views/Auth/reset_password.php', ['token' => $token]);
+        }
+    }
+
+    /**
+     * Vérifie le token de vérification d'email.
+     */
+    public function verifyEmail()
+    {
+        $token = $_GET['token'] ?? '';
+
+        if ($this->tokenService->verifyEmail($token)) {
+            // Rediriger vers la page d'accueil avec un message de succès
+            header('Location: /?verified=success');
+            exit();
+        } else {
+            // Rediriger vers la page d'accueil avec un message d'erreur
+            header('Location: /?verified=error');
+            exit();
         }
     }
 }

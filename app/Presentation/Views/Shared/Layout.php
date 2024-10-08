@@ -30,8 +30,22 @@
     </header>
 
     <main>
+        <!-- Affichage des messages de vérification de l'email -->
+        <?php if (isset($_GET['verified'])): ?>
+            <?php if ($_GET['verified'] === 'success'): ?>
+                <div class="alert alert-success">
+                    Votre adresse email a été vérifiée avec succès ! Vous pouvez maintenant vous connecter.
+                </div>
+            <?php elseif ($_GET['verified'] === 'error'): ?>
+                <div class="alert alert-danger">
+                    Le lien de vérification est invalide ou a expiré.
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <!-- Inclusion de la vue spécifique -->
         <?php 
-        if (file_exists($view)) {
+        if (isset($view) && file_exists($view)) {
             include $view; 
         } else {
             echo "La vue spécifiée n'existe pas.";
