@@ -6,43 +6,71 @@ use Camagru\Core\Models\User;
 use Camagru\Core\Models\Comment;
 
 class ProfileService {
-    private $userModel;
-    private $commentModel;
+    private User $userModel;
+    private Comment $commentModel;
+    private ValidationService $validationService;
     
     public function __construct() {
         $this->userModel = new User();
         $this->commentModel = new Comment();
+        $this->validationService = new ValidationService();
     }
 
-    public function updateProfile($userId, $newUsername, $newEmail, $newPassword = null, $notif) {
-        $errors = [];
+    /**
+     * Tente de mettre à jour le profil de l'utilisateur.
+     *
+     * @param int $userId
+     * @param string $newUsername
+     * @param string $newEmail
+     * @param string|null $newPassword
+     * @param bool $notif
+     * @return array
+     */
+    public function updateProfile(int $userId, string $newUsername, string $newEmail, ?string $newPassword = null, bool $notif): array {
+        $this->validationService->resetErrors();
 
-        // Validation de l'email
-        if (!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
-            $errors[] = "L'adresse email est invalide.";
+        // Valider le nom d'utilisateur
+        $isUsernameValid = $this->validationService->validateUsername($newUsername);
+
+        // Valider l'email
+        $isEmailValid = $this->validationService->validateEmail($newEmail);
+
+        // Valider le mot de passe si fourni
+        $isPasswordValid = true;
+        if ($newPassword !== null && $newPassword !== '') {
+            $isPasswordValid = $this->validationService->validatePassword($newPassword);
         }
 
         // Vérifier si le nom d'utilisateur est unique
         $existingUser = $this->userModel->findByUsername($newUsername);
         if ($existingUser && $existingUser['id'] !== $userId) {
-            $errors[] = "Le nom d'utilisateur est déjà pris.";
+            $this->validationService->addError('username', "Le nom d'utilisateur est déjà pris.");
+            $isUsernameValid = false;
         }
 
-        // Vérification du mot de passe (si un nouveau mot de passe est fourni)
-        if ($newPassword && strlen($newPassword) < 8) {
-            $errors[] = "Le mot de passe doit contenir au moins 8 caractères.";
+        // Vérifier si l'email est unique
+        $existingEmailUser = $this->userModel->findByEmail($newEmail);
+        if ($existingEmailUser && $existingEmailUser['id'] !== $userId) {
+            $this->validationService->addError('email', "L'email est déjà utilisé.");
+            $isEmailValid = false;
         }
 
-        if (!empty($errors)) {
-            return ['success' => false, 'errors' => $errors];
+        // Si des erreurs sont présentes, renvoyer false
+        if (!$isUsernameValid || !$isEmailValid || !$isPasswordValid) {
+            return ['success' => false, 'errors' => $this->validationService->getErrors()];
         }
 
         // Mettre à jour les informations dans la base de données
-        $this->userModel->updateUserProfile($userId, $newUsername, $newEmail, $newPassword, $notif);
-    
-        // Mettre à jour les commentaires associés avec le nouveau nom d'utilisateur
-        $this->commentModel->updateUsernameInComments($userId, $newUsername);
-
-        return ['success' => true];
+        $updateSuccess = $this->userModel->updateUserProfile($userId, $newUsername, $newEmail, $newPassword, $notif);
+        
+        if ($updateSuccess) {
+            // Mettre à jour les commentaires associés avec le nouveau nom d'utilisateur
+            $this->commentModel->updateUsernameInComments($userId, $newUsername);
+            return ['success' => true];
+        } else {
+            // En cas d'échec inattendu
+            $this->validationService->addError('general', "Une erreur est survenue lors de la mise à jour du profil.");
+            return ['success' => false, 'errors' => $this->validationService->getErrors()];
+        }
     }
 }
