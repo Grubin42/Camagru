@@ -110,3 +110,40 @@ form a:hover {
 .btn-primary:hover {
     background-color: #0056b3;
 }
+
+.password-strength-container {
+    margin: 10px 0;
+    width: 100%;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+}
+
+.password-strength-bar {
+    height: 100%;
+    width: 0;
+    background-color: red;
+    border-radius: 5px;
+}
+
+.valid {
+    color: green;
+}
+
+.invalid {
+    color: red;
+}
+
+.error {
+    margin-bottom: 10px;
+}
+
+.error p {
+    color: red;
+}
+
+.error-messages {
+    color: red;
+    list-style-type: none;
+    padding: 0;
+}

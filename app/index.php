@@ -28,6 +28,7 @@ require_once __DIR__ . '/Infrastructure/Services/TokenService.php';
 require_once __DIR__ . '/Infrastructure/Services/MailService.php';
 require_once __DIR__ . '/Infrastructure/Services/LikeService.php';
 require_once __DIR__ . '/Infrastructure/Services/CommentService.php';
+require_once __DIR__ . '/Infrastructure/Services/ValidationService.php';
 
 //CONFIG
 require_once __DIR__ . '/config.php';

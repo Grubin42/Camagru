@@ -57,6 +57,6 @@
         <p>&copy; <?= date('Y') ?> Camagru. Tous droits réservés.</p>
     </footer>
     
-    <script src="/Presentation/Assets/js/scripts.js"></script>
+    <script src="/Presentation/Assets/js/password-strength.js"></script>
 </body>
 </html>
