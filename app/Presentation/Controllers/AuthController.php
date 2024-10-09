@@ -5,7 +5,7 @@ namespace Camagru\Presentation\Controllers;
 use Camagru\Core\Models\Token;
 use Camagru\Infrastructure\Services\TokenService;
 
-class TokenController
+class AuthController
 {
     protected $tokenService;
 

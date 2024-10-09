@@ -4,7 +4,7 @@ use Camagru\Core\Router;
 use Camagru\Presentation\Controllers\ProfileController;
 use Camagru\Presentation\Controllers\RegisterController;
 use Camagru\Presentation\Controllers\LoginController;
-use Camagru\Presentation\Controllers\TokenController;
+use Camagru\Presentation\Controllers\AuthController;
 use Camagru\Presentation\Controllers\PostController;
 use Camagru\Presentation\Controllers\LikeController;
 use Camagru\Presentation\Controllers\CommentController;
@@ -44,7 +44,7 @@ $router->addRoute('/register/success', function() {
 });
 
 $router->addRoute('/verify-email', function() {
-    $tokenController = new TokenController();
+    $tokenController = new AuthController();
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $tokenController->verifyEmail();
@@ -58,12 +58,12 @@ $router->addRoute('/logout', function() {
 
 
 $router->addRoute('/request-reset', function() {
-    $TokenController = new TokenController();
+    $TokenController = new AuthController();
     $TokenController->requestPasswordReset();
 });
 
 $router->addRoute('/reset-password', function() {
-    $TokenController = new TokenController();
+    $TokenController = new AuthController();
     $TokenController->resetPassword();
 });
 

@@ -14,7 +14,7 @@ require_once __DIR__ . '/Presentation/Controllers/LoginController.php';
 require_once __DIR__ . '/Presentation/Controllers/ProfileController.php';
 require_once __DIR__ . '/Presentation/Controllers/PostController.php';
 require_once __DIR__ . '/Presentation/Controllers/RegisterController.php';
-require_once __DIR__ . '/Presentation/Controllers/TokenController.php';
+require_once __DIR__ . '/Presentation/Controllers/AuthController.php';
 require_once __DIR__ . '/Presentation/Controllers/LikeController.php';
 require_once __DIR__ . '/Presentation/Controllers/CommentController.php';
 

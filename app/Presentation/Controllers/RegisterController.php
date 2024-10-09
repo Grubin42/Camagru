@@ -15,8 +15,16 @@ class RegisterController
 
     public function showRegisterForm()
     {
+        // Récupérer les erreurs de la session s'il y en a
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        $errorMessage = $_SESSION['error_message'] ?? null;
+        unset($_SESSION['error_message']);
+
         renderView(__DIR__ . '/../Views/Shared/Layout.php', [
-            'view' => __DIR__ . '/../Views/Register/index.php'
+            'view' => __DIR__ . '/../Views/Register/index.php',
+            'error' => $errorMessage
         ]);
     }
 
@@ -38,11 +46,19 @@ class RegisterController
             header('Location: /register/success');
             exit();
         } else {
-            // Utiliser les sessions pour stocker le message d'erreur
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }
-            $_SESSION['error_message'] = 'L\'utilisateur existe déjà ou une erreur est survenue.';
+    
+            // Récupérer les erreurs et les valeurs validées du service
+            $_SESSION['error_message'] = implode('<br>', $this->registerService->getErrors());
+            $_SESSION['form_data'] = [
+                'username' => $this->registerService->isValid('username') ? $username : '',
+                'email' => $this->registerService->isValid('email') ? $email : '',
+                'password' => '' // Ne jamais pré-remplir les mots de passe après une tentative de soumission pour des raisons de sécurité
+            ];
+            
+            // Rediriger vers la page d'inscription
             header('Location: /register');
             exit();
         }
