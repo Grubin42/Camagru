@@ -7,8 +7,8 @@ use Camagru\Infrastructure\Services\MailService;
 
 class CommentController
 {
-    protected $commentService;
-    protected $mailService;
+    protected CommentService $commentService;
+    protected MailService $mailService;
 
     public function __construct()
     {
@@ -16,8 +16,13 @@ class CommentController
         $this->mailService = new MailService();
     }
 
+    /**
+     * Ajoute un commentaire à un post.
+     */
     public function addComment()
     {
+        session_start();
+        
         if (!isset($_SESSION['user'])) {
             // Renvoyer une erreur 401 (Non autorisé)
             http_response_code(401);
@@ -28,28 +33,35 @@ class CommentController
         // Récupérer les données JSON envoyées par le fetch
         $data = json_decode(file_get_contents('php://input'), true);
 
-        $postId = $data['post_id'] ?? null;
-        $comment = $data['comment'] ?? null;
+        $postId = isset($data['post_id']) ? (int)$data['post_id'] : null;
+        $comment = isset($data['comment']) ? trim($data['comment']) : null;
         $username = $_SESSION['user']['username'] ?? null;
         $userId = $_SESSION['user']['id'] ?? null;
 
         if ($postId && $comment && $username) {
-            // Ajouter le commentaire
-            $this->commentService->addComment($postId, $comment, $username, $userId);
+            // Ajouter le commentaire via CommentService
+            $result = $this->commentService->addComment($postId, $comment, $username, $userId);
 
-            // Récupérer l'email du propriétaire du post
-            $postOwner = $this->commentService->getPostOwner($postId);
-            if ($postOwner && $postOwner['notif']) {
-                // Envoyer une notification par email au propriétaire du post
-                $this->mailService->sendCommentNotification($postOwner['email'], $username, $postId);
+            if ($result['success']) {
+                // Récupérer l'email du propriétaire du post
+                $postOwner = $this->commentService->getPostOwner($postId);
+                if ($postOwner && $postOwner['notif']) {
+                    // Envoyer une notification par email au propriétaire du post
+                    $this->mailService->sendCommentNotification($postOwner['email'], $username, $postId);
+                }
+
+                // Renvoyer une réponse JSON avec les détails du nouveau commentaire
+                echo json_encode([
+                    'username' => htmlspecialchars($username),
+                    'comment' => htmlspecialchars($comment)
+                ]);
+                exit();
+            } else {
+                // Renvoyer une réponse JSON avec les erreurs de validation
+                http_response_code(400); // Bad Request
+                echo json_encode(['errors' => $result['errors']]);
+                exit();
             }
-
-            // Renvoyer une réponse JSON avec les détails du nouveau commentaire
-            echo json_encode([
-                'username' => $username,
-                'comment' => $comment
-            ]);
-            exit();
         } else {
             http_response_code(400); // Mauvaise requête
             echo json_encode(['error' => 'Données manquantes']);

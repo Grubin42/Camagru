@@ -91,6 +91,29 @@ class ValidationService
     }
 
     /**
+     * Valide un commentaire.
+     *
+     * @param string $comment
+     * @return bool
+     */
+    public function validateComment(string $comment): bool
+    {
+        $valid = true;
+
+        if (empty(trim($comment))) {
+            $this->addError('comment', "Le commentaire ne peut pas être vide.");
+            $valid = false;
+        }
+
+        if (strlen($comment) > 200) {
+            $this->addError('comment', "Le commentaire ne peut pas dépasser 200 caractères.");
+            $valid = false;
+        }
+
+        return $valid;
+    }
+
+    /**
      * Récupère les erreurs de validation.
      *
      * @return array

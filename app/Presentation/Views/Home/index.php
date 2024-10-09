@@ -7,44 +7,45 @@
     <div class="posts-grid">
     <?php foreach ($posts as $post): ?>
         <div class="post-item">
-            <img src="data:image/png;base64,<?= $post['image'] ?>" alt="Post Image">
+            <img src="data:image/png;base64,<?= htmlspecialchars($post['image']) ?>" alt="Post Image">
             <div class="post-info">
-                <p>Date: <?= $post['created_date'] ?></p>
+                <p>Date: <?= htmlspecialchars($post['created_date']) ?></p>
 
                 <!-- Accordéon pour les commentaires -->
                 <div class="comment-section">
                     <button class="toggle-comments">
-                        Voir les commentaires (<span id="comment-count-<?= $post['id'] ?>"><?= count($post['comment']) ?></span>)
+                        Voir les commentaires (<span id="comment-count-<?= htmlspecialchars($post['id']) ?>"><?= count($post['comment']) ?></span>)
                     </button>
-                    <div id="comments-list-<?= $post['id'] ?>" class="comments" style="display: none;">
+                    <div id="comments-list-<?= htmlspecialchars($post['id']) ?>" class="comments" style="display: none;">
                         <?php if (!empty($post['comment'])): ?>
                             <?php foreach ($post['comment'] as $comment): ?>
                                 <p>
-                                    <strong><?= $comment['username'] ?></strong> : <?= $comment['comment'] ?>
-                                    <small>(<?= $comment['created_date'] ?>)</small>
+                                    <strong><?= htmlspecialchars($comment['username']) ?></strong> : <?= htmlspecialchars($comment['comment']) ?>
+                                    <small>(<?= htmlspecialchars($comment['created_date']) ?>)</small>
                                 </p>
                             <?php endforeach; ?>
-                            <?php else: ?>
-                                <p class="no-comments">Aucun commentaire pour ce post.</p>
-                            <?php endif; ?>
+                        <?php else: ?>
+                            <p class="no-comments">Aucun commentaire pour ce post.</p>
+                        <?php endif; ?>
                     </div>
                 </div>
 
                 <!-- Si l'utilisateur est connecté, afficher le formulaire de commentaire -->
                 <?php if (isset($_SESSION['user'])): ?>
-                    <form class="comment-form" data-post-id="<?= $post['id'] ?>">
-                        <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
-                        <textarea name="comment" placeholder="Écrire un commentaire..."></textarea>
+                    <form class="comment-form" data-post-id="<?= htmlspecialchars($post['id']) ?>">
+                        <input type="hidden" name="post_id" value="<?= htmlspecialchars($post['id']) ?>">
+                        <textarea name="comment" placeholder="Écrire un commentaire..." maxlength="200" required></textarea>
+                        <div class="comment-errors"></div> <!-- Conteneur pour les erreurs de commentaire -->
                         <button type="submit">Commenter</button>
                     </form>
                 <?php endif; ?>
 
                 <!-- Afficher le nombre de likes pour tous les utilisateurs -->
                 <div class="like-section">
-                    <span class="like-count">❤️ <?= $post['like_count'] ?> Likes</span>
+                    <span class="like-count">❤️ <?= htmlspecialchars($post['like_count']) ?> Likes</span>
                     <!-- Si l'utilisateur est connecté, afficher le bouton Like -->
                     <?php if (isset($_SESSION['user'])): ?>
-                        <form class="like-form" data-post-id="<?= $post['id'] ?>">
+                        <form class="like-form" data-post-id="<?= htmlspecialchars($post['id']) ?>">
                             <button type="button" class="like-button">
                                 <?php if ($post['liked_by_user']): ?>
                                     💔 Dislike
@@ -133,6 +134,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const comment = formData.get('comment'); // Récupérer le commentaire
             const commentSection = document.getElementById(`comments-list-${postId}`);
             const commentCountSpan = document.getElementById(`comment-count-${postId}`); // Récupérer l'élément pour le nombre de commentaires
+            const commentErrorsDiv = form.querySelector('.comment-errors'); // Récupérer le conteneur des erreurs
+
+            // Réinitialiser les erreurs précédentes
+            commentErrorsDiv.innerHTML = '';
 
             try {
                 const response = await fetch('/add-comment', {
@@ -162,6 +167,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Mettre à jour le nombre de commentaires
                         const currentCount = parseInt(commentCountSpan.textContent);
                         commentCountSpan.textContent = currentCount + 1; // Incrémenter le nombre de commentaires
+                    }
+                } else if (response.status === 400) {
+                    const result = await response.json();
+                    if (result.errors && result.errors.comment) {
+                        // Afficher les erreurs dans le conteneur des erreurs
+                        result.errors.comment.forEach(error => {
+                            const errorMsg = document.createElement('p');
+                            errorMsg.textContent = error;
+                            errorMsg.style.color = 'red';
+                            commentErrorsDiv.appendChild(errorMsg);
+                        });
+                    } else if (result.error) {
+                        alert(result.error);
                     }
                 } else if (response.status === 401) {
                     alert('Vous devez être connecté pour commenter.');
