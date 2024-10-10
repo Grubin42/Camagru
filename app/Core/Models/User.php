@@ -65,7 +65,7 @@ class User
         $stmt->bindParam(':notif', $notif, PDO::PARAM_BOOL); // Ici, on s'assure que notif est un booléen
         $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
     
-        $stmt->execute();
+        return $stmt->execute();
     }
 
     public function setVerified(int $userId): bool

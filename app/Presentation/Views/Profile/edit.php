@@ -6,7 +6,7 @@
     </div>
 <?php endif; ?>
 
-<form action="/edit-profile" method="POST" class="password-form">
+<form action="/edit-profile" method="POST" class="password-form" autocomplete="off">
     <label for="username">Nom d'utilisateur :</label>
     <input type="text" id="username" name="username" value="<?= htmlspecialchars($user['username'] ?? '') ?>" required>
     <?php if (isset($errors['username'])): ?>
@@ -28,7 +28,7 @@
     <?php endif; ?>
 
     <label for="password">Nouveau mot de passe (laissez vide si inchangé) :</label>
-    <input type="password" class="password-input" name="password" placeholder="Mot de passe (facultatif)">
+    <input type="password" class="password-input" name="password" placeholder="Mot de passe (facultatif)" autocomplete="new-password">
 
     <?php if (isset($errors['password'])): ?>
         <ul class="error-messages">
