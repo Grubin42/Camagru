@@ -32,7 +32,7 @@ class ProfileController {
     }
     public function updateProfile() {
         // Récupérer les données actuelles de l'utilisateur pour la comparaison
-        $currentUser = $this->ProfileService->getUser();
+        //$currentUser = $this->ProfileService->getUser();
         $userId = $_SESSION['user']['id'];
         // Récupérer les valeurs soumises par l'utilisateur
         $username = isset($_POST['username']) ? trim($_POST['username']) : '';
@@ -42,6 +42,15 @@ class ProfileController {
         $notif = isset($_POST['notif']) ? 1 : 0;
         $errors = [];
 
+        if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+            $errors[] = 'Erreur : jeton CSRF invalide.';
+            renderView(__DIR__ . '/../Views/Shared/Layout.php', [
+                'view' => __DIR__ . '/../Views/Profile/editProfile.php',
+                'user' => $this->ProfileService->GetUser(),
+                'errors' => $errors  // Passer les erreurs à la vue
+            ]);
+            exit();
+        }
         // 1. Validation du username
         if (empty($username)) {
             $errors[] = "Le nom d'utilisateur est obligatoire.";
@@ -86,7 +95,7 @@ class ProfileController {
             $_SESSION['user']['username'] = $username;
             $_SESSION['user']['email'] = $email;
             $_SESSION['user']['notif'] = $notif;
-
+            unset($_SESSION['csrf_token']);
             // Redirection après la mise à jour
             renderView(__DIR__ . '/../Views/Shared/Layout.php', [
                 'view' => __DIR__ . '/../Views/Profile/index.php',

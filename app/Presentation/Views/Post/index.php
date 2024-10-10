@@ -54,6 +54,7 @@
                                     <div class="card-body p-2">
                                         <span class="text-danger position-absolute top-0 end-0 delete-photo" data-id="<?= $post['id'] ?>" style="cursor: pointer; font-size: 1.5rem; z-index: 1;" onclick="confirmDeletion(this)">
                                             &times;
+                                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(GenerateCsrfToken()) ?>">
                                         </span>
                                         <img src="data:image/png;base64,<?= $post['image'] ?>" alt="Post Image" class="img-fluid" style="width: 100px; height: 75px;" />
                                         <p class="small text-muted mt-1 text-center">Posté le : <?= date('d-m-Y', strtotime($post['created_date'])) ?></p>
@@ -73,6 +74,7 @@
             <form id="photoForm" method="post" action="/post/save">
                 <input type="hidden" id="photo" name="photo">
                 <input type="hidden" id="stickerBase64" name="sticker">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(GenerateCsrfToken()) ?>">
                 <button type="submit" class="btn btn-success">Envoyer la photo</button>
             </form>
         </div>
@@ -100,38 +102,4 @@
         display: none;
     }
 </style>
-<script>
-    function confirmDeletion(element) {
-        // Récupère l'ID de la photo à partir de l'attribut data-id
-        const postId = element.getAttribute('data-id');
-
-        // Demande de confirmation à l'utilisateur
-        const userConfirmed = confirm("Êtes-vous sûr de vouloir supprimer cette photo ?");
-
-        if (userConfirmed) {
-            // Si l'utilisateur confirme, on envoie une requête AJAX (fetch)
-            fetch('/post/delete', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `id=${postId}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Supprime la carte de la photo du DOM si la suppression est réussie
-                    element.closest('.card').remove();
-                } else {
-                    // Affiche un message d'erreur en cas de problème
-                    alert(data.message || 'Une erreur est survenue lors de la suppression de la photo.');
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                alert('Une erreur est survenue. Veuillez réessayer.');
-            });
-        }
-    }
-</script>
 <script src="/Presentation/Assets/js/post.js"></script>

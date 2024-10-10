@@ -15,6 +15,7 @@
             <?php endif; ?>
 
             <form method="POST" action="/updateProfile" class="text-center"> <!-- Formulaire POST pour la mise à jour -->
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(GenerateCsrfToken()) ?>">
                 <div class="form-group mt-3">
                     <label for="username">Nom d'utilisateur</label>
                     <input style="width: 250px;" type="text" class="form-control form-control-sm mx-auto" id="username" name="username" value="<?= htmlspecialchars($user['username']) ?>">

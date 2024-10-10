@@ -3,13 +3,15 @@ document.querySelectorAll('.like-button').forEach(button => {
         const form = this.closest('form');
         const postId = form.getAttribute('data-post-id');
         const likeCountElement = form.querySelector('.like-count');
+        const csrfTokenInput = form.querySelector('input[name="csrf_token"]');
+        const csrfToken = csrfTokenInput.value;
 
         fetch('/post/like', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: `post_id=${postId}`
+            body: `post_id=${postId}&csrf_token=${encodeURIComponent(csrfToken)}`
         })
         .then(response => response.json())
         .then(data => {
@@ -31,6 +33,14 @@ document.querySelectorAll('.comment-form').forEach(form => {
         const postId = form.getAttribute('data-post-id');
         const commentInput = form.querySelector('input[name="comment"]');
         const commentList = document.getElementById(`comment-list-${postId}`);
+        const errorMessage = form.querySelector('.error-message');
+        const commentText = commentInput.value.trim();
+        const csrfTokenInput = form.querySelector('input[name="csrf_token"]');
+        const csrfToken = csrfTokenInput.value;
+        // Vérifier si le conteneur d'erreur existe
+        if (!errorMessage) {
+            return;
+        }
 
         // Envoi de la requête POST via Fetch API
         fetch('/post/add_comment', {
@@ -38,7 +48,7 @@ document.querySelectorAll('.comment-form').forEach(form => {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: `post_id=${postId}&comment=${encodeURIComponent(commentInput.value)}`
+            body: `post_id=${postId}&comment=${encodeURIComponent(commentText)}&csrf_token=${encodeURIComponent(csrfToken)}`
         })
         .then(response => response.json())
         .then(data => {
@@ -53,10 +63,16 @@ document.querySelectorAll('.comment-form').forEach(form => {
 
                 // Réinitialiser le champ de texte du commentaire
                 commentInput.value = '';
+                errorMessage.style.display = 'none'; // Cacher le message d'erreur en cas de succès
             } else {
-                console.error(data.message);  // Afficher l'erreur si quelque chose s'est mal passé
+                // Afficher un message d'erreur si la requête échoue
+                errorMessage.textContent = data.errors ? data.errors.join(', ') : (data.message || 'Une erreur est survenue.');
+                errorMessage.style.display = 'block';
             }
         })
-        .catch(error => console.error('Erreur:', error));
+        .catch(() => {
+            errorMessage.textContent = 'Erreur de connexion ou de réponse. Veuillez réessayer.';
+            errorMessage.style.display = 'block';
+        });
     });
 });

@@ -15,7 +15,7 @@
             <?php endif; ?>
 
             <form method="POST" action="/register" class="text-center"> <!-- Formulaire POST pour l'enregistrement -->
-                
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(GenerateCsrfToken()) ?>">
                 <!-- Username -->
                 <div class="form-group mt-3">
                     <label for="username">Nom d'utilisateur</label>

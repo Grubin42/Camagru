@@ -46,12 +46,31 @@ class HomeController {
     }
     public function AddComment()
     {
+        header('Content-Type: application/json');
         // Vérifier si la requête est bien en POST
+
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $post_id = $_POST["post_id"];
             $comment = trim($_POST["comment"]);
             $username = $_SESSION['user']['username'];
-    
+            
+            if (!isset($_SESSION['csrf_token']) || !isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Erreur : jeton CSRF invalide ou non défini.'
+                ]);
+                exit();
+            }
+            $errors = $this->HomeService->ValidationCommentaire($comment);
+            if (!empty($errors)) {
+                // Renvoyer une réponse JSON avec les erreurs
+                echo json_encode([
+                    'success' => false,
+                    'errors' => $errors
+                ]);
+                exit();
+            }
             // Récupérer les informations du propriétaire du post
             $postOwner = $this->HomeService->GetPostOwner($post_id);
     
@@ -62,12 +81,13 @@ class HomeController {
             if ($postOwner['notif'] == TRUE) {
                 $this->EmailService->sendCommentNotification($postOwner['email'], $username, $postOwner['created_date']);
             }
-    
-            // Retourner une réponse JSON avec le nouveau commentaire
+            $newCsrfToken = GenerateCsrfToken();
+
             echo json_encode([
                 'success' => true,
                 'username' => htmlspecialchars($username),
-                'comment' => htmlspecialchars($comment)
+                'comment' => htmlspecialchars($comment),
+                'csrf_token' => $newCsrfToken  // Retourne le nouveau jeton
             ]);
         } else {
             // Si la requête n'est pas POST, retourner une erreur JSON
@@ -88,7 +108,13 @@ class HomeController {
             ]);
             exit();
         }
-
+        if (!isset($_SESSION['csrf_token']) || !isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Erreur : jeton CSRF invalide ou non défini.'
+            ]);
+            exit();
+        }
         // Récupérer l'ID du post et l'ID de l'utilisateur connecté
         $postId = $_POST['post_id'];
         $userId = $_SESSION['user']['id'];
@@ -98,12 +124,13 @@ class HomeController {
 
         // Récupérer le nouveau nombre de likes après l'ajout du like
         $likeCount = $this->HomeService->GetLikeCount($postId);
-
+        $newCsrfToken = GenerateCsrfToken();
         // Retourner une réponse JSON avec le nouveau nombre de likes
         echo json_encode([
             'success' => true,
             'message' => 'Like ajouté avec succès.',
-            'likes' => $likeCount
+            'likes' => $likeCount,
+            'csrf_token' => $newCsrfToken 
         ]);
         exit();
     }

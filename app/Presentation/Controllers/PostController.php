@@ -22,7 +22,6 @@ class PostController {
         ]);
         exit();
     }
-
     public function ImageRegister(string $image) {
         $this->PostService->ImageRegister($image);
 
@@ -33,6 +32,16 @@ class PostController {
     public function SavePost(): void
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // protection csrf
+            if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+                $errors[] = 'Erreur : jeton CSRF invalide.';
+                renderView(__DIR__ . '/../Views/Shared/Layout.php', [
+                    'view' => __DIR__ . '/../Views/Post/index.php',
+                    'errors' => $errors  // Passer les erreurs à la vue
+                ]);
+                exit();
+            }
+
             // Vérifier si les champs sont bien envoyés
             if (isset($_POST['photo']) && isset($_POST['sticker'])) {
                 $photoData = $_POST['photo'];  // Photo capturée en base64
@@ -68,7 +77,7 @@ class PostController {
                 }
                 // Appeler le service pour fusionner et sauvegarder l'image
                 $result = $this->PostService->mergeAndSaveImage(photoData: $photoData, stickerData: $stickerData);
-        
+                unset($_SESSION['csrf_token']);
                 if ($result) {
                     // Rediriger vers une page de succès ou afficher un message de succès
                     header('Location: /');
@@ -94,13 +103,23 @@ class PostController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             $postId = $_POST['id'];
             $userId = $_SESSION['user']['id']; // L'ID de l'utilisateur connecté
-
+            
+            if (!isset($_SESSION['csrf_token']) || !isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Erreur : jeton CSRF invalide ou non défini.'
+                ]);
+                exit();
+            }
             // Appeler le service pour supprimer la photo
             $success = $this->PostService->deletePhoto($postId, $userId);
-
+            $newCsrfToken = GenerateCsrfToken();
             if ($success) {
                 // Retourner une réponse JSON en cas de succès
-                echo json_encode(['success' => true]);
+                echo json_encode([
+                    'success' => true,
+                    'csrf_token' => $newCsrfToken 
+                    ]);
             } else {
                 // En cas d'échec, retourner une réponse JSON avec un message d'erreur
                 echo json_encode(['success' => false, 'message' => 'La suppression a échoué.']);

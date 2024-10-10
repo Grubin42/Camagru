@@ -34,4 +34,18 @@ class HomeService
     {
         return $this->LikeModel->GetLikeCount($post_id);
     }
+
+    public function validationCommentaire($comment)
+    {
+        $errors = [];
+        if (empty($comment))
+        {
+            $errors[] = 'Le commentaire ne doit pas être vide.';
+        }
+        if (strlen(string: $comment) > 50)
+        {
+            $errors[] = 'Le commentaire ne doit pas contenir plus de 50 caractères.';
+        }
+        return $errors;
+    }
 }

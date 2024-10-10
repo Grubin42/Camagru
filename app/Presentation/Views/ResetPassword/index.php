@@ -19,7 +19,7 @@
                     <!-- Formulaire de réinitialisation du mot de passe -->
                     <form action="/reset-password" method="post">
                         <input type="hidden" name="token" value="<?= htmlspecialchars($_GET['token']) ?>">
-
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(GenerateCsrfToken()) ?>">
                         <div class="mb-3">
                             <label for="password" class="form-label">Nouveau mot de passe :</label>
                             <input type="password" name="password" id="password" class="form-control" required>

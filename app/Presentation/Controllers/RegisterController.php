@@ -24,7 +24,16 @@ class RegisterController {
         $email = isset($_POST['email']) ? trim($_POST['email']) : '';
         $password = isset($_POST['password']) ? trim($_POST['password']) : '';
         $confirmPassword = isset($_POST['confirmPassword']) ? trim($_POST['confirmPassword']) : '';
-    
+
+        if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+            $errors[] = 'Erreur : jeton CSRF invalide.';
+            renderView(__DIR__ . '/../Views/Shared/Layout.php', [
+                'view' => __DIR__ . '/../Views/Register/index.php',
+                'errors' => $errors  // Passer les erreurs à la vue
+            ]);
+            exit();
+        }
+
         $errors = $this->Register->verificationRegister($username, $email, $password, $confirmPassword);
         // Si des erreurs sont présentes, les renvoyer
         if (!empty($errors)) {
@@ -41,7 +50,7 @@ class RegisterController {
 
             // Envoyer l'email de validation
             $this->EmailService->sendVerificationEmail($email, $verificationToken);
-
+            unset($_SESSION['csrf_token']);
             // Redirection avec message de succès
             $_SESSION['success_message'] = "Votre compte a été créé. Un email de validation vous a été envoyé.";
             header('Location: /login');

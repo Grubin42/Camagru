@@ -23,6 +23,7 @@
             <?php endif; ?>
 
             <form action="/login" method="post" class="d-flex flex-column align-items-center">
+                <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(GenerateCsrfToken()) ?>">
                 <!-- Username -->
                 <div class="mb-3 d-flex justify-content-center align-items-center" style="width: 350px;">
                     <label for="username" class="form-label" style="width: 150px;">Nom d'utilisateur :</label>

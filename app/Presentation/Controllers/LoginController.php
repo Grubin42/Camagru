@@ -17,9 +17,19 @@ class LoginController {
         ]);
     }
     
-    public function Login(string $username, string $password) {
+    public function Login() {
+        $username = $_POST["username"];
+        $password = $_POST["password"];
         $errors = [];  // Initialiser le tableau des erreurs
-    
+
+        if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+            $errors[] = 'Erreur : jeton CSRF invalide.';
+            renderView(__DIR__ . '/../Views/Shared/Layout.php', [
+                'view' => __DIR__ . '/../Views/Login/index.php',
+                'errors' => $errors  // Passer les erreurs à la vue
+            ]);
+            exit();
+        }
         // Récupérer l'utilisateur avec le nom d'utilisateur
         $user = $this->Login->Login($username, $password);
         
@@ -29,6 +39,7 @@ class LoginController {
             if ($user['is_verified']) {
                 // Si l'utilisateur est vérifié, on le connecte
                 $_SESSION['user'] = $user;
+                unset($_SESSION['csrf_token']);
                 header('Location: /');
                 exit();
             } else {

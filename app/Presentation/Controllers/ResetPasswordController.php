@@ -21,6 +21,15 @@ class ResetPasswordController
             $newPassword = $_POST['password'];
             $confirmPassword = $_POST['confirm_password'];
 
+            if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+                $errors[] = 'Erreur : jeton CSRF invalide.';
+                renderView(__DIR__ . '/../Views/Shared/Layout.php', [
+                    'view' => __DIR__ . '/../Views/ResetPassword/index.php',
+                    'errors' => $errors  // Passer les erreurs à la vue
+                ]);
+                exit();
+            }
+
             $errors = $this->ResetPasswordService->verificationResetPassword($newPassword, $confirmPassword);
             // Si aucune erreur, on vérifie le token et on réinitialise le mot de passe
             if (empty($errors)) {
@@ -34,6 +43,7 @@ class ResetPasswordController
     
                     // Message de succès et redirection
                     $_SESSION['success_message'] = "Mot de passe réinitialisé avec succès.";
+                    unset($_SESSION['csrf_token']);
                     header('Location: /login');
                     exit();
                 } else {

@@ -15,8 +15,16 @@ class ForgotPasswordController {
     public function sendResetLink()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+                renderView(__DIR__ . '/../Views/Shared/Layout.php', [
+                    'view' => __DIR__ . '/../Views/ResetPassword/error.php',
+                    'message' => "'Erreur : jeton CSRF invalide.'"
+                ]);
+                exit();
+            }
+
             $email = $_POST['email'];
-            
             // Vérifier si l'email existe dans la base de données
             $userModel = new UserModel();
             $user = $userModel->findUserByEmail($email);
@@ -32,7 +40,7 @@ class ForgotPasswordController {
                 // Envoyer le lien de réinitialisation par email
                 $emailService = new EmailService();
                 $emailService->sendPasswordResetEmail($email, $resetUrl);
-                
+                unset($_SESSION['csrf_token']);
                 // Rediriger vers la vue de confirmation
                 renderView(__DIR__ . '/../Views/Shared/Layout.php', [
                     'view' => __DIR__ . '/../Views/ResetPassword/success.php',
@@ -44,6 +52,7 @@ class ForgotPasswordController {
                     'view' => __DIR__ . '/../Views/ResetPassword/error.php',
                     'message' => "Cet email n'existe pas."
                 ]);
+                exit();
             }
         }
     }

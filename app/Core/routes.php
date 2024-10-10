@@ -51,9 +51,7 @@ $router->addRoute('/updateProfile', function() {
 $router->addRoute('/login', function() {
     $loginController = new LoginController();
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
-        $username = $_POST["username"];
-        $password = $_POST["password"];
-        $loginController->Login($username, $password);
+        $loginController->Login();
     }
     $loginController->Index();
 });

@@ -9,6 +9,7 @@
                         <div class="mb-3">
                             <label for="email" class="form-label">Adresse email :</label>
                             <input type="email" name="email" id="email" class="form-control" required>
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(GenerateCsrfToken()) ?>">
                         </div>
                         <button type="submit" class="btn btn-primary">Envoyer le lien</button>
                     </form>
