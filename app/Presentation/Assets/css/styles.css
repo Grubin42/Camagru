@@ -117,6 +117,19 @@ button:hover {
   border: solid 1px #ff00fe;
 }
 
+a {
+  color: #ff00fe;
+  text-decoration: none;
+  transition: transform 0.5s ease,
+}
+
+a:hover {
+  transform: scale(1.01);
+  color: #ff5cff;
+  font: bold;
+  text-decoration: underline;
+}
+
 /* Footer */
 footer {
   background-color: #6332a7;

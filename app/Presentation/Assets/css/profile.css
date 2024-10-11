@@ -1,65 +1,77 @@
-.list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.list-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* TODO: flex-column */
+.list { 
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .profile-form-container {
-    width: 100%;
-    display: flex;
-    margin-top: 50px;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  display: flex;
+  margin-top: 50px;
+  justify-content: center;
+  align-items: center;
 }
 
-.edit-form  {
-    width: 400px;
-    max-width: 700px;
+.edit-form {
+  width: 400px;
+  max-width: 700px;
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 50vh;
 }
 
 .button-container {
-    display: flex;
-    justify-content: end;
+  display: flex;
+  justify-content: end;
 }
 
+/* -------- toggle */
+.toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
 .toggle {
-    position: relative;
-    display: inline-block;
-    margin-top: 0.5rem;
-    width: 50px;
-    height: 26px;
-    background-color: hsl(0, 0%, 85%);
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background-color 0.25s ease-in;
+  position: relative;
+  display: inline-block;
+  margin-top: 0.5rem;
+  width: 50px;
+  height: 26px;
+  background-color: #6332a7;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.25s ease-in;
 }
 .toggle::after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 22px;
-    height: 22px;
-    background-color: white;
-    border-radius: 50%;
-    transition: all 0.25s ease-out;
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  background-color: white;
+  border-radius: 50%;
+  transition: all 0.25s ease-out;
 }
+
 #cb-toggle:checked + .toggle {
-    background-color: hsl(102, 58%, 39%);
+  background-color: #ff00fe;
 }
+
 #cb-toggle:checked + .toggle::after {
-    transform: translateX(24px);
+  transform: translateX(24px);
 }
+
 .hide-me {
-    opacity: 0;
-    height: 0;
-    width: 0;
+  opacity: 0;
+  height: 0;
+  width: 0;
 }

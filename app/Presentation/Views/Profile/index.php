@@ -5,17 +5,19 @@
 <div class="page-container">
     <h2>Modifier mon profil</h2>
     <hr />
-    <div class="list-container">
-        <li class="list">
+    <div class="profile-container">
+        <div class="list">
             <a href="/profile/username">Modifier mon nom d'utilisateur</a>
             <a href="/profile/email">Modifier mon email</a>
             <a href="/profile/password">Modifier mon password</a>
-        </li>
-        <div id="cb-label">
-            Toggle Button (current state: <span id="toggle-state">off</span>)
+            <div class="toggle-container">
+                <div id="cb-label">
+                    Toggle Button (current state: <span id="toggle-state">off</span>)
+                </div>
+                <input id="cb-toggle" type="checkbox" class="hide-me" aria-labelledby="cb-label">
+                <label for="cb-toggle" class="toggle"></label>
+            </div>
         </div>
-        <input id="cb-toggle" type="checkbox" class="hide-me" aria-labelledby="cb-label">
-        <label for="cb-toggle" class="toggle"></label>
     </div>
 </div>
 

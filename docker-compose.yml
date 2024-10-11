@@ -39,7 +39,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
 
   postgresql:
-    image: postgres:latest
+    #why? garder mes données
+    image: postgres:16 
     restart: unless-stopped
     container_name: postgres
     ports:

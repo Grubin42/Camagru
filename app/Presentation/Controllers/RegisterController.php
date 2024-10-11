@@ -22,12 +22,16 @@ class RegisterController
 
     public function register($username, $email, $password)
     {
-        if ($this->registerService->register($username, $email, $password)) {
+        try {
+            $this->registerService->register($username, $email, $password);
             header('Location: /login');
             exit();
-        } else {
-            header('Location: /register');
-            exit();
+        } catch (\Exception $e) {
+            renderView(__DIR__ . '/../Views/Shared/Layout.php', [
+                'view' => __DIR__ . '/../Views/Register/index.php',
+                'error' => $e->getMessage()
+            ]);
+            return; //TODO: check if it is necessary
         }
     }
 }
