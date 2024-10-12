@@ -4,3 +4,5 @@ define('DB_HOST', getenv('POSTGRES_HOST'));
 define('DB_NAME', getenv('POSTGRES_DB'));
 define('DB_USER', getenv('POSTGRES_USER'));
 define('DB_PASS', getenv('POSTGRES_PASSWORD'));
+
+define('ROOT_PATH', __DIR__ . '/');

@@ -1,29 +1,23 @@
-<h2>Connexion</h2>
-
-<!-- Affichage des erreurs depuis la session s'il y en a -->
-<?php 
-    session_start();
-    if (isset($_SESSION['error_message'])): ?>
-        <div>
-            <span>
-                <?= htmlspecialchars($_SESSION['error_message']) ?>
-            </span>
-        <br>
-        <a href="/register" class="btn btn-primary">Pas encore inscrit ? Inscrivez-vous ici</a>
-    </div>
-    <?php unset($_SESSION['error_message']); // Supprimer le message après l'affichage ?>
-<?php endif; ?>
-<form action="/login" method="POST">
-    <label for="username">Nom d'utilisateur</label>
-    <input type="text" id="username" name="username" required>
-
-    <label for="password">Mot de passe</label>
-    <input type="password" id="password" name="password" required>
-
-    <button type="submit">Se connecter</button>
-</form>
+<head>
+    <link rel="stylesheet" href="/Presentation/Assets/css/register.css">
+    <link rel="stylesheet" href="/Presentation/Assets/css/shared.css">
+</head>
 
 <!-- Lien vers la page de demande de réinitialisation de mot de passe -->
-<p>
+<!-- <p>
     <a href="/request-reset">Mot de passe oublié ?</a>
-</p>
+</p> -->
+
+
+
+<?php
+$formPath = ROOT_PATH . 'Presentation/Views/Login/Components/loginPage.php';
+renderComponent(
+    __DIR__ . '/../Shared/Layout/FormPageLayout.php',
+    [
+        'title' => 'Connexion',
+        'componentPath' => $formPath,
+        'error' => $error
+    ]
+);
+?>

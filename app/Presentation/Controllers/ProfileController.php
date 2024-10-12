@@ -18,6 +18,7 @@ class ProfileController {
         }
 
         if (!isset($_SESSION['user'])) {
+            $_SESSION['error_message'] = 'You must be logged in to access this page';
             header('Location: /login');
             exit();
         }
