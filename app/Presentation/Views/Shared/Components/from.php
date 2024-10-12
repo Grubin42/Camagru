@@ -8,8 +8,7 @@ arguments:
     $formAction: action attribute of the form
   -->
 
-<?php
-
+<?php   // TODO: add field disabled
 if ($inputFields): ?>
     <form action="<?= $formAction ?>" method="post" class="flex-column-gap-10 flex-center-all">
         <?php foreach ($inputFields as $inputField): ?>

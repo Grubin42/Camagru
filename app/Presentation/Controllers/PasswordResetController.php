@@ -37,7 +37,7 @@ class PasswordResetController
         } else {
             // Afficher le formulaire de demande de réinitialisation
             renderView(__DIR__ . '/../Views/Shared/Layout.php', [
-                'view' => __DIR__ . '/../Views/Auth/request_reset.php'
+                'view' => __DIR__ . '/../Views/Auth/index.php'
             ]);
         }
     }

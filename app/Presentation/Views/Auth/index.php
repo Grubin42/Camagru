@@ -5,11 +5,11 @@
 
 
 <?php
-$formPath = ROOT_PATH . 'Presentation/Views/Login/Components/loginPage.php';
+$formPath = ROOT_PATH . 'Presentation/Views/Auth/Components/form.php';
 renderComponent(
-    __DIR__ . '/../Shared/Layout/FormPageLayout.php',
+    ROOT_PATH . 'Presentation/Views/Shared/Layout/FormPageLayout.php',
     [
-        'title' => 'Connexion',
+        'title' => 'Réinitialiser le mot de passe',
         'componentPath' => $formPath,
         'error' => $error
     ]
