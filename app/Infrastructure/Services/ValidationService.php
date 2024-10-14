@@ -6,8 +6,6 @@ class ValidationService
 {
     protected array $errors = [];
 
-    // ... (autres méthodes de validation) ...
-
     /**
      * Ajoute une erreur pour un champ spécifique.
      *

@@ -1,6 +1,7 @@
 <?php
 
 use Camagru\Core\Router;
+use Camagru\Core\Middleware\CsrfMiddleware;
 use Camagru\Presentation\Controllers\ProfileController;
 use Camagru\Presentation\Controllers\RegisterController;
 use Camagru\Presentation\Controllers\LoginController;
@@ -10,7 +11,12 @@ use Camagru\Presentation\Controllers\LikeController;
 use Camagru\Presentation\Controllers\CommentController;
 
 $router = new Router();
-// Route pour la page d'accueil
+
+// Ajouter le middleware CSRF
+$router->addMiddleware(function() {
+    $csrfMiddleware = new CsrfMiddleware();
+    $csrfMiddleware->handle();
+});
 
 $router->addRoute('/', function() {
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;

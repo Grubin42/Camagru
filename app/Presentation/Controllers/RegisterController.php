@@ -3,14 +3,17 @@
 namespace Camagru\Presentation\Controllers;
 
 use Camagru\Infrastructure\Services\RegisterService;
+use Camagru\Infrastructure\Services\CsrfService;
 
 class RegisterController
 {
     protected RegisterService $registerService;
+    protected CsrfService $csrfService;
 
     public function __construct()
     {
         $this->registerService = new RegisterService();
+        $this->csrfService = new CsrfService();
     }
 
     /**
@@ -25,11 +28,14 @@ class RegisterController
         $errorMessage = $_SESSION['error_message'] ?? null;
         $formData = $_SESSION['form_data'] ?? [];
         unset($_SESSION['error_message'], $_SESSION['form_data']);
+        
+        $csrfToken = $this->csrfService->getToken();
 
         renderView(__DIR__ . '/../Views/Shared/Layout.php', [
             'view' => __DIR__ . '/../Views/Register/index.php',
             'error' => $errorMessage,
-            'form_data' => $formData
+            'form_data' => $formData,
+            'csrf_token' => $csrfToken
         ]);
     }
 

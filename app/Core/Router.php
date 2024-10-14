@@ -4,6 +4,7 @@ namespace Camagru\Core;
 
 class Router {
     private array $routes = [];
+    private array $middleware = [];
 
     /**
      * Enregistre une route avec son callback.
@@ -13,9 +14,21 @@ class Router {
     }
 
     /**
+     * Ajoute un middleware à exécuter avant les routes.
+     */
+    public function addMiddleware(callable $middleware): void {
+        $this->middleware[] = $middleware;
+    }
+
+    /**
      * Exécute le callback associé à la route correspondante.
      */
     public function handleRequest(string $requestedPath): void {
+        // Exécute tous les middlewares
+        foreach ($this->middleware as $middleware) {
+            $middleware();
+        }
+
         foreach ($this->routes as $path => $callback) {
             if ($path === $requestedPath) {
                 $callback();
@@ -24,6 +37,6 @@ class Router {
         }
         // Si aucune route ne correspond, afficher une erreur 404
         http_response_code(404);
-        echo "404 - Page not found";
+        echo "404 - Page non trouvée";
     }
 }

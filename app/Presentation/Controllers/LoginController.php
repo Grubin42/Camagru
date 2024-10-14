@@ -3,20 +3,26 @@
 namespace Camagru\Presentation\Controllers;
 
 use Camagru\Infrastructure\Services\LoginService;
+use Camagru\Infrastructure\Services\CsrfService;
 
 class LoginController
 {
     protected LoginService $loginService;
+    protected CsrfService $csrfService;
 
     public function __construct()
     {
         $this->loginService = new LoginService();
+        $this->csrfService = new CsrfService();
     }
 
     public function showLoginForm()
     {
+        $csrfToken = $this->csrfService->getToken();
+
         renderView(__DIR__ . '/../Views/Shared/Layout.php', [
-            'view' => __DIR__ . '/../Views/Login/index.php'
+            'view' => __DIR__ . '/../Views/Login/index.php',
+            'csrf_token' => $csrfToken
         ]);
     }
 

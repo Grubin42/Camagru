@@ -2,6 +2,7 @@
 
 <form action="/reset-password" method="POST" class="password-form">
     <input type="hidden" name="token" value="<?= htmlspecialchars($_GET['token'] ?? '') ?>">
+    <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
     
     <!-- Affichage des erreurs générales -->
     <?php if (isset($error) && !empty($error)): ?>

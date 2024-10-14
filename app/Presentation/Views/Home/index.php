@@ -1,3 +1,4 @@
+<!-- /Presentation/Views/Home/index.php -->
 <h1>Bienvenue sur Camagru</h1>
 <p>Ceci est la page d'accueil de votre application. Utilisez le menu de navigation pour explorer les fonctionnalités.</p>
 
@@ -80,6 +81,11 @@
     <p>Aucun post disponible.</p>
 <?php endif; ?>
 
+<!-- Inclure le CSRF Token comme une variable JavaScript -->
+<script>
+    const CSRF_TOKEN = "<?= htmlspecialchars($csrf_token) ?>";
+</script>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     // Gestion des likes
@@ -97,7 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch('/like-post', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': CSRF_TOKEN // Inclure le token CSRF dans les headers
                     },
                     body: JSON.stringify({ post_id: postId })
                 });
@@ -144,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json', // Indique que tu envoies des données JSON
+                        'X-CSRF-Token': CSRF_TOKEN // Inclure le token CSRF dans les headers
                     },
                     body: JSON.stringify({
                         post_id: postId,

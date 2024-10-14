@@ -5,6 +5,8 @@
 <?php endif; ?>
 
 <form action="/register" method="post" class="password-form">
+    <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+
     <label for="username">Nom d'utilisateur:</label>
     <input type="text" id="username" name="username" value="<?= htmlspecialchars($form_data['username'] ?? '') ?>" required>
     <?php if (isset($errors['username'])): ?>

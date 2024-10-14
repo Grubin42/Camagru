@@ -11,6 +11,8 @@
 <?php endif; ?>
 
 <form action="/login" method="POST">
+    <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+
     <label for="username">Nom d'utilisateur</label>
     <input type="text" id="username" name="username" required>
 

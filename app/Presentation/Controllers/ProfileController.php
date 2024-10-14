@@ -3,12 +3,15 @@
 namespace Camagru\Presentation\Controllers;
 
 use Camagru\Infrastructure\Services\ProfileService;
+use Camagru\Infrastructure\Services\CsrfService;
 
 class ProfileController {
     private $profileService;
+    private CsrfService $csrfService;
 
     public function __construct() {
         $this->profileService = new ProfileService();
+        $this->csrfService = new CsrfService();
     }
 
     // Afficher le profil de l'utilisateur
@@ -33,12 +36,16 @@ class ProfileController {
         $errors = $_SESSION['errors'] ?? [];
         $formData = $_SESSION['form_data'] ?? $_SESSION['user'] ?? [];
         unset($_SESSION['error_message'], $_SESSION['errors'], $_SESSION['form_data']);
-
+    
+        // Générer le token CSRF
+        $csrfToken = $this->csrfService->getToken();
+    
         renderView(__DIR__ . '/../Views/Shared/Layout.php', [
             'view' => __DIR__ . '/../Views/Profile/edit.php',
             'error' => $errorMessage,
             'errors' => $errors,
-            'user' => $formData
+            'user' => $formData,
+            'csrf_token' => $csrfToken // Passer le token CSRF
         ]);
     }
 
@@ -51,22 +58,22 @@ class ProfileController {
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }
-
+    
             $userId = $_SESSION['user']['id'];
             $newUsername = trim($_POST['username'] ?? '');
             $newEmail = trim($_POST['email'] ?? '');
             $newPassword = $_POST['password'] ?? null;
             $notif = isset($_POST['notif']) ? true : false; // Si la case à cocher est cochée
-
+    
             // Validation et mise à jour via ProfileService
             $result = $this->profileService->updateProfile($userId, $newUsername, $newEmail, $newPassword, $notif);
-
+    
             if ($result['success']) {
                 // Mettre à jour les informations dans la session
                 $_SESSION['user']['username'] = $newUsername;
                 $_SESSION['user']['email'] = $newEmail;
                 $_SESSION['user']['notif'] = $notif;
-
+    
                 header('Location: /profile');
                 exit();
             } else {
@@ -78,7 +85,7 @@ class ProfileController {
                     'email' => $newEmail,
                     'notif' => $notif
                 ];
-
+    
                 // Rediriger vers la page de modification de profil
                 header('Location: /edit-profile');
                 exit();

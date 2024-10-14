@@ -1,6 +1,9 @@
 <?php
 
 namespace Camagru;
+//MIDDLEWARE
+require_once __DIR__ . '/Core/Middleware/CsrfMiddleware.php';
+
 //MODEL
 require_once __DIR__ . '/Core/Models/Post.php';
 require_once __DIR__ . '/Core/Models/User.php';
@@ -29,6 +32,7 @@ require_once __DIR__ . '/Infrastructure/Services/MailService.php';
 require_once __DIR__ . '/Infrastructure/Services/LikeService.php';
 require_once __DIR__ . '/Infrastructure/Services/CommentService.php';
 require_once __DIR__ . '/Infrastructure/Services/ValidationService.php';
+require_once __DIR__ . '/Infrastructure/Services/CSRFService.php';
 
 //CONFIG
 require_once __DIR__ . '/config.php';

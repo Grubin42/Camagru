@@ -21,6 +21,7 @@ class CommentController
      */
     public function addComment()
     {
+        header('Content-Type: application/json'); 
         session_start();
         
         if (!isset($_SESSION['user'])) {

@@ -7,6 +7,8 @@
 <?php endif; ?>
 
 <form action="/edit-profile" method="POST" class="password-form" autocomplete="off">
+    <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+
     <label for="username">Nom d'utilisateur :</label>
     <input type="text" id="username" name="username" value="<?= htmlspecialchars($user['username'] ?? '') ?>" required>
     <?php if (isset($errors['username'])): ?>

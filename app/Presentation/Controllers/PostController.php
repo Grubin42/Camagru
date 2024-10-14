@@ -3,14 +3,17 @@
 namespace Camagru\Presentation\Controllers;
 
 use Camagru\Infrastructure\Services\PostService;
+use Camagru\Infrastructure\Services\CsrfService;
 
 class PostController
 {
-    protected $postService;
+    protected PostService $postService;
+    protected CsrfService $csrfService;
 
     public function __construct()
     {
         $this->postService = new PostService();
+        $this->csrfService = new CsrfService();
     }
 
     public function showCreatePostForm()
@@ -33,11 +36,14 @@ class PostController
         $totalPosts = $this->postService->getTotalPosts();
         $totalPages = ceil($totalPosts / $postsPerPage);
 
+        $csrfToken = $this->csrfService->getToken();
+
         renderView(__DIR__ . '/../Views/Shared/Layout.php', [
             'view' => __DIR__ . '/../Views/Home/index.php',
             'posts' => $posts,
             'currentPage' => $page,
-            'totalPages' => $totalPages
+            'totalPages' => $totalPages,
+            'csrf_token' => $csrfToken 
         ]);
     }
 
