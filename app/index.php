@@ -41,20 +41,6 @@ require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/Core/Data/Connection.php';
 require_once __DIR__ . '/Core/Router.php';
 
-// Configurer le gestionnaire d'exceptions
-set_exception_handler(function($exception) {
-    error_log($exception->getMessage());
-    $_SESSION['error_message'] = 'Une erreur interne est survenue.';
-    header('Location: /error/500');
-    exit();
-});
-
-// Configurer le gestionnaire d'erreurs
-set_error_handler(function($errno, $errstr, $errfile, $errline) {
-    // Convertir les erreurs en exceptions
-    throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
-});
-
 // Démarrer la session
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

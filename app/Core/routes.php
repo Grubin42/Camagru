@@ -92,6 +92,18 @@ $router->addRoute('/posts', function() {
     }
 });
 
+$router->addRoute('/delete-post', function() {
+    $postController = new PostController();
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $postController->deletePost();
+    } else {
+        // Redirection si la méthode n'est pas POST
+        header('Location: /');
+        exit();
+    }
+});
+
 $router->addRoute('/like-post', function() {
     $likeController = new LikeController();
 

@@ -7,15 +7,20 @@
             <!-- Section pour capturer une image avec la caméra -->
             <div class="capture-section">
                 <h3>Capture d'image</h3>
-                <video id="video" width="320" height="240" autoplay></video>
-                <button id="capture-btn">Capturer</button>
-            </div>
-
-            <!-- Section pour afficher l'image capturée -->
-            <div id="captured-image-section" style="display: none;">
-                <h3>Image capturée</h3>
-                <canvas id="canvas" width="320" height="240"></canvas>
-                <button id="delete-image-btn">Supprimer l'image</button>
+                <div class="capture-container">
+                    <!-- Vidéo et bouton de capture -->
+                    <div class="video-section">
+                        <video id="video" width="320" height="240" autoplay></video>
+                        <button id="capture-btn">Capturer</button>
+                    </div>
+                    <!-- Miniatures des images capturées -->
+                    <div class="thumbnails-section">
+                        <h4>Images capturées</h4>
+                        <div id="thumbnails-container">
+                            <!-- Les miniatures seront ajoutées ici dynamiquement -->
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Section pour sélectionner une image à ajouter -->
@@ -60,6 +65,13 @@
         <?php if (isset($userPosts) && count($userPosts) > 0): ?>
             <?php foreach ($userPosts as $post): ?>
                 <div class="user-post">
+                    <!-- Bouton de suppression -->
+                    <form action="/delete-post" method="POST" class="delete-post-form">
+                        <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                        <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
+                        <button type="submit" class="delete-post-button" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">&times;</button>
+                    </form>
+                    <!-- Image du post -->
                     <img src="data:image/png;base64,<?= $post['image'] ?>" alt="Post Image">
                 </div>
             <?php endforeach; ?>
@@ -70,15 +82,14 @@
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
     const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
     const finalCanvas = document.getElementById('final-canvas');
     const captureBtn = document.getElementById('capture-btn');
-    const deleteImageBtn = document.getElementById('delete-image-btn');
-    const capturedImageSection = document.getElementById('captured-image-section');
-    const context = canvas.getContext('2d');
     const finalContext = finalCanvas.getContext('2d');
-    let capturedImageData = null;
+    const thumbnailsContainer = document.getElementById('thumbnails-container');
+    let capturedImages = []; // Tableau pour stocker les images capturées
+    let selectedImageData = null;
     let selectedSticker = null;
 
     // Demander l'accès à la caméra
@@ -89,22 +100,62 @@
 
     // Capturer l'image lorsqu'on appuie sur le bouton "Capturer"
     captureBtn.addEventListener('click', () => {
+        if (capturedImages.length >= 4) {
+            alert('Vous avez déjà 4 images capturées. Veuillez supprimer une image pour en capturer une nouvelle.');
+            return;
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 320;
+        canvas.height = 240;
+        const context = canvas.getContext('2d');
+
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        capturedImageData = canvas.toDataURL();
-        capturedImageSection.style.display = 'block';
-        document.getElementById('captured-image').value = capturedImageData;
-        updateFinalCanvas();
+        const imageData = canvas.toDataURL();
+
+        // Ajouter l'image au tableau des images capturées
+        capturedImages.push(imageData);
+        updateThumbnails();
     });
 
-    // Supprimer l'image capturée et réinitialiser le canvas
-    deleteImageBtn.addEventListener('click', () => {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        finalContext.clearRect(0, 0, finalCanvas.width, finalCanvas.height);
-        capturedImageData = null;
-        document.getElementById('captured-image').value = '';
-        document.getElementById('final-image').value = '';
-        capturedImageSection.style.display = 'none';
-    });
+    // Mettre à jour l'affichage des miniatures
+    function updateThumbnails() {
+        // Vider le conteneur des miniatures
+        thumbnailsContainer.innerHTML = '';
+
+        capturedImages.forEach((imageData, index) => {
+            const thumbnailDiv = document.createElement('div');
+            thumbnailDiv.classList.add('thumbnail');
+
+            const img = document.createElement('img');
+            img.src = imageData;
+            img.alt = 'Captured Image ' + (index + 1);
+            img.addEventListener('click', () => {
+                // Sélectionner l'image pour l'afficher dans le résultat final
+                selectedImageData = imageData;
+                document.getElementById('captured-image').value = selectedImageData;
+                updateFinalCanvas();
+            });
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.classList.add('delete-thumbnail-button');
+            deleteBtn.innerHTML = '&times;';
+            deleteBtn.addEventListener('click', () => {
+                // Supprimer l'image du tableau et mettre à jour les miniatures
+                capturedImages.splice(index, 1);
+                if (selectedImageData === imageData) {
+                    selectedImageData = null;
+                    document.getElementById('captured-image').value = '';
+                    updateFinalCanvas();
+                }
+                updateThumbnails();
+            });
+
+            thumbnailDiv.appendChild(img);
+            thumbnailDiv.appendChild(deleteBtn);
+            thumbnailsContainer.appendChild(thumbnailDiv);
+        });
+    }
 
     // Gestion des stickers
     const stickers = document.querySelectorAll('.sticker');
@@ -118,11 +169,12 @@
 
     // Mettre à jour l'aperçu du canvas final
     function updateFinalCanvas() {
-        if (capturedImageData) {
+        finalContext.clearRect(0, 0, finalCanvas.width, finalCanvas.height);
+
+        if (selectedImageData) {
             const image = new Image();
-            image.src = capturedImageData;
+            image.src = selectedImageData;
             image.onload = () => {
-                finalContext.clearRect(0, 0, finalCanvas.width, finalCanvas.height);
                 finalContext.drawImage(image, 0, 0, finalCanvas.width, finalCanvas.height);
                 if (selectedSticker) {
                     const stickerImage = new Image();
@@ -137,13 +189,17 @@
 
     // Sauvegarder l'image fusionnée
     document.getElementById('post-form').addEventListener('submit', (event) => {
-        event.preventDefault(); // Empêcher l'envoi par défaut du formulaire
+        if (!selectedImageData) {
+            alert('Veuillez sélectionner une image capturée pour soumettre un post.');
+            event.preventDefault();
+            return;
+        }
 
         // Log pour vérifier que les valeurs sont bien capturées
         console.log('Captured Image:', document.getElementById('captured-image').value);
         console.log('Selected Sticker:', document.getElementById('selected-sticker').value);
 
-        // Soumettre le formulaire
-        event.target.submit();
+        // Laisser le formulaire se soumettre normalement
     });
+});
 </script>

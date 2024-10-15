@@ -116,3 +116,84 @@ button:hover {
 .result-section {
     text-align: center;
 }
+
+.user-post {
+    position: relative;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.delete-post-form {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.delete-post-button {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: #ff0000;
+    cursor: pointer;
+}
+
+.delete-post-button:hover {
+    color: #cc0000;
+}
+
+/* Conteneur principal de la section de capture */
+.capture-container {
+    display: flex;
+}
+
+/* Section de la vidéo et du bouton de capture */
+.video-section {
+    margin-right: 20px;
+    text-align: center;
+}
+
+/* Section des miniatures */
+.thumbnails-section {
+    flex-grow: 1;
+}
+
+.thumbnails-section h4 {
+    text-align: center;
+}
+
+#thumbnails-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.thumbnail {
+    position: relative;
+    margin: 5px;
+}
+
+.thumbnail img {
+    width: 80px;
+    height: 60px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.delete-thumbnail-button {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff0000;
+    border: none;
+    color: white;
+    font-size: 16px;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.delete-thumbnail-button:hover {
+    background: #cc0000;
+}

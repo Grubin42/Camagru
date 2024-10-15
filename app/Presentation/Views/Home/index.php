@@ -104,7 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-Token': CSRF_TOKEN // Inclure le token CSRF dans les headers
+                        'X-CSRF-Token': CSRF_TOKEN,
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
                     body: JSON.stringify({ post_id: postId })
                 });
@@ -150,8 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch('/add-comment', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json', // Indique que tu envoies des données JSON
-                        'X-CSRF-Token': CSRF_TOKEN // Inclure le token CSRF dans les headers
+                        'Content-Type': 'application/json', 
+                        'X-CSRF-Token': CSRF_TOKEN ,
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
                     body: JSON.stringify({
                         post_id: postId,

@@ -90,4 +90,23 @@ class Post
 
         return $posts;
     }
+
+    public function deletePost($postId, $userId)
+    {
+        // Vérifier que le post appartient à l'utilisateur
+        $stmt = $this->db->prepare('SELECT user_id FROM posts WHERE id = :post_id');
+        $stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
+        $stmt->execute();
+        $post = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$post || $post['user_id'] != $userId) {
+            // Le post n'existe pas ou n'appartient pas à l'utilisateur
+            return false;
+        }
+
+        // Supprimer le post
+        $stmt = $this->db->prepare('DELETE FROM posts WHERE id = :post_id');
+        $stmt->bindParam(':post_id', $postId, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
 }

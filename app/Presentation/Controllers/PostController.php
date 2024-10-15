@@ -93,4 +93,38 @@ class PostController
             echo "Erreur : données manquantes ou utilisateur non connecté.";
         }
     }
+
+    public function deletePost()
+    {
+        // Vérifier si l'utilisateur est connecté
+        $userId = $_SESSION['user']['id'] ?? null;
+        if (!$userId) {
+            header('Location: /login');
+            exit();
+        }
+
+        // Vérifier le token CSRF
+        $csrfToken = $_POST['_csrf_token'] ?? '';
+        if (!$this->csrfService->validateToken($csrfToken)) {
+            echo "Erreur : token CSRF invalide.";
+            exit();
+        }
+
+        // Récupérer l'ID du post
+        $postId = $_POST['post_id'] ?? null;
+        if (!$postId) {
+            echo "Erreur : ID du post manquant.";
+            exit();
+        }
+
+        // Appeler le service pour supprimer le post
+        $result = $this->postService->deletePost($postId, $userId);
+
+        if ($result) {
+            header('Location: /posts');
+            exit();
+        } else {
+            echo "Erreur : impossible de supprimer le post.";
+        }
+    }
 }

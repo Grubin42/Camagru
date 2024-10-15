@@ -86,4 +86,9 @@ class PostService
     {
         return $this->postModel->getPostsByUser($userId);
     }
+
+    public function deletePost($postId, $userId)
+    {
+        return $this->postModel->deletePost($postId, $userId);
+    }
 }
