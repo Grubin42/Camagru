@@ -4,7 +4,9 @@ FROM dunglas/frankenphp
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     libpng-dev \
+    libjpeg-dev \
     msmtp \
+    && docker-php-ext-configure gd --with-jpeg \
     && docker-php-ext-install pdo pdo_pgsql gd \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 

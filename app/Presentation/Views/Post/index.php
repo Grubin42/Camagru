@@ -30,7 +30,7 @@
                     <?php
                     // Chemin vers le répertoire contenant les stickers
                     $stickerDir = __DIR__ . '/../../Assets/images/'; 
-                    $stickers = glob($stickerDir . '*.{jpg,png,gif}', GLOB_BRACE);
+                    $stickers = glob($stickerDir . '*.{jpg,png,gif,jpeg}', GLOB_BRACE);
                     foreach ($stickers as $stickerPath) {
                         $stickerName = basename($stickerPath);
                         $stickerUrl = '/Presentation/Assets/images/' . $stickerName;
@@ -195,7 +195,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     const stickerImage = new Image();
                     stickerImage.src = selectedSticker;
                     stickerImage.onload = () => {
-                        finalContext.drawImage(stickerImage, 0, 0, finalCanvas.width, finalCanvas.height);
+                        // Dimensions souhaitées pour le sticker
+                        const stickerWidth = 100; // Largeur
+                        const stickerHeight = 100; // Hauteur
+
+                        // Position du sticker (exemple : coin supérieur gauche)
+                        const xPosition = 10; // Décalage horizontal
+                        const yPosition = 10; // Décalage vertical
+
+                        finalContext.drawImage(stickerImage, xPosition, yPosition, stickerWidth, stickerHeight);
                     };
                 }
             };
@@ -203,7 +211,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const stickerImage = new Image();
             stickerImage.src = selectedSticker;
             stickerImage.onload = () => {
-                finalContext.drawImage(stickerImage, 0, 0, finalCanvas.width, finalCanvas.height);
+                const stickerWidth = 100;
+                const stickerHeight = 100;
+                const xPosition = 10;
+                const yPosition = 10;
+                finalContext.drawImage(stickerImage, xPosition, yPosition, stickerWidth, stickerHeight);
             };
         }
     }

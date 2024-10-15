@@ -41,27 +41,43 @@ class PostService
     {
         // Créer les ressources d'image à partir des données binaires
         $capturedImageResource = imagecreatefromstring($capturedImage);
-        $stickerResource = imagecreatefromstring($sticker);
     
+        $stickerResource = imagecreatefromstring($sticker);
+
         // Vérifier que les ressources sont valides
         if (!$capturedImageResource || !$stickerResource) {
             throw new \Exception("Erreur lors de la création des images.");
         }
     
-        // Récupérer les dimensions de l'image capturée
-        $capturedWidth = imagesx($capturedImageResource);
-        $capturedHeight = imagesy($capturedImageResource);
-    
         // Récupérer les dimensions du sticker
         $stickerWidth = imagesx($stickerResource);
         $stickerHeight = imagesy($stickerResource);
     
-        // Définir la position du sticker (ici en haut à gauche, mais tu peux adapter)
-        $xPosition = 0;
-        $yPosition = 0;
+        // Dimensions souhaitées pour le sticker
+        $desiredStickerWidth = 100; // Largeur souhaitée
+        $desiredStickerHeight = 100; // Hauteur souhaitée
     
-        // Fusionner les images : d'abord l'image capturée, ensuite le sticker
-        imagecopy($capturedImageResource, $stickerResource, $xPosition, $yPosition, 0, 0, $stickerWidth, $stickerHeight);
+        // Position du sticker (exemple : coin supérieur gauche avec un décalage)
+        $xPosition = 10;
+        $yPosition = 10;
+    
+        // Fusionner les images avec redimensionnement du sticker
+        $mergeSuccess = imagecopyresampled(
+            $capturedImageResource, // Image de destination
+            $stickerResource,       // Image source
+            $xPosition,             // Position X dans l'image de destination
+            $yPosition,             // Position Y dans l'image de destination
+            0,                      // Position X dans l'image source
+            0,                      // Position Y dans l'image source
+            $desiredStickerWidth,   // Largeur souhaitée dans l'image de destination
+            $desiredStickerHeight,  // Hauteur souhaitée dans l'image de destination
+            $stickerWidth,          // Largeur originale de l'image source
+            $stickerHeight          // Hauteur originale de l'image source
+        );
+    
+        if (!$mergeSuccess) {
+            throw new \Exception("Erreur lors de la fusion des images avec imagecopyresampled.");
+        }
     
         // Sauvegarder l'image fusionnée dans une variable temporaire
         ob_start();

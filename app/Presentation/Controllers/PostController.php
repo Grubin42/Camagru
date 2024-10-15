@@ -73,15 +73,36 @@ class PostController
             $capturedImage = str_replace('data:image/png;base64,', '', $capturedImage);
             $capturedImage = base64_decode($capturedImage);
     
-            // Télécharger le sticker à partir de son URL
-            $stickerContent = file_get_contents($selectedStickerUrl);
+            // Vérifier si le décodage a réussi
+            if ($capturedImage === false) {
+                echo "Erreur : Décodage de l'image capturée échoué.";
+                return;
+            }
+    
+            // Construire le chemin absolu du sticker
+            $stickerName = basename($selectedStickerUrl);
+            $stickerPath = __DIR__ . '/../../Presentation/Assets/images/' . $stickerName;
+    
+            // Vérifier si le fichier existe
+            if (!file_exists($stickerPath)) {
+                echo "Erreur : Le fichier sticker n'existe pas : " . htmlspecialchars($stickerPath);
+                return;
+            }
+    
+            // Télécharger le sticker à partir de son chemin absolu
+            $stickerContent = @file_get_contents($stickerPath);
             if ($stickerContent === false) {
-                echo "Erreur : impossible de télécharger le sticker.";
+                echo "Erreur : Impossible de lire le fichier sticker.";
                 return;
             }
     
             // Appeler le service pour fusionner les images
-            $mergedImage = $this->postService->mergeImages($capturedImage, $stickerContent);
+            try {
+                $mergedImage = $this->postService->mergeImages($capturedImage, $stickerContent);
+            } catch (\Exception $e) {
+                echo "Erreur lors de la fusion des images : " . $e->getMessage();
+                return;
+            }
     
             // Enregistrer l'image fusionnée en base de données
             $this->postService->createPost($mergedImage);
