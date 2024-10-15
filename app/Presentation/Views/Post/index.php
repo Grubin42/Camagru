@@ -11,7 +11,7 @@
                     <!-- Vidéo et bouton de capture -->
                     <div class="video-section">
                         <video id="video" width="320" height="240" autoplay></video>
-                        <button id="capture-btn">Capturer</button>
+                        <button id="capture-btn">Capturer</button> <!-- Bouton activé -->
                     </div>
                     <!-- Miniatures des images capturées -->
                     <div class="thumbnails-section">
@@ -96,10 +96,19 @@ document.addEventListener('DOMContentLoaded', function() {
     navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => {
             video.srcObject = stream;
+        })
+        .catch(err => {
+            console.error("Erreur d'accès à la caméra :", err);
+            alert("Impossible d'accéder à la caméra. Veuillez vérifier les permissions.");
         });
 
     // Capturer l'image lorsqu'on appuie sur le bouton "Capturer"
     captureBtn.addEventListener('click', () => {
+        if (!selectedSticker) {
+            alert('Veuillez sélectionner un sticker avant de capturer une image.');
+            return;
+        }
+
         if (capturedImages.length >= 4) {
             alert('Vous avez déjà 4 images capturées. Veuillez supprimer une image pour en capturer une nouvelle.');
             return;
@@ -161,8 +170,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const stickers = document.querySelectorAll('.sticker');
     stickers.forEach(sticker => {
         sticker.addEventListener('click', () => {
+            // Retirer la sélection précédente
+            stickers.forEach(s => s.classList.remove('selected-sticker'));
+
+            // Sélectionner le nouveau sticker
             selectedSticker = sticker.src;
+            sticker.classList.add('selected-sticker');
             document.getElementById('selected-sticker').value = selectedSticker; // Mettre à jour le champ caché
+
             updateFinalCanvas();
         });
     });
@@ -183,6 +198,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         finalContext.drawImage(stickerImage, 0, 0, finalCanvas.width, finalCanvas.height);
                     };
                 }
+            };
+        } else if (selectedSticker) {
+            const stickerImage = new Image();
+            stickerImage.src = selectedSticker;
+            stickerImage.onload = () => {
+                finalContext.drawImage(stickerImage, 0, 0, finalCanvas.width, finalCanvas.height);
             };
         }
     }

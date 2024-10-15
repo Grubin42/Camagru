@@ -197,3 +197,16 @@ button:hover {
 .delete-thumbnail-button:hover {
     background: #cc0000;
 }
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+.selected-sticker {
+    border: 2px solid #008CBA;
+    border-radius: 4px;
+}
+#capture-instruction {
+    margin-top: 10px;
+    text-align: center;
+}

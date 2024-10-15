@@ -1,12 +1,14 @@
 {
- # Activer FrankenPHP
- frankenphp
- # Configurer l'ordre d'exécution de la directive
- order php_server before file_server
+	# Activer FrankenPHP
+	frankenphp
+	# Configurer l'ordre d'exécution de la directive
+	order php_server before file_server
+
+	ocsp_stapling off
 }
 
 localhost {
- root * /var/www/html/app
- file_server
- php_server
+	root * /var/www/html/app
+	file_server
+	php_server
 }
