@@ -18,9 +18,24 @@ class PostController
 
     public function showCreatePostForm()
     {
+        // Vérifier si l'utilisateur est connecté
+        $userId = $_SESSION['user']['id'] ?? null;
+
+        if ($userId) {
+            // Récupérer les posts de l'utilisateur
+            $userPosts = $this->postService->getPostsByUser($userId);
+        } else {
+            $userPosts = [];
+        }
+
+        // Générer le token CSRF
+        $csrfToken = $this->csrfService->getToken();
+
         // Rendre la vue avec la page de création de post
         renderView(__DIR__ . '/../Views/Shared/Layout.php', [
-            'view' => __DIR__ . '/../Views/Post/index.php'
+            'view' => __DIR__ . '/../Views/Post/index.php',
+            'userPosts' => $userPosts,
+            'csrf_token' => $csrfToken // Passer le token à la vue
         ]);
     }
 
@@ -72,7 +87,7 @@ class PostController
             $this->postService->createPost($mergedImage);
     
             // Rediriger vers la page des posts
-            header('Location: /');
+            header('Location: /posts');
             exit();
         } else {
             echo "Erreur : données manquantes ou utilisateur non connecté.";

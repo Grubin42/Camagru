@@ -32,11 +32,12 @@ class CsrfMiddleware
 
                 // Vérifier si la requête est AJAX
                 if ($this->isAjaxRequest()) {
+                    header('Content-Type: application/json');
                     http_response_code(403); // Forbidden
                     echo json_encode(['error' => 'Token CSRF invalide.']);
                 } else {
                     $_SESSION['error_message'] = 'Token CSRF invalide.';
-                    header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/'));
+                    header('Location: /error');
                 }
                 exit();
             } else {

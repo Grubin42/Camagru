@@ -1,13 +1,39 @@
-.posts-container {
-    max-width: 800px;
+/* Style général pour le conteneur principal */
+.main-container {
+    display: flex;
     margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    font-family: 'Arial', sans-serif;
+    max-width: 1200px;
 }
 
+/* Colonne de gauche */
+.left-column {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Section en haut à gauche */
+.top-left {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Section en bas à gauche */
+.bottom-left {
+    flex: 1;
+    padding: 20px;
+}
+
+/* Colonne de droite */
+.right-column {
+    width: 40%;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 90vh; /* Pour permettre le défilement si nécessaire */
+    border-left: 1px solid #ccc;
+}
+
+/* Styles pour les titres */
 h2, h3 {
     color: #333;
     font-weight: 600;
@@ -15,11 +41,13 @@ h2, h3 {
     text-align: center;
 }
 
-.capture-section, .sticker-selection, .result-section {
+/* Styles pour les sections de capture et de sélection de stickers */
+.capture-section, .sticker-selection {
     margin: 20px 0;
     text-align: center;
 }
 
+/* Style pour la vidéo */
 .capture-section video {
     border: 2px solid #ddd;
     border-radius: 8px;
@@ -27,8 +55,10 @@ h2, h3 {
     height: 240px;
 }
 
+/* Liste des stickers */
 #sticker-list {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     list-style-type: none;
     padding: 0;
@@ -48,12 +78,14 @@ h2, h3 {
     transform: scale(1.2);
 }
 
+/* Styles pour le canvas */
 canvas {
     border: 2px solid #ddd;
     border-radius: 8px;
     margin: 20px 0;
 }
 
+/* Boutons */
 button {
     background-color: #008CBA;
     color: white;
@@ -66,4 +98,21 @@ button {
 
 button:hover {
     background-color: #005f73;
+}
+
+/* Styles pour les posts de l'utilisateur */
+.user-post {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.user-post img {
+    max-width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+/* Ajustement des sections */
+.result-section {
+    text-align: center;
 }

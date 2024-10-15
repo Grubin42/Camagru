@@ -73,4 +73,21 @@ class Post
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getPostsByUser($userId): array
+    {
+        $stmt = $this->db->prepare('SELECT * FROM posts WHERE user_id = :user_id ORDER BY created_date DESC');
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($posts as &$post) {
+            if (is_resource($post['image'])) {
+                $imageStream = stream_get_contents($post['image']);
+                $post['image'] = base64_encode($imageStream);
+            }
+        }
+
+        return $posts;
+    }
 }

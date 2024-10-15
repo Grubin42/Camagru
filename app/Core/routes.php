@@ -9,6 +9,8 @@ use Camagru\Presentation\Controllers\AuthController;
 use Camagru\Presentation\Controllers\PostController;
 use Camagru\Presentation\Controllers\LikeController;
 use Camagru\Presentation\Controllers\CommentController;
+use Camagru\Presentation\Controllers\ErrorController;
+
 
 $router = new Router();
 
@@ -137,4 +139,29 @@ $router->addRoute('/edit-profile', function() {
     }
 });
 
+// Ajouter les routes d'erreur
+$router->addRoute('/error', function() {
+    $errorController = new ErrorController();
+    $errorController->showError($_SESSION['error_message'] ?? 'Une erreur est survenue.');
+});
+
+$router->addRoute('/error/403', function() {
+    $errorController = new ErrorController();
+    $errorController->showError('403 - Accès interdit.');
+});
+
+$router->addRoute('/error/401', function() {
+    $errorController = new ErrorController();
+    $errorController->showError('401 - Non autorisé.');
+});
+
+$router->addRoute('/error/404', function() {
+    $errorController = new ErrorController();
+    $errorController->show404();
+});
+
+$router->addRoute('/error/500', function() {
+    $errorController = new ErrorController();
+    $errorController->show500();
+});
 return $router;

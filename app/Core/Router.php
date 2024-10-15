@@ -2,6 +2,8 @@
 
 namespace Camagru\Core;
 
+use Camagru\Presentation\Controllers\ErrorController;
+
 class Router {
     private array $routes = [];
     private array $middleware = [];
@@ -36,7 +38,7 @@ class Router {
             }
         }
         // Si aucune route ne correspond, afficher une erreur 404
-        http_response_code(404);
-        echo "404 - Page non trouvée";
+        $errorController = new ErrorController();
+        $errorController->show404();
     }
 }

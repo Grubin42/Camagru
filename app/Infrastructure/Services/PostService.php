@@ -81,4 +81,9 @@ class PostService
         $userId = $_SESSION['user']['id'] ?? null;
         $this->postModel->createPost($userId, $imageData);
     }
+
+    public function getPostsByUser($userId): array
+    {
+        return $this->postModel->getPostsByUser($userId);
+    }
 }

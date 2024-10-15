@@ -1,49 +1,72 @@
-<div class="posts-container">
-    <h2>Créer un nouveau post</h2>
+<div class="main-container">
+    <!-- Colonne de gauche -->
+    <div class="left-column">
+        <!-- Section en haut à gauche : Caméra et stickers -->
+        <div class="top-left">
+            <h2>Créer un nouveau post</h2>
+            <!-- Section pour capturer une image avec la caméra -->
+            <div class="capture-section">
+                <h3>Capture d'image</h3>
+                <video id="video" width="320" height="240" autoplay></video>
+                <button id="capture-btn">Capturer</button>
+            </div>
 
-    <!-- Section pour capturer une image avec la caméra -->
-    <div class="capture-section">
-        <h3>Capture d'image</h3>
-        <video id="video" width="320" height="240" autoplay></video>
-        <button id="capture-btn">Capturer</button>
+            <!-- Section pour afficher l'image capturée -->
+            <div id="captured-image-section" style="display: none;">
+                <h3>Image capturée</h3>
+                <canvas id="canvas" width="320" height="240"></canvas>
+                <button id="delete-image-btn">Supprimer l'image</button>
+            </div>
+
+            <!-- Section pour sélectionner une image à ajouter -->
+            <div class="sticker-selection">
+                <h3>Sélectionner un sticker à ajouter</h3>
+                <ul id="sticker-list">
+                    <?php
+                    // Chemin vers le répertoire contenant les stickers
+                    $stickerDir = __DIR__ . '/../../Assets/images/'; 
+                    $stickers = glob($stickerDir . '*.{jpg,png,gif}', GLOB_BRACE);
+                    foreach ($stickers as $stickerPath) {
+                        $stickerName = basename($stickerPath);
+                        $stickerUrl = '/Presentation/Assets/images/' . $stickerName;
+                        echo '<li><img src="' . $stickerUrl . '" alt="' . $stickerName . '" class="sticker"></li>';
+                    }
+                    ?>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section en bas à gauche : Résultat final et bouton soumettre -->
+        <div class="bottom-left">
+            <!-- Section pour voir le résultat final -->
+            <div class="result-section">
+                <h3>Résultat final</h3>
+                <canvas id="final-canvas" width="320" height="240"></canvas>
+            </div>
+
+            <!-- Bouton pour soumettre le post -->
+            <form action="/posts" method="POST" id="post-form">
+                <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+                <input type="hidden" id="captured-image" name="captured_image">
+                <input type="hidden" id="selected-sticker" name="selected_sticker">
+                <button type="submit">Soumettre</button>
+            </form>
+        </div>
     </div>
 
-    <!-- Section pour afficher l'image capturée -->
-    <div id="captured-image-section" style="display: none;">
-        <h3>Image capturée</h3>
-        <canvas id="canvas" width="320" height="240"></canvas>
-        <button id="delete-image-btn">Supprimer l'image</button>
+    <!-- Colonne de droite : Affichage des posts de l'utilisateur -->
+    <div class="right-column">
+        <h2>Vos Posts</h2>
+        <?php if (isset($userPosts) && count($userPosts) > 0): ?>
+            <?php foreach ($userPosts as $post): ?>
+                <div class="user-post">
+                    <img src="data:image/png;base64,<?= $post['image'] ?>" alt="Post Image">
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Vous n'avez pas encore de posts.</p>
+        <?php endif; ?>
     </div>
-
-    <!-- Section pour sélectionner une image à ajouter -->
-    <div class="sticker-selection">
-        <h3>Sélectionner un sticker à ajouter</h3>
-        <ul id="sticker-list">
-            <?php
-            // Chemin vers le répertoire contenant les stickers
-            $stickerDir = __DIR__ . '/../../Assets/images/'; 
-            $stickers = glob($stickerDir . '*.{jpg,png,gif}', GLOB_BRACE);
-            foreach ($stickers as $stickerPath) {
-                $stickerName = basename($stickerPath);
-                $stickerUrl = '/Presentation/Assets/images/' . $stickerName;
-                echo '<li><img src="' . $stickerUrl . '" alt="' . $stickerName . '" class="sticker"></li>';
-            }
-            ?>
-        </ul>
-    </div>
-
-    <!-- Section pour voir le résultat final -->
-    <div class="result-section">
-        <h3>Résultat final</h3>
-        <canvas id="final-canvas" width="320" height="240"></canvas>
-    </div>
-
-    <!-- Bouton pour soumettre le post -->
-    <form action="/posts" method="POST" id="post-form">
-        <input type="hidden" id="captured-image" name="captured_image">
-        <input type="hidden" id="selected-sticker" name="selected_sticker">
-        <button type="submit">Soumettre</button>
-    </form>
 </div>
 
 <script>

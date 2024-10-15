@@ -20,6 +20,7 @@ require_once __DIR__ . '/Presentation/Controllers/RegisterController.php';
 require_once __DIR__ . '/Presentation/Controllers/AuthController.php';
 require_once __DIR__ . '/Presentation/Controllers/LikeController.php';
 require_once __DIR__ . '/Presentation/Controllers/CommentController.php';
+require_once __DIR__ . '/Presentation/Controllers/ErrorController.php';
 
 //SERVICE
 require_once __DIR__ . '/Infrastructure/Services/HomeService.php';
@@ -40,7 +41,25 @@ require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/Core/Data/Connection.php';
 require_once __DIR__ . '/Core/Router.php';
 
-session_start();
+// Configurer le gestionnaire d'exceptions
+set_exception_handler(function($exception) {
+    error_log($exception->getMessage());
+    $_SESSION['error_message'] = 'Une erreur interne est survenue.';
+    header('Location: /error/500');
+    exit();
+});
+
+// Configurer le gestionnaire d'erreurs
+set_error_handler(function($errno, $errstr, $errfile, $errline) {
+    // Convertir les erreurs en exceptions
+    throw new \ErrorException($errstr, 0, $errno, $errfile, $errline);
+});
+
+// Démarrer la session
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Charger le routeur avec les routes définies
 $router = require __DIR__ . '/Core/routes.php';
 
