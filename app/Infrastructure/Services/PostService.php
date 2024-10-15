@@ -60,8 +60,8 @@ class PostService
         $stickerHeight = imagesy($stickerImageResource);
     
         // Debug: Afficher les dimensions de la photo et du sticker
-        echo "Dimensions de la photo: largeur = $photoWidth, hauteur = $photoHeight<br>";
-        echo "Dimensions du sticker: largeur = $stickerWidth, hauteur = $stickerHeight<br>";
+        // echo "Dimensions de la photo: largeur = $photoWidth, hauteur = $photoHeight<br>";
+        // echo "Dimensions du sticker: largeur = $stickerWidth, hauteur = $stickerHeight<br>";
     
         // Redimensionner le sticker (par exemple à 50% de sa taille originale)
         $newStickerWidth = $stickerWidth * 0.5; // 50% de la largeur originale
@@ -129,5 +129,35 @@ class PostService
     public function deletePhoto($postId, $userId)
     {
         return $this->PostModel->deletePost($postId,$userId);
+    }
+
+    public function ValidatePost($photoData, $stickerData, $maxImageSize)
+    {
+        $errors = [];
+        if (empty($photoData)) {
+            $errors = "Erreur : aucune photo sélectionnée.";
+        } else {
+
+            $base64Prefix = substr($photoData, 0, strpos($photoData, ','));
+
+            // Vérifier le type d'image avec les préfixes spécifiques
+            if (strpos($base64Prefix, 'data:image/png') === false && strpos($base64Prefix, 'data:image/jpeg') === false) {
+                $errors[] = "Erreur : seuls les fichiers PNG et JPEG sont autorisés.";
+            }
+
+            // Calculer la taille réelle de l'image décodée à partir du base64
+            $photoSizeInBytes = (int)(strlen(base64_decode(explode(',', $photoData)[1])));
+            
+            // Vérifier la taille de la photo
+            if ($photoSizeInBytes > $maxImageSize) {
+                $errors[] = "Erreur : la taille de la photo dépasse la limite autorisée de 5 Mo.";
+            }
+        }
+
+        // Vérifier si un sticker a bien été sélectionné
+        if (empty($stickerData)) {
+            $errors[] = "Erreur : aucun sticker sélectionné.";
+        }
+        return $errors;
     }
 }

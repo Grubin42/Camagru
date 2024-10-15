@@ -4,6 +4,9 @@
 
     # Set directive order
     order php_server before file_server
+
+    # Disabling OCSP stapling globally
+    ocsp_stapling off
 }
 
 localhost {

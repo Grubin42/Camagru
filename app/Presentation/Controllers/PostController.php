@@ -49,23 +49,7 @@ class PostController {
                 $errors = [];
                 $maxImageSize = 5 * 1024 * 1024; // 5 Mo
                 
-                // Vérifier si une photo a bien été sélectionnée
-                if (empty($photoData)) {
-                    $errors[] = "Erreur : aucune photo sélectionnée.";
-                } else {
-                    // Calculer la taille réelle de l'image décodée à partir du base64
-                    $photoSizeInBytes = (int)(strlen(base64_decode(explode(',', $photoData)[1])));
-                    
-                    // Vérifier la taille de la photo
-                    if ($photoSizeInBytes > $maxImageSize) {
-                        $errors[] = "Erreur : la taille de la photo dépasse la limite autorisée de 5 Mo.";
-                    }
-                }
-
-                // Vérifier si un sticker a bien été sélectionné
-                if (empty($stickerData)) {
-                    $errors[] = "Erreur : aucun sticker sélectionné.";
-                }
+                $errors = $this->PostService->ValidatePost($photoData, $stickerData, $maxImageSize);
 
                 // Si des erreurs existent, les afficher à l'utilisateur
                 if (!empty($errors)) {
