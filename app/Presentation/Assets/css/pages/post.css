@@ -207,7 +207,45 @@ button:disabled {
     border: 2px solid #008CBA;
     border-radius: 4px;
 }
+/* Styles pour le label de sélection de fichier */
+.video-section label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Styles pour l'input de fichier */
+#file-input {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Styles pour le message d'instruction */
 #capture-instruction {
     margin-top: 10px;
     text-align: center;
+    color: #555;
+    font-size: 14px;
+}
+/* Styles pour le label de sélection de fichier ressemblant à un bouton */
+.file-input-button {
+    display: inline-block;
+    background-color: #008CBA;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.file-input-button:hover {
+    background-color: #005f73;
+}
+
+/* Optionnel : ajouter un peu d'espace entre le label et l'instruction */
+.capture-section label + p {
+    margin-top: 10px;
 }

@@ -81,6 +81,7 @@
     </div>
 </div>
 
+<!-- Script JavaScript inclus ici -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const video = document.getElementById('video');
@@ -92,15 +93,95 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedImageData = null;
     let selectedSticker = null;
 
-    // Demander l'accès à la caméra
-    navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
-            video.srcObject = stream;
-        })
-        .catch(err => {
-            console.error("Erreur d'accès à la caméra :", err);
-            alert("Impossible d'accéder à la caméra. Veuillez vérifier les permissions.");
+    // Fonction pour remplacer le bouton de capture par un input file stylisé
+    function replaceCaptureButtonWithFileInput() {
+        const captureSection = document.querySelector('.video-section');
+        captureSection.innerHTML = ''; // Supprimer le contenu actuel
+
+        // Créer le label stylisé comme un bouton
+        const fileInputLabel = document.createElement('label');
+        fileInputLabel.setAttribute('for', 'file-input');
+        fileInputLabel.textContent = 'Sélectionner une image';
+        fileInputLabel.classList.add('file-input-button'); // Ajouter une classe pour le style
+
+        // Créer l'input de fichier caché
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.id = 'file-input';
+        fileInput.accept = 'image/png, image/jpeg, image/jpg, image/gif';
+        fileInput.style.display = 'none'; // Cacher l'input
+
+        // Ajouter un message d'instruction
+        const instruction = document.createElement('p');
+        instruction.id = 'capture-instruction';
+        instruction.textContent = 'Veuillez sélectionner une image (PNG, JPG, JPEG, GIF) de moins de 5 Mo.';
+        instruction.style.textAlign = 'center';
+        instruction.style.color = '#555';
+        instruction.style.fontSize = '14px';
+
+        // Ajouter le label, l'input et l'instruction à la section
+        captureSection.appendChild(fileInputLabel);
+        captureSection.appendChild(fileInput);
+        captureSection.appendChild(instruction);
+
+        // Gérer la sélection de fichier
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Vérifier la taille du fichier (<=5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('La taille du fichier doit être inférieure ou égale à 5 Mo.');
+                    return;
+                }
+
+                // Vérifier le type de fichier
+                const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Type de fichier invalide. Veuillez sélectionner un fichier PNG, JPG, JPEG ou GIF.');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageData = e.target.result;
+
+                    if (capturedImages.length >= 4) {
+                        alert('Vous avez déjà 4 images capturées. Veuillez supprimer une image pour en ajouter une nouvelle.');
+                        return;
+                    }
+
+                    // Ajouter l'image au tableau des images capturées
+                    capturedImages.push(imageData);
+                    updateThumbnails();
+                };
+                reader.readAsDataURL(file);
+            }
         });
+    }
+
+    // Vérifier si le contexte est sécurisé
+    function isSecureContext() {
+        return window.isSecureContext;
+    }
+
+    // Vérifier si getUserMedia est supporté
+    if (isSecureContext() && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Demander l'accès à la caméra
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error("Erreur d'accès à la caméra :", err);
+                // Remplacer le bouton de capture par l'input file stylisé
+                replaceCaptureButtonWithFileInput();
+            });
+    } else {
+        // getUserMedia non supporté ou contexte non sécurisé
+        console.warn("getUserMedia n'est pas supporté par ce navigateur ou le contexte n'est pas sécurisé.");
+        // Remplacer le bouton de capture par l'input file stylisé
+        replaceCaptureButtonWithFileInput();
+    }
 
     // Capturer l'image lorsqu'on appuie sur le bouton "Capturer"
     captureBtn.addEventListener('click', () => {
@@ -127,9 +208,8 @@ document.addEventListener('DOMContentLoaded', function() {
         updateThumbnails();
     });
 
-    // Mettre à jour l'affichage des miniatures
+    // Fonction pour mettre à jour les miniatures
     function updateThumbnails() {
-        // Vider le conteneur des miniatures
         thumbnailsContainer.innerHTML = '';
 
         capturedImages.forEach((imageData, index) => {
