@@ -111,6 +111,59 @@ class ValidationService
         return $valid;
     }
 
+        /**
+     * Valide une image en vérifiant son type.
+     *
+     * @param string $dataURL La chaîne de données de l'image en base64.
+     * @return bool
+     */
+    public function validateImage(string $dataURL): bool
+    {
+        // Extraire le type MIME de la Data URL
+        if (preg_match('/^data:image\/(\w+);base64,/', $dataURL, $type)) {
+            $imageType = strtolower($type[1]); // jpg, png, gif, etc.
+
+            // Vérifier les types d'images autorisés
+            if (!in_array($imageType, ['jpg', 'jpeg', 'gif', 'png'])) {
+                $this->addError('image', "Type d'image invalide. Seuls JPG, JPEG, PNG et GIF sont autorisés.");
+                return false;
+            }
+
+            return true;
+        } else {
+            $this->addError('image', "La donnée fournie n'est pas une image valide.");
+            return false;
+        }
+    }
+
+    /**
+     * Valide la taille de l'image.
+     *
+     * @param string $dataURL La chaîne de données de l'image en base64.
+     * @param int $maxSize En octets (par défaut 5 Mo).
+     * @return bool
+     */
+    public function validateImageSize(string $dataURL, int $maxSize = 5242880): bool
+    {
+        // Calculer la taille de l'image en binaire
+        $base64String = preg_replace('/^data:image\/\w+;base64,/', '', $dataURL);
+        $binaryData = base64_decode($base64String, true);
+
+        if ($binaryData === false) {
+            $this->addError('image', "L'image est corrompue ou mal encodée.");
+            return false;
+        }
+
+        $dataSize = strlen($binaryData);
+
+        if ($dataSize > $maxSize) {
+            $this->addError('image', "La taille de l'image dépasse la limite de 5 Mo.");
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Récupère les erreurs de validation.
      *

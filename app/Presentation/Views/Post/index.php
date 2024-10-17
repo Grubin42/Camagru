@@ -1,4 +1,20 @@
 <div class="main-container">
+
+    <?php
+    if (isset($_SESSION['errors']) && !empty($_SESSION['errors'])):
+    ?>
+        <div class="error-messages">
+            <?php foreach ($_SESSION['errors'] as $field => $errors): ?>
+                <?php foreach ($errors as $error): ?>
+                    <p style="color:red;"><?php echo htmlspecialchars($error); ?></p>
+                <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
+    <?php
+        // Réinitialiser les erreurs après les avoir affichées
+        unset($_SESSION['errors']);
+    endif;
+    ?>
     <!-- Colonne de gauche -->
     <div class="left-column">
         <!-- Section en haut à gauche : Caméra et stickers -->
@@ -95,6 +111,35 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedImageData = null;
     let selectedSticker = null;
 
+    // Fonction pour redimensionner une image tout en maintenant le ratio d'aspect
+    function resizeImage(dataURL, maxWidth, maxHeight, callback) {
+        const img = new Image();
+        img.onload = function() {
+            let width = img.width;
+            let height = img.height;
+
+            // Calculer le ratio de redimensionnement
+            const widthRatio = maxWidth / width;
+            const heightRatio = maxHeight / height;
+            const ratio = Math.min(widthRatio, heightRatio, 1); // Ne pas agrandir si l'image est plus petite
+
+            width = width * ratio;
+            height = height * ratio;
+
+            // Créer un canvas pour dessiner l'image redimensionnée
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // Obtenir le Data URL de l'image redimensionnée
+            const resizedDataURL = canvas.toDataURL('image/png');
+            callback(resizedDataURL);
+        };
+        img.src = dataURL;
+    }
+
     // Fonction pour remplacer le bouton de capture par un input file stylisé
     function replaceCaptureButtonWithFileInput() {
         const captureSection = document.querySelector('.video-section');
@@ -155,16 +200,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const imageData = e.target.result;
+                    const originalDataURL = e.target.result;
 
-                    if (capturedImages.length >= 4) {
-                        alert('Vous avez déjà 4 images capturées. Veuillez supprimer une image pour en ajouter une nouvelle.');
-                        return;
-                    }
+                    // Redimensionner l'image avant de l'ajouter
+                    resizeImage(originalDataURL, 320, 240, function(resizedDataURL) {
+                        if (capturedImages.length >= 4) {
+                            alert('Vous avez déjà 4 images capturées. Veuillez supprimer une image pour en ajouter une nouvelle.');
+                            return;
+                        }
 
-                    // Ajouter l'image au tableau des images capturées
-                    capturedImages.push(imageData);
-                    updateThumbnails();
+                        // Ajouter l'image redimensionnée au tableau des images capturées
+                        capturedImages.push(resizedDataURL);
+                        updateThumbnails();
+                    });
                 };
                 reader.readAsDataURL(file);
             }

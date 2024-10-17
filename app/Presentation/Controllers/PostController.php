@@ -4,16 +4,19 @@ namespace Camagru\Presentation\Controllers;
 
 use Camagru\Infrastructure\Services\PostService;
 use Camagru\Infrastructure\Services\CsrfService;
+use Camagru\Infrastructure\Services\ValidationService;
 
 class PostController
 {
     protected PostService $postService;
     protected CsrfService $csrfService;
+    protected ValidationService $validationService;
 
     public function __construct()
     {
         $this->postService = new PostService();
         $this->csrfService = new CsrfService();
+        $this->validationService = new ValidationService();
     }
 
     public function showCreatePostForm()
@@ -64,19 +67,36 @@ class PostController
 
     public function savePost()
     {
+        session_start(); // Assurez-vous que la session est démarrée
+    
         // Récupérer l'image capturée et le sticker depuis le formulaire
         $capturedImage = $_POST['captured_image'] ?? null;
         $selectedStickerUrl = $_POST['selected_sticker'] ?? null;
     
         if ($capturedImage && $selectedStickerUrl) {
+            // Valider l'image capturée
+            if (!$this->validationService->validateImage($capturedImage)) {
+                $_SESSION['errors'] = $this->validationService->getErrors();
+                header('Location: /create-post'); // Rediriger vers le formulaire de création de post
+                exit();
+            }
+    
+            if (!$this->validationService->validateImageSize($capturedImage)) {
+                $_SESSION['errors'] = $this->validationService->getErrors();
+                header('Location: /create-post');
+                exit();
+            }
+    
             // Nettoyer les données des images (base64 -> binaire)
-            $capturedImage = str_replace('data:image/png;base64,', '', $capturedImage);
+            $capturedImage = preg_replace('/^data:image\/\w+;base64,/', '', $capturedImage);
             $capturedImage = base64_decode($capturedImage);
     
             // Vérifier si le décodage a réussi
             if ($capturedImage === false) {
-                echo "Erreur : Décodage de l'image capturée échoué.";
-                return;
+                $this->validationService->addError('image', "Décodage de l'image capturée échoué.");
+                $_SESSION['errors'] = $this->validationService->getErrors();
+                header('Location: /create-post');
+                exit();
             }
     
             // Construire le chemin absolu du sticker
@@ -85,23 +105,29 @@ class PostController
     
             // Vérifier si le fichier existe
             if (!file_exists($stickerPath)) {
-                echo "Erreur : Le fichier sticker n'existe pas : " . htmlspecialchars($stickerPath);
-                return;
+                $this->validationService->addError('sticker', "Le fichier sticker n'existe pas : " . htmlspecialchars($stickerPath));
+                $_SESSION['errors'] = $this->validationService->getErrors();
+                header('Location: /create-post');
+                exit();
             }
     
             // Télécharger le sticker à partir de son chemin absolu
             $stickerContent = @file_get_contents($stickerPath);
             if ($stickerContent === false) {
-                echo "Erreur : Impossible de lire le fichier sticker.";
-                return;
+                $this->validationService->addError('sticker', "Impossible de lire le fichier sticker.");
+                $_SESSION['errors'] = $this->validationService->getErrors();
+                header('Location: /create-post');
+                exit();
             }
     
             // Appeler le service pour fusionner les images
             try {
                 $mergedImage = $this->postService->mergeImages($capturedImage, $stickerContent);
             } catch (\Exception $e) {
-                echo "Erreur lors de la fusion des images : " . $e->getMessage();
-                return;
+                $this->validationService->addError('merge', "Erreur lors de la fusion des images : " . $e->getMessage());
+                $_SESSION['errors'] = $this->validationService->getErrors();
+                header('Location: /create-post');
+                exit();
             }
     
             // Enregistrer l'image fusionnée en base de données
@@ -111,7 +137,10 @@ class PostController
             header('Location: /posts');
             exit();
         } else {
-            echo "Erreur : données manquantes ou utilisateur non connecté.";
+            $this->validationService->addError('general', "Données manquantes ou utilisateur non connecté.");
+            $_SESSION['errors'] = $this->validationService->getErrors();
+            header('Location: /create-post');
+            exit();
         }
     }
 

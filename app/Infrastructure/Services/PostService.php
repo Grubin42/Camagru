@@ -41,53 +41,96 @@ class PostService
     {
         // Créer les ressources d'image à partir des données binaires
         $capturedImageResource = imagecreatefromstring($capturedImage);
-    
-        $stickerResource = imagecreatefromstring($sticker);
-
-        // Vérifier que les ressources sont valides
-        if (!$capturedImageResource || !$stickerResource) {
-            throw new \Exception("Erreur lors de la création des images.");
+        if (!$capturedImageResource) {
+            throw new \Exception("Erreur lors de la création de l'image capturée.");
         }
-    
-        // Récupérer les dimensions du sticker
+
+        $stickerResource = imagecreatefromstring($sticker);
+        if (!$stickerResource) {
+            throw new \Exception("Erreur lors de la création du sticker.");
+        }
+
+        // Récupérer les dimensions de l'image capturée
+        $capturedWidth = imagesx($capturedImageResource);
+        $capturedHeight = imagesy($capturedImageResource);
+
+        // Définir les dimensions maximales
+        $maxWidth = 320;
+        $maxHeight = 240;
+
+        // Calculer le ratio de redimensionnement
+        $widthRatio = $maxWidth / $capturedWidth;
+        $heightRatio = $maxHeight / $capturedHeight;
+        $ratio = min($widthRatio, $heightRatio, 1); // Ne pas agrandir si l'image est plus petite
+
+        $newWidth = (int)($capturedWidth * $ratio);
+        $newHeight = (int)($capturedHeight * $ratio);
+
+        // Redimensionner l'image capturée si nécessaire
+        if ($ratio < 1) {
+            $resizedCapturedImage = imagecreatetruecolor($newWidth, $newHeight);
+            // Maintenir la transparence pour les PNG et GIF
+            imagealphablending($resizedCapturedImage, false);
+            imagesavealpha($resizedCapturedImage, true);
+            imagecopyresampled(
+                $resizedCapturedImage,
+                $capturedImageResource,
+                0, 0, 0, 0,
+                $newWidth, $newHeight,
+                $capturedWidth, $capturedHeight
+            );
+            imagedestroy($capturedImageResource);
+            $capturedImageResource = $resizedCapturedImage;
+        }
+
+        // Redimensionner le sticker à 100x100 pixels
         $stickerWidth = imagesx($stickerResource);
         $stickerHeight = imagesy($stickerResource);
-    
-        // Dimensions souhaitées pour le sticker
-        $desiredStickerWidth = 100; // Largeur souhaitée
-        $desiredStickerHeight = 100; // Hauteur souhaitée
-    
+        $desiredStickerWidth = 100;
+        $desiredStickerHeight = 100;
+
+        $resizedSticker = imagecreatetruecolor($desiredStickerWidth, $desiredStickerHeight);
+        // Maintenir la transparence pour les PNG et GIF
+        imagealphablending($resizedSticker, false);
+        imagesavealpha($resizedSticker, true);
+        imagecopyresampled(
+            $resizedSticker,
+            $stickerResource,
+            0, 0, 0, 0,
+            $desiredStickerWidth, $desiredStickerHeight,
+            $stickerWidth, $stickerHeight
+        );
+        imagedestroy($stickerResource);
+
         // Position du sticker (exemple : coin supérieur gauche avec un décalage)
         $xPosition = 10;
         $yPosition = 10;
-    
-        // Fusionner les images avec redimensionnement du sticker
-        $mergeSuccess = imagecopyresampled(
+
+        // Fusionner le sticker sur l'image capturée
+        $mergeSuccess = imagecopy(
             $capturedImageResource, // Image de destination
-            $stickerResource,       // Image source
+            $resizedSticker,        // Image source
             $xPosition,             // Position X dans l'image de destination
             $yPosition,             // Position Y dans l'image de destination
             0,                      // Position X dans l'image source
             0,                      // Position Y dans l'image source
-            $desiredStickerWidth,   // Largeur souhaitée dans l'image de destination
-            $desiredStickerHeight,  // Hauteur souhaitée dans l'image de destination
-            $stickerWidth,          // Largeur originale de l'image source
-            $stickerHeight          // Hauteur originale de l'image source
+            $desiredStickerWidth,   // Largeur de l'image source
+            $desiredStickerHeight   // Hauteur de l'image source
         );
-    
+
         if (!$mergeSuccess) {
-            throw new \Exception("Erreur lors de la fusion des images avec imagecopyresampled.");
+            throw new \Exception("Erreur lors de la fusion des images.");
         }
-    
+
         // Sauvegarder l'image fusionnée dans une variable temporaire
         ob_start();
         imagepng($capturedImageResource);
         $mergedImageData = ob_get_clean();
-    
+
         // Libérer la mémoire des ressources d'image
         imagedestroy($capturedImageResource);
-        imagedestroy($stickerResource);
-    
+        imagedestroy($resizedSticker);
+
         // Retourner l'image fusionnée sous forme de chaîne binaire
         return $mergedImageData;
     }
