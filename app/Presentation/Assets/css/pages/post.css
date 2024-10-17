@@ -1,4 +1,4 @@
-/* Style général pour le conteneur principal */
+/* Styles spécifiques à la page post */
 .main-container {
     display: flex;
     margin: 0 auto;
@@ -10,80 +10,6 @@
     width: 60%;
     display: flex;
     flex-direction: column;
-}
-
-/* Section en haut à gauche */
-.top-left {
-    flex: 1;
-    padding: 20px;
-}
-
-/* Section en bas à gauche */
-.bottom-left {
-    flex: 1;
-    padding: 20px;
-}
-
-/* Colonne de droite */
-.right-column {
-    width: 40%;
-    padding: 20px;
-    overflow-y: auto;
-    max-height: 90vh; /* Pour permettre le défilement si nécessaire */
-    border-left: 1px solid #ccc;
-}
-
-/* Styles pour les titres */
-h2, h3 {
-    color: #333;
-    font-weight: 600;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-/* Styles pour les sections de capture et de sélection de stickers */
-.capture-section, .sticker-selection {
-    margin: 20px 0;
-    text-align: center;
-}
-
-/* Style pour la vidéo */
-.capture-section video {
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    width: 320px;
-    height: 240px;
-}
-
-/* Liste des stickers */
-#sticker-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    list-style-type: none;
-    padding: 0;
-}
-
-#sticker-list li {
-    margin: 10px;
-}
-
-#sticker-list img {
-    width: 50px;
-    height: auto;
-    cursor: pointer;
-    transition: transform 0.3s;
-}
-
-#sticker-list img:hover {
-    transform: scale(1.2);
-}
-
-/* Styles pour le canvas */
-canvas {
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    margin: 20px 0;
 }
 
 /* Styles généraux pour les boutons d'action */
@@ -113,102 +39,9 @@ label.action-button.disabled-button {
     opacity: 0.6;
 }
 
-/* Boutons de suppression */
-.delete-button {
-    background: transparent;
-    border: none;
-    color: #ff0000;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.delete-button:hover {
-    color: #cc0000;
-}
-
-/* Styles spécifiques pour les boutons de suppression des miniatures */
-.delete-button.delete-thumbnail {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #ff0000;
-    color: white;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-}
-
-.delete-button.delete-thumbnail:hover {
-    background: #cc0000;
-}
-
-/* Styles pour les posts de l'utilisateur */
-.user-post {
-    position: relative;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.user-post img {
-    max-width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-}
-
-/* Ajustement des sections */
-.result-section {
-    text-align: center;
-}
-
-/* Formulaire de suppression de post */
-.delete-post-form {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
 /* Sticker sélectionné */
 .selected-sticker {
     border: 2px solid #008CBA;
-    border-radius: 4px;
-}
-
-/* Conteneur principal de la section de capture */
-.capture-container {
-    display: flex;
-}
-
-/* Section de la vidéo et du bouton de capture */
-.video-section {
-    margin-right: 20px;
-    text-align: center;
-}
-
-/* Section des miniatures */
-.thumbnails-section {
-    flex-grow: 1;
-}
-
-.thumbnails-section h4 {
-    text-align: center;
-}
-
-#thumbnails-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.thumbnail {
-    position: relative;
-    margin: 5px;
-}
-
-.thumbnail img {
-    width: 50px;
-    height: auto;
-    cursor: pointer;
-    border: 1px solid #ddd;
     border-radius: 4px;
 }
 
@@ -218,23 +51,6 @@ label.action-button.disabled-button {
     text-align: center;
     color: #555;
     font-size: 14px;
-}
-
-/* Boutons désactivés génériques */
-button:disabled,
-label.disabled-button {
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-/* Styles additionnels pour le label du file input */
-label.action-button {
-    display: inline-block;
-}
-
-/* Optionnel : ajouter un peu d'espace entre le label et l'instruction */
-.capture-section label + p {
-    margin-top: 10px;
 }
 
 /* Styles pour le conteneur du bouton avec infobulle */

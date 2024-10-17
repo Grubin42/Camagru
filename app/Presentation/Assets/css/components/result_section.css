@@ -1,0 +1,16 @@
+/* /Presentation/Assets/css/components/result_section.css */
+
+.bottom-left {
+    flex: 1;
+    padding: 20px;
+}
+
+.result-section {
+    text-align: center;
+}
+
+.result-section canvas {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    margin: 20px 0;
+}

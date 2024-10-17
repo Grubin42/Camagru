@@ -1,0 +1,71 @@
+/* /Presentation/Assets/css/components/capture_section.css */
+
+.capture-section {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.capture-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.video-section {
+    margin-right: 20px;
+    text-align: center;
+}
+
+.video-section video {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    width: 320px;
+    height: 240px;
+}
+
+.button-container {
+    margin-top: 10px;
+    position: relative;
+}
+
+.thumbnails-section {
+    flex-grow: 1;
+}
+
+.thumbnails-section h4 {
+    text-align: center;
+}
+
+#thumbnails-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.thumbnail {
+    position: relative;
+    margin: 5px;
+}
+
+.thumbnail img {
+    width: 50px;
+    height: auto;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.delete-button.delete-thumbnail {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff0000;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+}
+
+.delete-button.delete-thumbnail:hover {
+    background: #cc0000;
+}

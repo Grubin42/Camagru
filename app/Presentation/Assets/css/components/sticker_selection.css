@@ -1,0 +1,34 @@
+/* /Presentation/Assets/css/components/sticker_selection.css */
+
+.sticker-selection {
+    margin: 20px 0;
+    text-align: center;
+}
+
+#sticker-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+}
+
+#sticker-list li {
+    margin: 10px;
+}
+
+#sticker-list img {
+    width: 50px;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+#sticker-list img:hover {
+    transform: scale(1.2);
+}
+
+.selected-sticker {
+    border: 2px solid #008CBA;
+    border-radius: 4px;
+}

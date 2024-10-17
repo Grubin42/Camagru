@@ -10,6 +10,11 @@
 @import url('components/nav.css');
 @import url('components/forms.css');
 @import url('components/footer.css');
+@import url('components/error_messages.css');
+@import url('components/capture_section.css');
+@import url('components/sticker_selection.css');
+@import url('components/result_section.css');
+@import url('components/user_posts.css');
 
 /* Importation des styles spécifiques aux pages */
 @import url('pages/home.css');

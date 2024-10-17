@@ -1,0 +1,15 @@
+/* /Presentation/Assets/css/components/error_messages.css */
+
+.error-messages {
+    /* Styles pour les messages d'erreur */
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid #ff0000;
+    background-color: #ffe6e6;
+    border-radius: 5px;
+}
+
+.error-messages p {
+    color: #ff0000;
+    margin: 5px 0;
+}
