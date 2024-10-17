@@ -69,8 +69,8 @@ h2, h3 {
 }
 
 #sticker-list img {
-    width: 50px; /* Taille réduite */
-    height: auto; /* Maintient le ratio d'aspect */
+    width: 50px;
+    height: auto;
     cursor: pointer;
     transition: transform 0.3s;
 }
@@ -86,8 +86,8 @@ canvas {
     margin: 20px 0;
 }
 
-/* Boutons */
-button {
+/* Styles généraux pour les boutons d'action */
+.action-button {
     background-color: #008CBA;
     color: white;
     padding: 10px 20px;
@@ -95,14 +95,56 @@ button {
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s;
 }
 
-button:hover {
+/* Styles pour les boutons d'action au survol */
+.action-button:hover {
     background-color: #005f73;
+}
+
+/* Styles pour les boutons d'action désactivés */
+.action-button.disabled-button,
+.action-button:disabled,
+label.action-button.disabled-button {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Boutons de suppression */
+.delete-button {
+    background: transparent;
+    border: none;
+    color: #ff0000;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.delete-button:hover {
+    color: #cc0000;
+}
+
+/* Styles spécifiques pour les boutons de suppression des miniatures */
+.delete-button.delete-thumbnail {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff0000;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+}
+
+.delete-button.delete-thumbnail:hover {
+    background: #cc0000;
 }
 
 /* Styles pour les posts de l'utilisateur */
 .user-post {
+    position: relative;
     margin-bottom: 20px;
     text-align: center;
 }
@@ -118,28 +160,17 @@ button:hover {
     text-align: center;
 }
 
-.user-post {
-    position: relative;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
+/* Formulaire de suppression de post */
 .delete-post-form {
     position: absolute;
     top: 10px;
     right: 10px;
 }
 
-.delete-post-button {
-    background: transparent;
-    border: none;
-    font-size: 24px;
-    color: #ff0000;
-    cursor: pointer;
-}
-
-.delete-post-button:hover {
-    color: #cc0000;
+/* Sticker sélectionné */
+.selected-sticker {
+    border: 2px solid #008CBA;
+    border-radius: 4px;
 }
 
 /* Conteneur principal de la section de capture */
@@ -174,50 +205,11 @@ button:hover {
 }
 
 .thumbnail img {
-    width: 50px; /* Taille réduite pour les miniatures */
+    width: 50px;
     height: auto;
     cursor: pointer;
     border: 1px solid #ddd;
     border-radius: 4px;
-}
-
-.delete-thumbnail-button {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #ff0000;
-    border: none;
-    color: white;
-    font-size: 16px;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-}
-
-.delete-thumbnail-button:hover {
-    background: #cc0000;
-}
-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-.selected-sticker {
-    border: 2px solid #008CBA;
-    border-radius: 4px;
-}
-/* Styles pour le label de sélection de fichier */
-.video-section label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
-
-/* Styles pour l'input de fichier */
-#file-input {
-    display: block;
-    margin: 0 auto;
 }
 
 /* Styles pour le message d'instruction */
@@ -227,25 +219,64 @@ button:disabled {
     color: #555;
     font-size: 14px;
 }
-/* Styles pour le label de sélection de fichier ressemblant à un bouton */
-.file-input-button {
-    display: inline-block;
-    background-color: #008CBA;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    text-align: center;
-    transition: background-color 0.3s;
+
+/* Boutons désactivés génériques */
+button:disabled,
+label.disabled-button {
+    cursor: not-allowed;
+    opacity: 0.6;
 }
 
-.file-input-button:hover {
-    background-color: #005f73;
+/* Styles additionnels pour le label du file input */
+label.action-button {
+    display: inline-block;
 }
 
 /* Optionnel : ajouter un peu d'espace entre le label et l'instruction */
 .capture-section label + p {
     margin-top: 10px;
+}
+
+/* Styles pour le conteneur du bouton avec infobulle */
+.button-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Styles pour l'infobulle */
+.button-container[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 8px;
+    border-radius: 4px;
+    z-index: 1000;
+    font-size: 12px;
+    white-space: normal;
+    text-align: center;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+
+/* Petite flèche sous l'infobulle */
+.button-container[data-tooltip]:hover::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
+    z-index: 1000;
+}
+
+/* Ajustement pour s'assurer que l'infobulle n'apparaît que lorsque le bouton est désactivé */
+.button-container:not(:hover)::after,
+.button-container:not(:hover)::before {
+    content: none;
 }

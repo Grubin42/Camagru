@@ -11,7 +11,9 @@
                     <!-- Vidéo et bouton de capture -->
                     <div class="video-section">
                         <video id="video" width="320" height="240" autoplay></video>
-                        <button id="capture-btn">Capturer</button> <!-- Bouton activé -->
+                        <div class="button-container" data-tooltip="Veuillez sélectionner un sticker avant de capturer une image.">
+                            <button id="capture-btn" class="action-button">Capturer</button>
+                        </div>
                     </div>
                     <!-- Miniatures des images capturées -->
                     <div class="thumbnails-section">
@@ -54,7 +56,7 @@
                 <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                 <input type="hidden" id="captured-image" name="captured_image">
                 <input type="hidden" id="selected-sticker" name="selected_sticker">
-                <button type="submit">Soumettre</button>
+                <button type="submit" class="action-button">Soumettre</button>
             </form>
         </div>
     </div>
@@ -69,7 +71,7 @@
                     <form action="/delete-post" method="POST" class="delete-post-form">
                         <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
                         <input type="hidden" name="post_id" value="<?= $post['id'] ?>">
-                        <button type="submit" class="delete-post-button" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">&times;</button>
+                        <button type="submit" class="delete-button" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce post ?');">&times;</button>
                     </form>
                     <!-- Image du post -->
                     <img src="data:image/png;base64,<?= $post['image'] ?>" alt="Post Image">
@@ -81,7 +83,7 @@
     </div>
 </div>
 
-<!-- Script JavaScript inclus ici -->
+<!-- Script JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const video = document.getElementById('video');
@@ -89,27 +91,34 @@ document.addEventListener('DOMContentLoaded', function() {
     const captureBtn = document.getElementById('capture-btn');
     const finalContext = finalCanvas.getContext('2d');
     const thumbnailsContainer = document.getElementById('thumbnails-container');
-    let capturedImages = []; // Tableau pour stocker les images capturées
+    let capturedImages = [];
     let selectedImageData = null;
     let selectedSticker = null;
 
     // Fonction pour remplacer le bouton de capture par un input file stylisé
     function replaceCaptureButtonWithFileInput() {
         const captureSection = document.querySelector('.video-section');
-        captureSection.innerHTML = ''; // Supprimer le contenu actuel
+        captureSection.innerHTML = '';
+
+        // Créer le conteneur du bouton
+        const buttonContainer = document.createElement('div');
+        buttonContainer.classList.add('button-container');
+        buttonContainer.setAttribute('data-tooltip', 'Veuillez sélectionner un sticker avant de sélectionner une image.');
 
         // Créer le label stylisé comme un bouton
         const fileInputLabel = document.createElement('label');
         fileInputLabel.setAttribute('for', 'file-input');
         fileInputLabel.textContent = 'Sélectionner une image';
-        fileInputLabel.classList.add('file-input-button'); // Ajouter une classe pour le style
+        fileInputLabel.classList.add('action-button', 'disabled-button');
+        fileInputLabel.style.display = 'inline-block';
 
         // Créer l'input de fichier caché
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.id = 'file-input';
         fileInput.accept = 'image/png, image/jpeg, image/jpg, image/gif';
-        fileInput.style.display = 'none'; // Cacher l'input
+        fileInput.style.display = 'none';
+        fileInput.disabled = true; // Désactiver l'input au début
 
         // Ajouter un message d'instruction
         const instruction = document.createElement('p');
@@ -119,8 +128,11 @@ document.addEventListener('DOMContentLoaded', function() {
         instruction.style.color = '#555';
         instruction.style.fontSize = '14px';
 
-        // Ajouter le label, l'input et l'instruction à la section
-        captureSection.appendChild(fileInputLabel);
+        // Ajouter le label au conteneur
+        buttonContainer.appendChild(fileInputLabel);
+
+        // Ajouter le conteneur, l'input et l'instruction à la section
+        captureSection.appendChild(buttonContainer);
         captureSection.appendChild(fileInput);
         captureSection.appendChild(instruction);
 
@@ -161,10 +173,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Vérifier si le contexte est sécurisé
     function isSecureContext() {
-        return window.isSecureContext;
+        return window.isSecureContext || location.protocol === 'https:';
     }
 
-    // Vérifier si getUserMedia est supporté
+    // Vérifier si getUserMedia est supporté et autorisé
     if (isSecureContext() && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         // Demander l'accès à la caméra
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -172,41 +184,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 video.srcObject = stream;
             })
             .catch(err => {
-                console.error("Erreur d'accès à la caméra :", err);
+                // L'utilisateur a refusé l'accès ou la caméra n'est pas disponible
+                console.warn("Accès à la caméra refusé ou non disponible. Passage au mode de sélection de fichier.");
                 // Remplacer le bouton de capture par l'input file stylisé
                 replaceCaptureButtonWithFileInput();
             });
     } else {
         // getUserMedia non supporté ou contexte non sécurisé
-        console.warn("getUserMedia n'est pas supporté par ce navigateur ou le contexte n'est pas sécurisé.");
+        console.warn("getUserMedia n'est pas supporté par ce navigateur ou le contexte n'est pas sécurisé. Passage au mode de sélection de fichier.");
         // Remplacer le bouton de capture par l'input file stylisé
         replaceCaptureButtonWithFileInput();
     }
 
     // Capturer l'image lorsqu'on appuie sur le bouton "Capturer"
-    captureBtn.addEventListener('click', () => {
-        if (!selectedSticker) {
-            alert('Veuillez sélectionner un sticker avant de capturer une image.');
-            return;
-        }
+    if (captureBtn) {
+        captureBtn.addEventListener('click', () => {
+            if (!selectedSticker) {
+                alert('Veuillez sélectionner un sticker avant de capturer une image.');
+                return;
+            }
 
-        if (capturedImages.length >= 4) {
-            alert('Vous avez déjà 4 images capturées. Veuillez supprimer une image pour en capturer une nouvelle.');
-            return;
-        }
+            if (capturedImages.length >= 4) {
+                alert('Vous avez déjà 4 images capturées. Veuillez supprimer une image pour en capturer une nouvelle.');
+                return;
+            }
 
-        const canvas = document.createElement('canvas');
-        canvas.width = 320;
-        canvas.height = 240;
-        const context = canvas.getContext('2d');
+            const canvas = document.createElement('canvas');
+            canvas.width = 320;
+            canvas.height = 240;
+            const context = canvas.getContext('2d');
 
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageData = canvas.toDataURL();
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL();
 
-        // Ajouter l'image au tableau des images capturées
-        capturedImages.push(imageData);
-        updateThumbnails();
-    });
+            // Ajouter l'image au tableau des images capturées
+            capturedImages.push(imageData);
+            updateThumbnails();
+        });
+
+        // Désactiver le bouton de capture au début
+        captureBtn.disabled = true;
+        captureBtn.classList.add('disabled-button');
+    }
 
     // Fonction pour mettre à jour les miniatures
     function updateThumbnails() {
@@ -227,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             const deleteBtn = document.createElement('button');
-            deleteBtn.classList.add('delete-thumbnail-button');
+            deleteBtn.classList.add('delete-button', 'delete-thumbnail');
             deleteBtn.innerHTML = '&times;';
             deleteBtn.addEventListener('click', () => {
                 // Supprimer l'image du tableau et mettre à jour les miniatures
@@ -256,9 +275,28 @@ document.addEventListener('DOMContentLoaded', function() {
             // Sélectionner le nouveau sticker
             selectedSticker = sticker.src;
             sticker.classList.add('selected-sticker');
-            document.getElementById('selected-sticker').value = selectedSticker; // Mettre à jour le champ caché
+            document.getElementById('selected-sticker').value = selectedSticker;
 
             updateFinalCanvas();
+
+            // Activer le bouton de capture ou le file input
+            if (captureBtn) {
+                captureBtn.disabled = false;
+                captureBtn.classList.remove('disabled-button');
+                // Retirer l'infobulle du conteneur
+                const captureButtonContainer = captureBtn.parentElement;
+                captureButtonContainer.removeAttribute('data-tooltip');
+            }
+
+            const fileInput = document.getElementById('file-input');
+            const fileInputLabel = document.querySelector('label[for="file-input"]');
+
+            if (fileInput) {
+                fileInput.disabled = false;
+                fileInputLabel.classList.remove('disabled-button');
+                // Retirer l'infobulle du conteneur
+                fileInputLabel.parentElement.removeAttribute('data-tooltip');
+            }
         });
     });
 
@@ -275,13 +313,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     const stickerImage = new Image();
                     stickerImage.src = selectedSticker;
                     stickerImage.onload = () => {
-                        // Dimensions souhaitées pour le sticker
-                        const stickerWidth = 100; // Largeur
-                        const stickerHeight = 100; // Hauteur
-
-                        // Position du sticker (exemple : coin supérieur gauche)
-                        const xPosition = 10; // Décalage horizontal
-                        const yPosition = 10; // Décalage vertical
+                        const stickerWidth = 100;
+                        const stickerHeight = 100;
+                        const xPosition = 10;
+                        const yPosition = 10;
 
                         finalContext.drawImage(stickerImage, xPosition, yPosition, stickerWidth, stickerHeight);
                     };
