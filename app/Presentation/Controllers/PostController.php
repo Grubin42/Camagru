@@ -66,9 +66,7 @@ class PostController
     }
 
     public function savePost()
-    {
-        session_start(); // Assurez-vous que la session est démarrée
-    
+    {    
         // Récupérer l'image capturée et le sticker depuis le formulaire
         $capturedImage = $_POST['captured_image'] ?? null;
         $selectedStickerUrl = $_POST['selected_sticker'] ?? null;

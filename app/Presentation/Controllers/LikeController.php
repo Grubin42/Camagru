@@ -16,7 +16,6 @@ class LikeController
     public function toggleLike()
     {
         header('Content-Type: application/json'); // Ajouter ce header
-        session_start();
 
         if (!isset($_SESSION['user'])) {
             http_response_code(401);
