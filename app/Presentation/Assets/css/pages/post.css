@@ -1,15 +1,33 @@
-/* Styles spécifiques à la page post */
+/* Style de base pour la mise en page principale */
 .main-container {
     display: flex;
-    margin: 0 auto;
-    max-width: 1200px;
 }
 
-/* Colonne de gauche */
+/* Colonne gauche */
 .left-column {
-    width: 60%;
     display: flex;
     flex-direction: column;
+    width: 70%; /* Largeur de la colonne gauche */
+}
+
+.right-column {
+    width: 40%;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 100vh; /* Pour permettre le défilement si nécessaire */
+    border-left: 1px solid #ccc;
+    text-align: center;
+}
+
+/* Responsivité pour les tablettes et écrans plus petits */
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column; /* Passe en colonne */
+    }
+
+    .left-column, .right-column {
+        width: 100%; /* Chaque colonne prend toute la largeur */
+    }
 }
 
 /* Styles généraux pour les boutons d'action */
@@ -25,12 +43,10 @@
     transition: background-color 0.3s;
 }
 
-/* Styles pour les boutons d'action au survol */
 .action-button:hover {
     background-color: #005f73;
 }
 
-/* Styles pour les boutons d'action désactivés */
 .action-button.disabled-button,
 .action-button:disabled,
 label.action-button.disabled-button {
@@ -39,60 +55,9 @@ label.action-button.disabled-button {
     opacity: 0.6;
 }
 
-/* Sticker sélectionné */
-.selected-sticker {
-    border: 2px solid #008CBA;
-    border-radius: 4px;
-}
-
-/* Styles pour le message d'instruction */
-#capture-instruction {
-    margin-top: 10px;
-    text-align: center;
-    color: #555;
-    font-size: 14px;
-}
-
-/* Styles pour le conteneur du bouton avec infobulle */
-.button-container {
-    position: relative;
-    display: inline-block;
-}
-
-/* Styles pour l'infobulle */
-.button-container[data-tooltip]:hover::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    top: -35px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 220px;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    padding: 8px;
-    border-radius: 4px;
-    z-index: 1000;
-    font-size: 12px;
-    white-space: normal;
-    text-align: center;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-}
-
-/* Petite flèche sous l'infobulle */
-.button-container[data-tooltip]:hover::before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent transparent rgba(0, 0, 0, 0.8) transparent;
-    z-index: 1000;
-}
-
-/* Ajustement pour s'assurer que l'infobulle n'apparaît que lorsque le bouton est désactivé */
-.button-container:not(:hover)::after,
-.button-container:not(:hover)::before {
-    content: none;
+/* Responsive Design */
+@media (max-width: 768px) {
+    .right-column {
+        border-left: none; /* Supprime la bordure */
+    }
 }

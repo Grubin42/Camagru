@@ -1,14 +1,17 @@
-/* /Presentation/Assets/css/components/capture_section.css */
-
-.capture-section {
-    margin: 20px 0;
-    text-align: center;
-}
-
 .capture-container {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column; /* Empile le bouton et la section vidéo/miniatures verticalement */
+    align-items: center; /* Centre les éléments horizontalement */
+    gap: 10px; /* Espace entre le bouton et la section vidéo/miniatures */
+}
+
+.content-wrapper {
+    display: flex; /* Aligne la vidéo et les miniatures côte à côte */
+    gap: 10px; /* Espace entre la vidéo et les miniatures */
+}
+
+#capture-instruction {
+    width: 320px;
 }
 
 .video-section {
@@ -17,7 +20,7 @@
 }
 
 .video-section video {
-    border: 2px solid #ddd;
+    /* border: 2px solid #ddd; */
     border-radius: 8px;
     width: 320px;
     height: 240px;
@@ -32,40 +35,91 @@
     flex-grow: 1;
 }
 
-.thumbnails-section h4 {
-    text-align: center;
-}
-
 #thumbnails-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    width: 320px;
+    max-height: 240px;
+    display: grid;
+    grid-template-columns: calc(50% - 2.5px) calc(50% - 2.5px);
+    grid-template-rows: calc(50% - 2.5px) calc(50% - 2.5px);
+    gap: 5px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .thumbnail {
     position: relative;
-    margin: 5px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
 }
 
 .thumbnail img {
-    width: 50px;
-    height: auto;
-    cursor: pointer;
-    border: 1px solid #ddd;
+    width: 100%; /* Occupe tout l'espace de la cellule */
+    height: 100%; /* Occupe tout l'espace de la cellule */
+    object-fit: cover; /* Ajuste l'image pour remplir la cellule */
     border-radius: 4px;
+    cursor: pointer;
+    box-sizing: border-box;
 }
 
 .delete-button.delete-thumbnail {
     position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #ff0000;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 0, 0, 0.8); /* Rouge semi-transparent */
     color: white;
+    border: none;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
 }
 
 .delete-button.delete-thumbnail:hover {
-    background: #cc0000;
+    background: rgba(255, 0, 0, 1); /* Rouge plus intense au survol */
+    transform: scale(1.1); /* Agrandit légèrement le bouton */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); /* Ombre plus prononcée */
+}
+
+.delete-button.delete-thumbnail:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.5); /* Indicateur de focus pour l'accessibilité */
+}
+
+/* Media Query pour les Tablettes (Portrait et Paysage) */
+@media (max-width: 1024px) {
+    .content-wrapper {
+        flex-direction: column; /* Empile la vidéo et les miniatures verticalement */
+        align-items: center; /* Centre les éléments horizontalement */
+    }
+
+    .video-section {
+        margin-right: 0; /* Supprime la marge droite */
+        margin-bottom: 20px; /* Ajoute une marge en bas pour l'espacement */
+    }
+
+    .capture-container {
+        width: 100%; /* Assure que le conteneur capture occupe toute la largeur */
+    }
+
+    /* Optionnel : Ajustement des boutons et instructions */
+    #capture-instruction {
+        width: 100%; /* Assure que l'instruction occupe toute la largeur disponible */
+    }
+
+    .button-container {
+        width: 100%; /* Bouton de capture occupe toute la largeur */
+        display: flex;
+        justify-content: center; /* Centre le bouton horizontalement */
+    }
 }

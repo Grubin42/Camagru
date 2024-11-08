@@ -39,8 +39,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Fonction pour remplacer le bouton de capture par un input file stylisé
     function replaceCaptureButtonWithFileInput() {
+        console.log('Remplacement du bouton de capture par un bouton de sélection de fichier.');
+
+        // Supprimer le bouton "Capturer une image" s'il est présent
+        const captureBtn = document.getElementById('capture-btn');
+        if (captureBtn) {
+            const captureButtonContainer = captureBtn.parentElement;
+            
+            // Vérifier si le parent existe avant de supprimer le bouton et de manipuler l'attribut
+            if (captureButtonContainer) {
+                captureButtonContainer.removeAttribute('data-tooltip');
+                captureBtn.remove(); // Supprime le bouton du DOM
+            } else {
+                console.warn('captureButtonContainer est null. Impossible de retirer l\'attribut data-tooltip.');
+            }
+        }
+
         const captureSection = document.querySelector('.video-section');
-        captureSection.innerHTML = '';
+        captureSection.innerHTML = ''; // Vider la section vidéo pour y ajouter l'input de fichier
 
         // Créer le conteneur du bouton
         const buttonContainer = document.createElement('div');
@@ -114,6 +130,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 reader.readAsDataURL(file);
             }
         });
+
+        if (fileInput) {
+            fileInput.disabled = false;
+            fileInputLabel.classList.remove('disabled-button');
+            
+            // Vérifier si le parent de fileInputLabel existe avant de manipuler ses attributs
+            if (fileInputLabel && fileInputLabel.parentElement) {
+                fileInputLabel.parentElement.removeAttribute('data-tooltip');
+            } else {
+                console.warn('Le parent de fileInputLabel est null. Impossible de retirer l\'attribut data-tooltip.');
+            }
+        }
+
+        // Mettre à jour l'état des boutons
+        updateButtonsState();
     }
 
     // Vérifier si le contexte est sécurisé
@@ -127,6 +158,8 @@ document.addEventListener('DOMContentLoaded', function() {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(stream => {
                 video.srcObject = stream;
+                // Initialiser l'état des boutons
+                updateButtonsState();
             })
             .catch(err => {
                 // L'utilisateur a refusé l'accès ou la caméra n'est pas disponible
@@ -193,7 +226,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const deleteBtn = document.createElement('button');
             deleteBtn.classList.add('delete-button', 'delete-thumbnail');
             deleteBtn.innerHTML = '&times;';
-            deleteBtn.addEventListener('click', () => {
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Empêcher la sélection de l'image lors du clic sur le bouton de suppression
                 // Supprimer l'image du tableau et mettre à jour les miniatures
                 capturedImages.splice(index, 1);
                 if (selectedImageData === imageData) {
@@ -202,6 +236,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateFinalCanvas();
                 }
                 updateThumbnails();
+                // Mettre à jour l'état des boutons si nécessaire
+                if (capturedImages.length < 4) {
+                    // Si moins de 4 images, permettre d'ajouter de nouvelles images
+                }
             });
 
             thumbnailDiv.appendChild(img);
@@ -218,32 +256,71 @@ document.addEventListener('DOMContentLoaded', function() {
             stickers.forEach(s => s.classList.remove('selected-sticker'));
 
             // Sélectionner le nouveau sticker
-            selectedSticker = sticker.src;
-            sticker.classList.add('selected-sticker');
-            document.getElementById('selected-sticker').value = selectedSticker;
+            if (selectedSticker === sticker.src) {
+                // Si le sticker est déjà sélectionné, le désélectionner
+                selectedSticker = null;
+                document.getElementById('selected-sticker').value = '';
+            } else {
+                selectedSticker = sticker.src;
+                sticker.classList.add('selected-sticker');
+                document.getElementById('selected-sticker').value = selectedSticker;
+            }
 
             updateFinalCanvas();
+            updateButtonsState();
+        });
+    });
 
-            // Activer le bouton de capture ou le file input
+    // Fonction pour mettre à jour l'état des boutons
+    function updateButtonsState() {
+        const captureBtn = document.getElementById('capture-btn');
+        const fileInput = document.getElementById('file-input');
+        const fileInputLabel = document.querySelector('label[for="file-input"]');
+
+        if (selectedSticker) {
+            // Activer le bouton de capture
             if (captureBtn) {
                 captureBtn.disabled = false;
                 captureBtn.classList.remove('disabled-button');
-                // Retirer l'infobulle du conteneur
+
                 const captureButtonContainer = captureBtn.parentElement;
-                captureButtonContainer.removeAttribute('data-tooltip');
+                if (captureButtonContainer) {
+                    captureButtonContainer.removeAttribute('data-tooltip');
+                }
             }
 
-            const fileInput = document.getElementById('file-input');
-            const fileInputLabel = document.querySelector('label[for="file-input"]');
-
+            // Activer le bouton de sélection de fichier
             if (fileInput) {
                 fileInput.disabled = false;
                 fileInputLabel.classList.remove('disabled-button');
-                // Retirer l'infobulle du conteneur
-                fileInputLabel.parentElement.removeAttribute('data-tooltip');
+
+                if (fileInputLabel && fileInputLabel.parentElement) {
+                    fileInputLabel.parentElement.removeAttribute('data-tooltip');
+                }
             }
-        });
-    });
+        } else {
+            // Désactiver le bouton de capture
+            if (captureBtn) {
+                captureBtn.disabled = true;
+                captureBtn.classList.add('disabled-button');
+
+                const captureButtonContainer = captureBtn.parentElement;
+                if (captureButtonContainer) {
+                    captureButtonContainer.setAttribute('data-tooltip', 'Veuillez sélectionner un sticker avant de capturer une image.');
+                }
+            }
+
+            // Désactiver le bouton de sélection de fichier
+            if (fileInput) {
+                fileInput.disabled = true;
+                fileInputLabel.classList.add('disabled-button');
+
+                if (fileInputLabel && fileInputLabel.parentElement) {
+                    fileInputLabel.parentElement.setAttribute('data-tooltip', 'Veuillez sélectionner un sticker avant de sélectionner une image.');
+                }
+            }
+        }
+    }
 
     // Mettre à jour l'aperçu du canvas final
     function updateFinalCanvas() {
@@ -294,4 +371,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Laisser le formulaire se soumettre normalement
     });
+
+    // Initialiser l'état des boutons
+    updateButtonsState();
 });

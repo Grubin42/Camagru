@@ -1,43 +1,72 @@
-/* /Presentation/Assets/css/components/user_posts.css */
-
-.right-column {
-    width: 40%;
-    padding: 20px;
-    overflow-y: auto;
-    max-height: 90vh; /* Pour permettre le défilement si nécessaire */
-    border-left: 1px solid #ccc;
-}
-
+/* Chaque post utilisateur */
 .user-post {
-    position: relative;
     margin-bottom: 20px;
     text-align: center;
 }
 
-.user-post img {
-    max-width: 100%;
+/* Conteneur de l'image et du bouton de suppression */
+.image-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 320px; /* Largeur maximale de l'image */
+    margin: 0 auto; /* Centre le conteneur */
+}
+
+/* Uniformiser la taille des images */
+.image-container img {
+    width: 100%; /* S'adapte à la largeur du conteneur */
+    height: auto; /* Hauteur ajustée automatiquement */
+    object-fit: cover; /* Ajuste l'image pour remplir l'espace sans déformation */
     border: 1px solid #ddd;
     border-radius: 8px;
+    display: block;
 }
 
+/* Formulaire de suppression positionné en haut à droite de l'image */
 .delete-post-form {
     position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
-.delete-button {
-    background: transparent;
+    top: 5px; /* Ajusté pour positionner le bouton */
+    right: 5px; /* Ajusté pour positionner le bouton */
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    background-color: unset; /* Supprime le fond du formulaire */
     border: none;
-    color: #ff0000;
-    cursor: pointer;
+}
+
+/* Style de base du bouton de suppression */
+.delete-button.delete-thumbnail {
+    background: rgba(255, 0, 0, 0.8); /* Rouge semi-transparent */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    padding: 0; /* Supprime le padding par défaut */
 }
 
-.delete-button:hover {
-    color: #cc0000;
+/* Effets au survol */
+.delete-button.delete-thumbnail:hover {
+    background: rgba(255, 0, 0, 1); /* Rouge plus intense au survol */
+    transform: scale(1.1); /* Agrandit légèrement le bouton */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); /* Ombre plus prononcée */
 }
 
+/* Effets au focus pour l'accessibilité */
+.delete-button.delete-thumbnail:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.5); /* Indicateur de focus */
+}
+
+/* Texte lorsque l'utilisateur n'a pas de posts */
 .user-post p {
     color: #555;
 }

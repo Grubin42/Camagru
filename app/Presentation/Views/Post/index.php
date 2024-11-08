@@ -6,11 +6,11 @@
 
     <!-- Colonne de gauche -->
     <div class="left-column">
-        <!-- Composant Capture Section -->
-        <?php include 'components/capture_section.php'; ?>
-
         <!-- Composant Sticker Selection -->
         <?php include 'components/sticker_selection.php'; ?>
+
+        <!-- Composant Capture Section -->
+        <?php include 'components/capture_section.php'; ?>
 
         <!-- Composant Result Section -->
         <?php include 'components/result_section.php'; ?>

@@ -1,10 +1,7 @@
-<!-- /Presentation/Views/Post/components/sticker_selection.php -->
-
 <div class="sticker-selection">
-    <h3>Sélectionner un sticker à ajouter</h3>
+    <h3>Sélectionner un sticker</h3>
     <ul id="sticker-list">
         <?php
-        // Chemin vers le répertoire contenant les stickers
         $stickerDir = __DIR__ . '/../../../Assets/images/'; 
         $stickers = glob($stickerDir . '*.{jpg,png,gif,jpeg}', GLOB_BRACE);
         foreach ($stickers as $stickerPath) {
