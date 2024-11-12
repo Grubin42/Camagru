@@ -1,9 +1,7 @@
 <!-- /Presentation/Views/Home/index.php -->
 <h1>Bienvenue sur Camagru</h1>
 
-<?php if (!empty($posts)): ?>
-    <h2>Les 5 derniers posts</h2>
-    
+<?php if (!empty($posts)): ?>    
     <div class="posts-grid">
     <?php foreach ($posts as $post): ?>
         <div class="post-item">
@@ -30,13 +28,14 @@
                     </form>
                 <?php endif; ?>
             </div>
-            
-            <!-- Accordéon pour les commentaires -->
-            <div class="comment-section">
-                <button class="toggle-comments">
-                    Voir les commentaires (<span id="comment-count-<?= htmlspecialchars($post['id']) ?>"><?= count($post['comment']) ?></span>)
-                </button>
-                <div id="comments-list-<?= htmlspecialchars($post['id']) ?>" class="comments" style="display: none;">
+
+
+            <!-- Section des commentaires -->
+            <div class="comments-section">
+                <div class="comments-header">
+                    <!-- <span id="comment-count-<?= htmlspecialchars($post['id']) ?>"><?= count($post['comment']) ?></span> commentaires -->
+                </div>
+                <div id="comments-list-<?= htmlspecialchars($post['id']) ?>" class="comments">
                     <?php if (!empty($post['comment'])): ?>
                         <?php foreach ($post['comment'] as $comment): ?>
                             <p>
@@ -53,17 +52,17 @@
                         <p class="no-comments">Aucun commentaire pour ce post.</p>
                     <?php endif; ?>
                 </div>
-            </div>
 
-            <!-- Si l'utilisateur est connecté, afficher le formulaire de commentaire -->
-            <?php if (isset($_SESSION['user'])): ?>
-                <form class="comment-form" data-post-id="<?= htmlspecialchars($post['id']) ?>">
-                    <input type="hidden" name="post_id" value="<?= htmlspecialchars($post['id']) ?>">
-                    <textarea name="comment" placeholder="Écrire un commentaire..." maxlength="200" required></textarea>
-                    <div class="comment-errors"></div> <!-- Conteneur pour les erreurs de commentaire -->
-                    <button type="submit">Commenter</button>
-                </form>
-            <?php endif; ?>
+                <!-- Formulaire de commentaire -->
+                <?php if (isset($_SESSION['user'])): ?>
+                    <form class="comment-form comment-form-bottom-right" data-post-id="<?= htmlspecialchars($post['id']) ?>">
+                        <input type="hidden" name="post_id" value="<?= htmlspecialchars($post['id']) ?>">
+                        <textarea name="comment" placeholder="Écrire un commentaire..." maxlength="200" required></textarea>
+                        <div class="comment-errors"></div> <!-- Conteneur pour les erreurs de commentaire -->
+                        <button type="submit">Commenter</button>
+                    </form>
+                <?php endif; ?>
+            </div>
         </div>
     <?php endforeach; ?>
     </div>
@@ -147,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const postId = formData.get('post_id');
             const comment = formData.get('comment'); // Récupérer le commentaire
             const commentSection = document.getElementById(`comments-list-${postId}`);
-            const commentCountSpan = document.getElementById(`comment-count-${postId}`); // Récupérer l'élément pour le nombre de commentaires
             const commentErrorsDiv = form.querySelector('.comment-errors'); // Récupérer le conteneur des erreurs
 
             // Réinitialiser les erreurs précédentes
@@ -179,10 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         const newComment = `<p><strong>${result.username}</strong> : ${result.comment}</p>`;
                         commentSection.insertAdjacentHTML('beforeend', newComment);
                         form.reset(); // Réinitialiser le formulaire après soumission
-
-                        // Mettre à jour le nombre de commentaires
-                        const currentCount = parseInt(commentCountSpan.textContent);
-                        commentCountSpan.textContent = currentCount + 1; // Incrémenter le nombre de commentaires
                     }
                 } else if (response.status === 400) {
                     const result = await response.json();
@@ -206,15 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Erreur réseau :', error); // Ajouter un log pour voir l'erreur en détail
                 alert('Erreur réseau. Veuillez vérifier votre connexion.');
             }
-        });
-    });
-
-    const toggleButtons = document.querySelectorAll('.toggle-comments');
-
-    toggleButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const commentsDiv = button.nextElementSibling;
-            commentsDiv.style.display = (commentsDiv.style.display === 'none' || commentsDiv.style.display === '') ? 'block' : 'none';
         });
     });
 });

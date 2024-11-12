@@ -1,8 +1,6 @@
 /* Style de la grille pour les posts */
 .posts-grid {
     display: block; /* Permet d'empiler les éléments */
-    margin: 20px 0;
-    padding: 0 10px;
 }
 
 /* Style de chaque post dans la grille */
@@ -15,7 +13,6 @@
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 10px;
-    overflow: visible;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -23,7 +20,6 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    border: #333;
 }
 
 .image-section p {
@@ -34,10 +30,11 @@
 
 /* Style de l'image dans le post, réduite à la moitié de la taille */
 .post-item img {
-    width: 20em; /* Taille fixe pour que toutes les images aient la même largeur */
-    height: 20em; /* Taille fixe pour que toutes les images aient la même hauteur */
-    object-fit: cover; /* Coupe l'image pour qu'elle remplisse l'espace défini */
+    width: 20em; /* Prend toute la largeur disponible */
+    height: 20em; /* Ajuste automatiquement la hauteur */
+    object-fit: cover; /* Coupe l'image si nécessaire pour remplir l'espace */
     border-radius: 5px;
+    max-width: 20em;
 }
 
 /* Ajouter une ombre et une légère animation au hover */
@@ -118,32 +115,24 @@
     color: #fff;
 }
 
-.comment-section {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 8px;
-}
-
-/* Bouton pour afficher les commentaires */
-.toggle-comments {
-    background-color: #333;
-    color: #fff;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    transition: background-color 0.3s ease;
-}
-
-.toggle-comments:hover {
-    background-color: #555;
+/* Section des commentaires */
+.comments-section {
+    flex: 1; /* Prendre le reste de l'espace */
+    display: flex;
+    flex-direction: column;
+    max-height: 20em; /* Hauteur maximale avant scroll */
+    margin-left: 10px;
 }
 
 /* Section des commentaires masquée par défaut */
-.comments {
-    display: none;
+.comments-section .comments {
+    flex: 1;
+    overflow-y: auto; /* Activer le scroll vertical */
+    overflow-x: hidden; /* Désactiver le scroll horizontal */
+    max-height: 15em; /* Limite la hauteur avant d'activer le scroll vertical */
+    word-wrap: break-word; /* Force le retour à la ligne pour les mots trop longs */
+    word-break: break-all; /* Coupe les mots très longs pour éviter le débordement */
+    white-space: normal; /* Permet aux lignes de passer automatiquement à la ligne */
 }
 
 /* Style des commentaires */
@@ -156,17 +145,26 @@
     font-size: 12px;
 }
 
+/* Formulaire de commentaire */
 .comment-form {
-    margin-top: 10px;
+    display: flex;
+    position: absolute;
+    bottom: 10px; /* Ajuste la distance depuis le bas */
+    right: 10px;
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0%;
+    margin: 0%;
 }
 
 .comment-form textarea {
-    width: 100%;
-    height: 80px;
-    margin-bottom: 10px;
-    padding: 10px;
+    flex: 1;
+    height: 50px;
+    margin-right: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
+    resize: none; /* Empêcher le redimensionnement */
 }
 
 .comment-form button {
@@ -182,18 +180,42 @@
     background-color: #555;
 }
 
-/* Responsive pour petits écrans */
+
+/* Ajustement pour petits écrans */
 @media screen and (max-width: 768px) {
-    .posts-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    .post-item {
+        flex-direction: column; /* Aligne l'image au-dessus des commentaires */
+    }
+
+    .post-item img {
+        width: 100%;
+        height: auto;
+    }
+
+    .comment-form {
+        position: static; /* Retire la position absolue pour qu'il s'affiche sous les commentaires */
+        margin-right: 10px;
+    }
+
+    .comment-form textarea {
+        width: 10em;
+    }
+
+    .comments-section {
+        width: 100%; /* Prend toute la largeur */
+        max-height: 15em; /* Limite la hauteur avant scroll vertical */
     }
 }
 
+/* Responsive pour petits écrans (≤ 480px) */
 @media screen and (max-width: 480px) {
-    .posts-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    }
 
+    .comment-form button {
+        padding: 6px 10px; /* Réduit le padding pour un bouton plus petit */
+        font-size: 14px; /* Réduit la taille de la police */
+        border-radius: 3px; /* Légèrement plus petit arrondi */
+    }
+    
     .pagination a {
         padding: 6px;
         font-size: 12px;
