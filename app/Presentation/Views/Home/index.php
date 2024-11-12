@@ -1,6 +1,5 @@
 <!-- /Presentation/Views/Home/index.php -->
 <h1>Bienvenue sur Camagru</h1>
-<p>Ceci est la page d'accueil de votre application. Utilisez le menu de navigation pour explorer les fonctionnalités.</p>
 
 <?php if (!empty($posts)): ?>
     <h2>Les 5 derniers posts</h2>
@@ -8,56 +7,63 @@
     <div class="posts-grid">
     <?php foreach ($posts as $post): ?>
         <div class="post-item">
-            <img src="data:image/png;base64,<?= htmlspecialchars($post['image']) ?>" alt="Post Image">
-            <div class="post-info">
-                <p>Date: <?= htmlspecialchars($post['created_date']) ?></p>
+            <div class="image-section">
+                <img src="data:image/png;base64,<?= htmlspecialchars($post['image']) ?>" alt="Post Image">
+                <span class="like-count">❤️ <?= htmlspecialchars($post['like_count']) ?> Likes</span>
+                <?php
+                $date = new DateTime($post['created_date']);
+                ?>
+                <p><?= $date->format('Y-m-d') ?></p>
+            </div>
 
-                <!-- Accordéon pour les commentaires -->
-                <div class="comment-section">
-                    <button class="toggle-comments">
-                        Voir les commentaires (<span id="comment-count-<?= htmlspecialchars($post['id']) ?>"><?= count($post['comment']) ?></span>)
-                    </button>
-                    <div id="comments-list-<?= htmlspecialchars($post['id']) ?>" class="comments" style="display: none;">
-                        <?php if (!empty($post['comment'])): ?>
-                            <?php foreach ($post['comment'] as $comment): ?>
-                                <p>
-                                    <strong><?= htmlspecialchars($comment['username']) ?></strong> : <?= htmlspecialchars($comment['comment']) ?>
-                                    <small>(<?= htmlspecialchars($comment['created_date']) ?>)</small>
-                                </p>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <p class="no-comments">Aucun commentaire pour ce post.</p>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <!-- Si l'utilisateur est connecté, afficher le formulaire de commentaire -->
+            <!-- Afficher le nombre de likes pour tous les utilisateurs -->
+            <div class="like-section">
                 <?php if (isset($_SESSION['user'])): ?>
-                    <form class="comment-form" data-post-id="<?= htmlspecialchars($post['id']) ?>">
-                        <input type="hidden" name="post_id" value="<?= htmlspecialchars($post['id']) ?>">
-                        <textarea name="comment" placeholder="Écrire un commentaire..." maxlength="200" required></textarea>
-                        <div class="comment-errors"></div> <!-- Conteneur pour les erreurs de commentaire -->
-                        <button type="submit">Commenter</button>
+                    <form class="like-form" data-post-id="<?= htmlspecialchars($post['id']) ?>">
+                        <button type="button" class="like-button">
+                            <?php if ($post['liked_by_user']): ?>
+                                💔 Dislike
+                            <?php else: ?>
+                                ❤️ Like
+                            <?php endif; ?>
+                        </button>
                     </form>
                 <?php endif; ?>
-
-                <!-- Afficher le nombre de likes pour tous les utilisateurs -->
-                <div class="like-section">
-                    <span class="like-count">❤️ <?= htmlspecialchars($post['like_count']) ?> Likes</span>
-                    <!-- Si l'utilisateur est connecté, afficher le bouton Like -->
-                    <?php if (isset($_SESSION['user'])): ?>
-                        <form class="like-form" data-post-id="<?= htmlspecialchars($post['id']) ?>">
-                            <button type="button" class="like-button">
-                                <?php if ($post['liked_by_user']): ?>
-                                    💔 Dislike
-                                <?php else: ?>
-                                    ❤️ Like
-                                <?php endif; ?>
-                            </button>
-                        </form>
+            </div>
+            
+            <!-- Accordéon pour les commentaires -->
+            <div class="comment-section">
+                <button class="toggle-comments">
+                    Voir les commentaires (<span id="comment-count-<?= htmlspecialchars($post['id']) ?>"><?= count($post['comment']) ?></span>)
+                </button>
+                <div id="comments-list-<?= htmlspecialchars($post['id']) ?>" class="comments" style="display: none;">
+                    <?php if (!empty($post['comment'])): ?>
+                        <?php foreach ($post['comment'] as $comment): ?>
+                            <p>
+                                <strong><?= htmlspecialchars($comment['username']) ?></strong> : <?= htmlspecialchars($comment['comment']) ?>
+                                <small>
+                                <?php
+                                    $date = new DateTime($comment['created_date']);
+                                ?>
+                                    (<?= $date->format('Y-m-d') ?>)
+                                </small>
+                            </p>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="no-comments">Aucun commentaire pour ce post.</p>
                     <?php endif; ?>
                 </div>
             </div>
+
+            <!-- Si l'utilisateur est connecté, afficher le formulaire de commentaire -->
+            <?php if (isset($_SESSION['user'])): ?>
+                <form class="comment-form" data-post-id="<?= htmlspecialchars($post['id']) ?>">
+                    <input type="hidden" name="post_id" value="<?= htmlspecialchars($post['id']) ?>">
+                    <textarea name="comment" placeholder="Écrire un commentaire..." maxlength="200" required></textarea>
+                    <div class="comment-errors"></div> <!-- Conteneur pour les erreurs de commentaire -->
+                    <button type="submit">Commenter</button>
+                </form>
+            <?php endif; ?>
         </div>
     <?php endforeach; ?>
     </div>

@@ -1,35 +1,43 @@
 /* Style de la grille pour les posts */
 .posts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    display: block; /* Permet d'empiler les éléments */
     margin: 20px 0;
     padding: 0 10px;
 }
 
 /* Style de chaque post dans la grille */
 .post-item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    padding: 10px;
+    margin-bottom: 1.5em;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 10px;
-    overflow: hidden;
+    overflow: visible;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.post-item img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-bottom: 1px solid #ddd;
+.image-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: #333;
 }
 
-/* Information du post (par exemple, la date) */
-.post-info {
-    padding: 15px;
-    text-align: center;
-    background-color: #f9f9f9;
-    font-size: 14px;
-    color: #555;
+.image-section p {
+    font-size: small;
+    text-align: end;
+    margin: 0%;
+}
+
+/* Style de l'image dans le post, réduite à la moitié de la taille */
+.post-item img {
+    width: 20em; /* Taille fixe pour que toutes les images aient la même largeur */
+    height: 20em; /* Taille fixe pour que toutes les images aient la même hauteur */
+    object-fit: cover; /* Coupe l'image pour qu'elle remplisse l'espace défini */
+    border-radius: 5px;
 }
 
 /* Ajouter une ombre et une légère animation au hover */
@@ -38,26 +46,48 @@
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
+.like-count {
+    position: absolute;
+    top: 10px; /* Ajuste si besoin */
+    right: 10px; /* Ajuste si besoin */
+    background-color: rgba(255, 255, 255, 0.8); /* Fond semi-transparent pour une meilleure lisibilité */
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+}
+
+.like-section {
+    position: absolute;
+    top: -15px; /* Ajustez la valeur selon vos besoins */
+    right: 10px; /* Ajustez la valeur selon vos besoins */
+    background-color: #fff;
+}
+
 /* Bouton "Like" avec style amélioré */
 .like-button {
-    background-color: transparent;
-    border: none;
     font-size: 18px;
     cursor: pointer;
-    padding: 10px;
-    transition: color 0.3s ease, transform 0.2s ease;
-    display: inline-block;
+    border: none;
+    color: #333;
+    background-color: transparent;
+    padding: 0%;
 }
 
 .like-button:hover {
-    color: red;
-    transform: scale(1.1);
+    background-color: transparent;
 }
 
 .like-form {
     display: flex;
     justify-content: center;
     align-items: center;
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0%;
+    margin: 0%;
 }
 
 /* Pagination */
