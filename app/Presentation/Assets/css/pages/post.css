@@ -59,5 +59,6 @@ label.action-button.disabled-button {
 @media (max-width: 768px) {
     .right-column {
         border-left: none; /* Supprime la bordure */
+        padding: 0%;
     }
 }

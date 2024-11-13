@@ -2,7 +2,6 @@
 
 .bottom-left {
     flex: 1;
-    padding: 20px;
 }
 
 .result-section {
@@ -13,4 +12,23 @@
     border: 2px solid #ddd;
     border-radius: 8px;
     margin: 20px 0;
+}
+/* Styles pour les écrans mobiles */
+@media (max-width: 600px) {
+    .bottom-left {
+        flex: none; /* Retire la flexibilité sur mobile */
+        max-width: 100%; /* Limite la largeur pour éviter qu'elle ne dépasse l'écran */
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centre le contenu à l'intérieur */
+    }
+
+    .result-section canvas {
+        width: 100%; /* Ajuste la taille du canvas pour qu'il s'adapte à la largeur */
+    }
+
+    .action-button {
+        width: 100%; /* Bouton plein largeur */
+        font-size: 16px; /* Taille de police plus grande pour une meilleure lisibilité */
+    }
 }

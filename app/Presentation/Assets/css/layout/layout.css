@@ -5,8 +5,9 @@ main {
     max-width: 1200px;
     margin: 20px auto;
     padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+    min-height: calc(100vh - 160px); /* Ajuste la hauteur en fonction de celle du footer */
+    box-sizing: border-box;
 }
 
 /* Style pour les sections de contenu */

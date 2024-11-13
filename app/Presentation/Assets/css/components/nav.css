@@ -8,6 +8,7 @@ nav {
     background-color: #343a40;
     padding: 10px 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative; /* Pour positionner le side-menu par rapport à nav */
 }
 
 /* Logo à gauche */
@@ -15,6 +16,7 @@ nav {
     font-size: 1.5rem;
     color: #fff;
     font-weight: bold;
+    text-decoration: none;
 }
 
 /* Liens de navigation au centre */
@@ -28,6 +30,7 @@ nav {
     color: #fff;
     padding: 10px 15px;
     transition: background-color 0.3s ease;
+    text-decoration: none;
 }
 
 .nav-center li a:hover {
@@ -35,16 +38,155 @@ nav {
     border-radius: 5px;
 }
 
-/* Boutons à droite */
-.nav-right .btn-login, .nav-right .btn-logout {
+/* Styles globaux pour les boutons Login, Logout, Register */
+.btn-login, 
+.btn-logout, 
+.btn-register {
     color: #fff;
     padding: 10px 20px;
     border: 1px solid #fff;
     border-radius: 5px;
     transition: background-color 0.3s ease, color 0.3s ease;
+    text-decoration: none;
+    display: inline-block; /* Assure qu'ils se comportent comme des éléments en ligne */
 }
 
-.nav-right .btn-login:hover, .nav-right .btn-logout:hover {
+.btn-login:hover, 
+.btn-logout:hover, 
+.btn-register:hover {
     background-color: #fff;
     color: #343a40;
+}
+
+/* Menu Hamburger */
+.hamburger {
+    display: none; /* Caché par défaut (visible uniquement sur mobile) */
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Side Menu */
+.side-menu {
+    position: fixed;
+    top: 0;
+    right: -250px; /* Caché hors de l'écran */
+    width: 250px;
+    height: 100%;
+    background-color: #343a40;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+    transition: right 0.3s ease, transform 0.3s ease;
+    z-index: 1000; /* Au-dessus des autres éléments */
+    padding-top: 60px; /* Espace pour le bouton de fermeture */
+}
+
+.side-menu.open {
+    right: 0;
+    transform: translateX(0);
+}
+
+/* Liens dans le menu */
+.menu-links {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-left: 20px;
+}
+
+.menu-links li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+/* Styles spécifiques pour les boutons dans le side-menu */
+.menu-links li a.btn-login, 
+.menu-links li a.btn-logout, 
+.menu-links li a.btn-register {
+    padding: 8px 12px; /* Ajustement du padding pour mobile */
+    font-size: 0.9rem; /* Réduction de la taille de la police */
+    border-radius: 4px; /* Légère réduction du rayon des bords */
+    margin-left: 0; /* Aligner avec les liens */
+}
+
+.menu-links li a.btn-login:hover, 
+.menu-links li a.btn-logout:hover, 
+.menu-links li a.btn-register:hover {
+    background-color: #fff;
+    color: #343a40;
+}
+
+/* Bouton de fermeture */
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 900; /* Sous le side-menu */
+}
+
+.overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Empêcher le scroll lorsque le menu est ouvert */
+body.no-scroll {
+    overflow: hidden;
+}
+
+/* Styles pour les écrans mobiles */
+@media (max-width: 600px) {
+    /* Masquer les liens de navigation et les boutons à droite sur mobile */
+    .nav-right .btn-login, 
+    .nav-right .btn-logout, 
+    .nav-right .btn-register,
+    .nav-center {
+        display: none;
+    }
+
+    /* Afficher le bouton hamburger */
+    .hamburger {
+        display: block;
+    }
+
+    /* Style des boutons dans le side-menu */
+    .side-menu .btn-login, 
+    .side-menu .btn-logout, 
+    .side-menu .btn-register {
+        display: inline-block;
+
+        padding: 8px 12px; /* Ajustement du padding pour mobile */
+        font-size: 0.9rem; /* Réduction de la taille de la police */
+        border-radius: 4px; /* Légère réduction du rayon des bords */
+        margin-left: 0; /* Alignement avec les liens */
+    }
+
+    /* Optionnel : ajuster la taille du logo */
+    .nav-left .logo {
+        font-size: 1.3rem;
+    }
 }
