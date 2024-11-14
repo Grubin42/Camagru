@@ -4,6 +4,9 @@ networks:
   camagru:
     driver: bridge
 
+volumes:
+  shared-seeds: {} # Define a shared volume for seeding 
+
 services:
   mailpit:
     image: axllent/mailpit:latest
@@ -27,6 +30,8 @@ services:
       - ./app:/var/www/html/app
       - ./frankenphp/Caddyfile:/etc/caddy/Caddyfile
       - ./frankenphp/php.ini:/usr/local/etc/php/php.ini
+      - ./postgresql/hashPassword.php:/docker-entrypoint-initdb.d/hashPassword.php # Mount here for PHP
+      - shared-seeds:/docker-entrypoint-initdb.d/shared-seeds
     depends_on:
       - postgresql
       - mailpit
@@ -40,7 +45,7 @@ services:
 
   postgresql:
     #why? garder mes données
-    image: postgres:16 
+    image: postgres:16
     restart: unless-stopped
     container_name: postgres
     ports:
@@ -48,8 +53,8 @@ services:
     volumes:
       - ./postgresql/data:/var/lib/postgresql/data
       - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./postgresql/seed_user.sql:/docker-entrypoint-initdb.d/seed_user.sql
       - ./postgresql/seed_posts.sql:/docker-entrypoint-initdb.d/seed_posts.sql
+      - shared-seeds:/docker-entrypoint-initdb.d/shared-seeds
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

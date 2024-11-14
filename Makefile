@@ -58,9 +58,13 @@ frankenphp:
 
 seed: delete up
 # wait for postgres to start
-	@sleep 2		
+	@sleep 2	
+
+	@echo "Generating hashed password seed file..."
+	docker exec -it frankenphp php /docker-entrypoint-initdb.d/hashPassword.php
+	
 	docker exec -e PGPASSWORD=${DB_PASSWORD} -it $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME) -h postgres -c "\i /docker-entrypoint-initdb.d/init.sql"
-	docker exec -e PGPASSWORD=${DB_PASSWORD} -it $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME) -h postgres -c "\i /docker-entrypoint-initdb.d/seed_user.sql"
+	docker exec -e PGPASSWORD=${DB_PASSWORD} -it $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME) -h postgres -c "\i /docker-entrypoint-initdb.d/shared-seeds/seed_user_hashed.sql"
 	docker exec -e PGPASSWORD=${DB_PASSWORD} -it $(DB_CONTAINER) psql -U $(DB_USER) -d $(DB_NAME) -h postgres -c "\i /docker-entrypoint-initdb.d/seed_posts.sql"
 	@echo "${GREEN}Database seeding completed successfully!${RESET}"
 
