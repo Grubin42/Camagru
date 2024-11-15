@@ -55,7 +55,7 @@
 
                 <!-- Formulaire de commentaire -->
                 <?php if (isset($_SESSION['user'])): ?>
-                    <form class="comment-form comment-form-bottom-right" data-post-id="<?= htmlspecialchars($post['id']) ?>">
+                    <form class="comment-form" data-post-id="<?= htmlspecialchars($post['id']) ?>">
                         <input type="hidden" name="post_id" value="<?= htmlspecialchars($post['id']) ?>">
                         <textarea name="comment" placeholder="Écrire un commentaire..." maxlength="200" required></textarea>
                         <div class="comment-errors"></div> <!-- Conteneur pour les erreurs de commentaire -->
