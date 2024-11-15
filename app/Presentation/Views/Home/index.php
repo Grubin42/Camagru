@@ -1,5 +1,6 @@
 <head>
     <link rel="stylesheet" href="/Presentation/Assets/css/feed.css">
+    <link rel="stylesheet" href="/Presentation/Assets/css/shared.css">
 </head>
 
 <h1>Bienvenue sur Camagru</h1>
@@ -20,10 +21,9 @@
 
                 <!-- Comment input form -->
                 <div id="comment-section-<?= $post['id'] ?>" class="comment-section" style="display: none;">
-                    <form action="/comment" method="POST">
+                    <form action="/comment" method="POST" class="flex-column">
                         <input type="hidden" name="postId" value="<?= $post['id'] ?>">
-                        <input type="hidden" name="username" value="testusername">
-                        <!-- Assuming you have the current user object -->
+                        <input type="hidden" name="username" value="<?= $post['username'] ?>">
                         <textarea name="comment" placeholder="Type your comment here..." required></textarea>
                         <button type="submit">Submit Comment</button>
                     </form>
@@ -31,14 +31,17 @@
 
                 <!-- Comments display section -->
                 <div id="comments-<?= $post['id'] ?>" class="comments" style="display:none;">
-                    <h4>Comments:</h4>
-                    <?php if (!empty($post['comments'])): ?>
+                    <?php if (!empty($post['commentaire'])): ?>
                         <ul>
-                            <?php foreach ($post['comments'] as $comment): ?>
-                                <li>
+                            <?php foreach ($post['commentaire'] as $comment): ?>
+                                <li class="comment">
                                     <strong><?= htmlspecialchars($comment['username']) ?>:</strong>
-                                    <p><?= htmlspecialchars($comment['comment']) ?></p>
-                                    <em><?= htmlspecialchars($comment['created_date']) ?></em>
+                                    <p><?= htmlspecialchars($comment['commentaire']) ?></p>
+                                    <?php
+                                    $createdDate = new DateTime($comment['created_date']);
+                                    $formattedDate = $createdDate->format('d-m-Y H:i');
+                                    ?>
+                                    <em class="comment-date"><?= htmlspecialchars($formattedDate) ?></em>
                                 </li>
                             <?php endforeach; ?>
                         </ul>

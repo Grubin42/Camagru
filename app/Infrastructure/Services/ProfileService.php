@@ -23,9 +23,10 @@ class ProfileService
         return $user['username'];
     }
 
-    public function updateUsername($id, $username): void
+    public function getEmail($id): ?string
     {
-        $this->profileModel->updateUsername($id, $username);
+        $user = $this->profileModel->getUserById($id);
+        return $user['email'];
     }
 
     public function getPassword($id): ?string
@@ -34,13 +35,20 @@ class ProfileService
         return $user['password'];
     }
 
+    
+    public function updateUsername($id, $username): void
+    {
+        $this->profileModel->updateUsername($id, $username);
+    }
+
+
     public function updatePassword($id, $current, $password, $confirmation): void
     {
         $currentHashedDbPassword = $this->getPassword($id);
         if (!password_verify($current, $currentHashedDbPassword)) {
             throw new \Exception('Le mot de passe actuel est incorrect.');
         }
-        
+
         if ($password !== $confirmation) {
             throw new \Exception('Les mots de passe ne correspondent pas.');
         }

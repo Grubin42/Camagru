@@ -4,14 +4,17 @@ namespace Presentation\Controllers;
 
 use Camagru\Infrastructure\Services\ProfileService;
 
-class ProfileController {
+class ProfileController
+{
     private $Profile;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->Profile = new ProfileService();
     }
 
-    public function Index() {
+    public function Index()
+    {
         // check if the user is logged in
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -23,15 +26,13 @@ class ProfileController {
             exit();
         }
 
-        $profileModel = new ProfileService() ;
-        // $lastUser = $profileModel->getLastUser();
-
-        renderView(__DIR__ . '/../Views/Shared/Layout.php', [
-            'view' => __DIR__ . '/../Views/Profile/index.php',
+        renderView(ROOT_PATH . '/Presentation/Views/Shared/Layout.php', [
+            'view' => ROOT_PATH . '/Presentation/Views/Profile/index.php',
         ]);
     }
 
-    public function displayEditUserName() {
+    public function displayEditUserName()
+    {
         // check if the user is logged in
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -44,13 +45,15 @@ class ProfileController {
 
         $username = $this->Profile->getUsername(id: $_SESSION['user']['id']);
 
-        renderView(__DIR__ . '/../Views/Shared/Layout.php', [
-            'view' => __DIR__ . '/../Views/Profile/editUserName.php',
+
+        renderView(ROOT_PATH . '/Presentation/Views/Shared/Layout.php', [
+            'view' => ROOT_PATH . 'Presentation/Views/Profile/Username/editUserName.php',
             'username' => $username,
         ]);
     }
 
-    function updateUsername() {
+    function updateUsername()
+    {
         // check if the user is logged in
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -69,7 +72,8 @@ class ProfileController {
         }
     }
 
-    function displayEditPassword() {
+    function displayEditPassword()
+    {
         // check if the user is logged in
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -82,13 +86,14 @@ class ProfileController {
 
         $password = $this->Profile->getPassword(id: $_SESSION['user']['id']);
 
-        renderView(__DIR__ . '/../Views/Shared/Layout.php', [
-            'view' => __DIR__ . '/../Views/Profile/editPassword.php',
+        renderView(ROOT_PATH . '/Presentation/Views/Shared/Layout.php', [
+            'view' => ROOT_PATH . '/Presentation/Views/Profile/Password/editPassword.php',
             'password' => $password,
         ]);
     }
 
-    function updatePassword() {
+    function updatePassword()
+    {
         // check if the user is logged in
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
@@ -106,10 +111,9 @@ class ProfileController {
             try {
 
                 $this->Profile->updatePassword(id: $_SESSION['user']['id'], current: $current, password: $password, confirmation: $confirmation);
-            }
-            catch (\Exception $e) {
-                renderView(__DIR__ . '/../Views/Shared/Layout.php', [
-                    'view' => __DIR__ . '/../Views/Profile/editPassword.php',
+            } catch (\Exception $e) {
+                renderView(ROOT_PATH . '/Presentation/Views/Shared/Layout.php', [
+                    'view' => ROOT_PATH . '/Presentation/Views/Profile/Password/editPassword.php',
                     'password' => $password,
                     'error' => $e->getMessage(),
                 ]);
@@ -120,5 +124,24 @@ class ProfileController {
         }
     }
 
+    function displayEditEmail(): void
+    {
+        // check if the user is logged in
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (!isset($_SESSION['user'])) {
+            header('Location: /login');
+            exit();
+        }
+
+        $email = $this->Profile->getEmail(id: $_SESSION['user']['id']);
+
+        renderView(ROOT_PATH . '/Presentation/Views/Shared/Layout.php', [
+            'view' => ROOT_PATH . '/Presentation/Views/Profile/Email/editEmail.php',
+            'email' => $email,
+        ]);
+    }
 
 }

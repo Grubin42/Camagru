@@ -31,11 +31,6 @@
   background-color: aqua;
 }
 
-.title {
-  width: 100%;
-  text-align: left;
-}
-
 /* form --------------- */
 .form-container {
   width: 100%;
@@ -54,4 +49,15 @@ form {
   width: 100%;
   display: flex;
   justify-content: end;
+}
+
+.textarea {
+  width: 100%;
+  background-color: blueviolet;
+  resize: none;
+}
+
+.title {
+  width: 100%;
+  text-align: left;
 }

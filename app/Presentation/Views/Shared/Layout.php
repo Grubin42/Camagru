@@ -29,6 +29,7 @@
         if (file_exists($view)) {
             include $view; 
         } else {
+            echo $view;
             echo "La vue spécifiée n'existe pas.";
         }
         ?> 

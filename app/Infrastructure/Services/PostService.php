@@ -25,11 +25,10 @@ class PostService
         $commentModel = new CommentModel();
 
         foreach ($posts as &$post) {
-            $post['comments'] = $commentModel->getCommentsByPostId($post['id']);
+            $post['commentaire'] = $commentModel->getCommentsByPostId($post['id']);
         }
 
         return $posts;
-
     }
 
 

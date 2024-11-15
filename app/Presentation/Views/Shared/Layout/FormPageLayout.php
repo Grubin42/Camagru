@@ -6,6 +6,6 @@ if ($title): ?>
 
 <?php if ($componentPath): ?>
     <div class="flex-container">
-        <?php renderComponent($componentPath, ['error' => $error]); ?>
+        <?php renderComponent($componentPath, $data); ?>
     </div>
 <?php endif; ?>

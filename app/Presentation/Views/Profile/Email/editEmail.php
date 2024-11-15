@@ -5,6 +5,9 @@
 </head>
 
 <?php if ($email): ?>
+    <div>
+        <p>Votre email actuel est : <?= $email ?></p>
+    </div>
     <?php
     $formPath = ROOT_PATH . 'Presentation/Views/Profile/Email/form.php';
     renderComponent(

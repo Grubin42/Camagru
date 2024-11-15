@@ -125,10 +125,10 @@ $router->addRoute('/profile/editPassword', function () {
 });
 
 // edit email TODO: implement this
-// $router->addRoute('/profile/email', function() {
-//     $profileController = new ProfileController();
-//     $profileController->displayEditEmail();
-// });
+$router->addRoute('/profile/email', function() {
+    $profileController = new ProfileController();
+    $profileController->displayEditEmail();
+});
 
 // $router->addRoute('/profile/editEmail', function() {
 //     $profileController = new ProfileController();
