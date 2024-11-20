@@ -67,11 +67,20 @@ class PostController
 
     public function savePost()
     {    
-        // Récupérer l'image capturée et le sticker depuis le formulaire
+        // Récupérer l'image capturée et les stickers depuis le formulaire
         $capturedImage = $_POST['captured_image'] ?? null;
-        $selectedStickerUrl = $_POST['selected_sticker'] ?? null;
+        $selectedStickersJson = $_POST['selected_stickers'] ?? null;
     
-        if ($capturedImage && $selectedStickerUrl) {
+        if ($capturedImage && $selectedStickersJson) {
+            // Décoder les stickers sélectionnés
+            $selectedStickers = json_decode($selectedStickersJson, true);
+            if (!is_array($selectedStickers)) {
+                $this->validationService->addError('sticker', "Format des stickers sélectionnés invalide.");
+                $_SESSION['errors'] = $this->validationService->getErrors();
+                header('Location: /create-post');
+                exit();
+            }
+    
             // Valider l'image capturée
             if (!$this->validationService->validateImage($capturedImage)) {
                 $_SESSION['errors'] = $this->validationService->getErrors();
@@ -97,35 +106,41 @@ class PostController
                 exit();
             }
     
-            // Construire le chemin absolu du sticker
-            $stickerName = basename($selectedStickerUrl);
-            $stickerPath = __DIR__ . '/../../Presentation/Assets/images/' . $stickerName;
+            // Initialiser le contenu final de l'image fusionnée
+            $mergedImage = $capturedImage;
     
-            // Vérifier si le fichier existe
-            if (!file_exists($stickerPath)) {
-                $this->validationService->addError('sticker', "Le fichier sticker n'existe pas : " . htmlspecialchars($stickerPath));
-                $_SESSION['errors'] = $this->validationService->getErrors();
-                header('Location: /create-post');
-                exit();
-            }
+            // Parcourir chaque sticker sélectionné et le fusionner avec l'image capturée
+            foreach ($selectedStickers as $stickerUrl) {
+                // Construire le chemin absolu du sticker
+                $stickerName = basename($stickerUrl);
+                $stickerPath = __DIR__ . '/../../Presentation/Assets/images/' . $stickerName;
     
-            // Télécharger le sticker à partir de son chemin absolu
-            $stickerContent = @file_get_contents($stickerPath);
-            if ($stickerContent === false) {
-                $this->validationService->addError('sticker', "Impossible de lire le fichier sticker.");
-                $_SESSION['errors'] = $this->validationService->getErrors();
-                header('Location: /create-post');
-                exit();
-            }
+                // Vérifier si le fichier existe
+                if (!file_exists($stickerPath)) {
+                    $this->validationService->addError('sticker', "Le fichier sticker n'existe pas : " . htmlspecialchars($stickerPath));
+                    $_SESSION['errors'] = $this->validationService->getErrors();
+                    header('Location: /create-post');
+                    exit();
+                }
     
-            // Appeler le service pour fusionner les images
-            try {
-                $mergedImage = $this->postService->mergeImages($capturedImage, $stickerContent);
-            } catch (\Exception $e) {
-                $this->validationService->addError('merge', "Erreur lors de la fusion des images : " . $e->getMessage());
-                $_SESSION['errors'] = $this->validationService->getErrors();
-                header('Location: /create-post');
-                exit();
+                // Télécharger le sticker à partir de son chemin absolu
+                $stickerContent = @file_get_contents($stickerPath);
+                if ($stickerContent === false) {
+                    $this->validationService->addError('sticker', "Impossible de lire le fichier sticker.");
+                    $_SESSION['errors'] = $this->validationService->getErrors();
+                    header('Location: /create-post');
+                    exit();
+                }
+    
+                // Fusionner l'image actuelle avec le nouveau sticker
+                try {
+                    $mergedImage = $this->postService->mergeImages($mergedImage, $stickerContent);
+                } catch (\Exception $e) {
+                    $this->validationService->addError('merge', "Erreur lors de la fusion des images : " . $e->getMessage());
+                    $_SESSION['errors'] = $this->validationService->getErrors();
+                    header('Location: /create-post');
+                    exit();
+                }
             }
     
             // Enregistrer l'image fusionnée en base de données

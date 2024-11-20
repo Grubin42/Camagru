@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const thumbnailsContainer = document.getElementById('thumbnails-container');
     let capturedImages = [];
     let selectedImageData = null;
-    let selectedSticker = null;
+    let selectedStickers = []; // Tableau pour stocker plusieurs stickers
 
     // Fonction pour redimensionner une image tout en maintenant le ratio d'aspect
     function resizeImage(dataURL, maxWidth, maxHeight, callback) {
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Créer le conteneur du bouton
         const buttonContainer = document.createElement('div');
         buttonContainer.classList.add('button-container');
-        buttonContainer.setAttribute('data-tooltip', 'Veuillez sélectionner un sticker avant de sélectionner une image.');
+        buttonContainer.setAttribute('data-tooltip', 'Sélectionnez une image.');
 
         // Créer le label stylisé comme un bouton
         const fileInputLabel = document.createElement('label');
@@ -177,11 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Capturer l'image lorsqu'on appuie sur le bouton "Capturer"
     if (captureBtn) {
         captureBtn.addEventListener('click', () => {
-            if (!selectedSticker) {
-                alert('Veuillez sélectionner un sticker avant de capturer une image.');
-                return;
-            }
-
             if (capturedImages.length >= 4) {
                 alert('Vous avez déjà 4 images capturées. Veuillez supprimer une image pour en capturer une nouvelle.');
                 return;
@@ -200,9 +195,9 @@ document.addEventListener('DOMContentLoaded', function() {
             updateThumbnails();
         });
 
-        // Désactiver le bouton de capture au début
-        captureBtn.disabled = true;
-        captureBtn.classList.add('disabled-button');
+        // Désactiver le bouton de capture au début si nécessaire
+        // Ici, le bouton est activé indépendamment de la sélection des stickers
+        // Vous pouvez choisir de le désactiver au début et l'activer après certaines conditions si nécessaire
     }
 
     // Fonction pour mettre à jour les miniatures
@@ -252,19 +247,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const stickers = document.querySelectorAll('.sticker');
     stickers.forEach(sticker => {
         sticker.addEventListener('click', () => {
-            // Retirer la sélection précédente
-            stickers.forEach(s => s.classList.remove('selected-sticker'));
+            const stickerSrc = sticker.src;
 
-            // Sélectionner le nouveau sticker
-            if (selectedSticker === sticker.src) {
+            if (selectedStickers.includes(stickerSrc)) {
                 // Si le sticker est déjà sélectionné, le désélectionner
-                selectedSticker = null;
-                document.getElementById('selected-sticker').value = '';
+                selectedStickers = selectedStickers.filter(src => src !== stickerSrc);
+                sticker.classList.remove('selected-sticker');
             } else {
-                selectedSticker = sticker.src;
+                // Ajouter le sticker à la sélection
+                selectedStickers.push(stickerSrc);
                 sticker.classList.add('selected-sticker');
-                document.getElementById('selected-sticker').value = selectedSticker;
             }
+
+            // Mettre à jour les valeurs des champs cachés si nécessaire
+            // Par exemple, pour stocker les stickers sélectionnés en tant que chaîne JSON
+            document.getElementById('selected-stickers').value = JSON.stringify(selectedStickers);
 
             updateFinalCanvas();
             updateButtonsState();
@@ -277,47 +274,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const fileInput = document.getElementById('file-input');
         const fileInputLabel = document.querySelector('label[for="file-input"]');
 
-        if (selectedSticker) {
-            // Activer le bouton de capture
-            if (captureBtn) {
-                captureBtn.disabled = false;
-                captureBtn.classList.remove('disabled-button');
+        // Ici, les boutons sont activés indépendamment de la sélection des stickers
+        // Vous pouvez ajouter d'autres conditions si nécessaire
 
-                const captureButtonContainer = captureBtn.parentElement;
-                if (captureButtonContainer) {
-                    captureButtonContainer.removeAttribute('data-tooltip');
-                }
-            }
+        // Exemple: Activer le bouton de capture si la caméra est disponible ou si l'input file est disponible
+        if (captureBtn) {
+            // Ici, vous pouvez ajouter des conditions spécifiques pour activer/désactiver le bouton
+            // Par exemple, vérifier si la caméra est active
+            // Dans cet exemple, nous le gardons toujours activé
+            captureBtn.disabled = false;
+            captureBtn.classList.remove('disabled-button');
+        }
 
-            // Activer le bouton de sélection de fichier
-            if (fileInput) {
-                fileInput.disabled = false;
+        if (fileInput && fileInputLabel) {
+            // Activer ou désactiver le bouton de sélection de fichier en fonction des conditions
+            // Ici, nous le gardons activé si l'input n'est pas déjà remplacé
+            if (!fileInput.disabled) {
                 fileInputLabel.classList.remove('disabled-button');
-
-                if (fileInputLabel && fileInputLabel.parentElement) {
-                    fileInputLabel.parentElement.removeAttribute('data-tooltip');
-                }
-            }
-        } else {
-            // Désactiver le bouton de capture
-            if (captureBtn) {
-                captureBtn.disabled = true;
-                captureBtn.classList.add('disabled-button');
-
-                const captureButtonContainer = captureBtn.parentElement;
-                if (captureButtonContainer) {
-                    captureButtonContainer.setAttribute('data-tooltip', 'Veuillez sélectionner un sticker avant de capturer une image.');
-                }
-            }
-
-            // Désactiver le bouton de sélection de fichier
-            if (fileInput) {
-                fileInput.disabled = true;
+            } else {
                 fileInputLabel.classList.add('disabled-button');
-
-                if (fileInputLabel && fileInputLabel.parentElement) {
-                    fileInputLabel.parentElement.setAttribute('data-tooltip', 'Veuillez sélectionner un sticker avant de sélectionner une image.');
-                }
             }
         }
     }
@@ -331,29 +306,38 @@ document.addEventListener('DOMContentLoaded', function() {
             image.src = selectedImageData;
             image.onload = () => {
                 finalContext.drawImage(image, 0, 0, finalCanvas.width, finalCanvas.height);
-                if (selectedSticker) {
+                if (selectedStickers.length > 0) {
+                    selectedStickers.forEach((stickerSrc, index) => {
+                        const stickerImage = new Image();
+                        stickerImage.src = stickerSrc;
+                        stickerImage.onload = () => {
+                            const stickerWidth = 100;
+                            const stickerHeight = 100;
+                            // Positionner chaque sticker avec un décalage
+                            const xPosition = 10 + (index * 10);
+                            const yPosition = 10 + (index * 10);
+
+                            finalContext.drawImage(stickerImage, xPosition, yPosition, stickerWidth, stickerHeight);
+                        };
+                    });
+                }
+            };
+        } else {
+            // Si aucune image capturée, afficher uniquement les stickers sélectionnés
+            if (selectedStickers.length > 0) {
+                selectedStickers.forEach((stickerSrc, index) => {
                     const stickerImage = new Image();
-                    stickerImage.src = selectedSticker;
+                    stickerImage.src = stickerSrc;
                     stickerImage.onload = () => {
                         const stickerWidth = 100;
                         const stickerHeight = 100;
-                        const xPosition = 10;
-                        const yPosition = 10;
-
+                        // Positionner chaque sticker avec un décalage
+                        const xPosition = 10 + (index * 10);
+                        const yPosition = 10 + (index * 10);
                         finalContext.drawImage(stickerImage, xPosition, yPosition, stickerWidth, stickerHeight);
                     };
-                }
-            };
-        } else if (selectedSticker) {
-            const stickerImage = new Image();
-            stickerImage.src = selectedSticker;
-            stickerImage.onload = () => {
-                const stickerWidth = 100;
-                const stickerHeight = 100;
-                const xPosition = 10;
-                const yPosition = 10;
-                finalContext.drawImage(stickerImage, xPosition, yPosition, stickerWidth, stickerHeight);
-            };
+                });
+            }
         }
     }
 
@@ -364,13 +348,27 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault();
             return;
         }
-
+    
+        // Sérialiser les stickers sélectionnés en JSON
+        document.getElementById('selected-stickers').value = JSON.stringify(selectedStickers);
+    
         // Log pour vérifier que les valeurs sont bien capturées
         console.log('Captured Image:', document.getElementById('captured-image').value);
-        console.log('Selected Sticker:', document.getElementById('selected-sticker').value);
-
+        console.log('Selected Stickers:', document.getElementById('selected-stickers').value);
+    
         // Laisser le formulaire se soumettre normalement
     });
+
+    // Ajouter un champ caché pour stocker les stickers sélectionnés
+    // const postForm = document.getElementById('post-form');
+    // if (postForm) {
+    //     const selectedStickersInput = document.createElement('input');
+    //     selectedStickersInput.type = 'hidden';
+    //     selectedStickersInput.id = 'selected-stickers';
+    //     selectedStickersInput.name = 'selected_stickers';
+    //     selectedStickersInput.value = JSON.stringify(selectedStickers);
+    //     postForm.appendChild(selectedStickersInput);
+    // }
 
     // Initialiser l'état des boutons
     updateButtonsState();
